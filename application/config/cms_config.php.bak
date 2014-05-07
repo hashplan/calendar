@@ -1,0 +1,3 @@
+<?php
+$config['site_name']='Black Card';
+$config['meta_title']='Black Card';
