@@ -1,20 +1,27 @@
 <?php $this->load->view('/components/page_head');?>
-  <body>
+ <body>
 <div class="navbar navbar-default navbar-fixed-top" role="navigation">
 	<div class = "container-fluid">
 	  <div class="navbar-header">
+		<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
 			<a class="navbar-brand" href="<?php echo site_url('user/dashboard'); ?>"><img src="<?php echo site_url('/assets/img/logo/logo.png');?>" alt="Hashplan logo"></a>
+		</div>
+		<div class="navbar-collapse collapse">
 			<ul class="nav navbar-nav">
-				  <li><?php echo anchor('user/dashboard','All Events'); ?></li>
-				  <li><?php echo anchor('user/dashboard/my_plan/'.$user->id,"My #");?></li>
-				  <li><?php echo anchor('user/dashboard/social_view/'.$user->id,'Social View'); ?></li>
+				  <li><?php echo anchor('user/dashboard/my_plan/'.$user->id,"Profile");?></li>
+				  <li><?php echo anchor('user/dashboard','Events'); ?></li>
 				  <li><a href="<?php echo site_url('user/dashboard/friends/'.$user->id); ?>">Friends</a></li>
 				  <li><?php echo anchor('user/dashboard/invites/'.$user->id,'Invites');?></li>
-				  <li><?php echo anchor('user/dashboard/groups/'.$user->id,'Groups');?></li>
 			</ul>
-	  </div>
+	  
 	  <!--Side bar-->
 		<ul class="nav navbar-nav navbar-right">
+		<li><?php echo anchor('user/dashboard','Event Hosting');?></li>
 		  <li class="dropdown">
 			<a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-user">&nbsp </span><?php echo (string)$user->first_name;?><b class="caret"></b></a>
 			<ul class="dropdown-menu">
@@ -24,8 +31,8 @@
 				<li><?php echo anchor('auth/logout','<span class="glyphicon glyphicon-log-out">&nbsp </span>Logout');?></li>
 			</ul> 
 		  </li>
-			 <li><a href="#">Another action</a></li>
 		</ul>
+	</div>		
 	</div>
 </div>
 <br>

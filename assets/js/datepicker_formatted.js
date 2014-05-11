@@ -8,5 +8,6 @@ $(function(){
 	//minDate: 0,
 	//maxDate: "+1M +10D",
 	showButtonPanel: true,
+	showOn:"focus",
 	});
 });

@@ -43,6 +43,14 @@ class MY_Controller extends CI_Controller {
 	$this->load->view($this->get_user_identifier().'/_layout_main',$this->data);
 }
 
+	public function my_trash(){
+	$user_id = $this->ion_auth->user()->row()->id;
+	$this->data['events']=$this->events_m->get_trash($user_id);
+	$this->data['cal'] = $this->calendar();
+	$this->data['subview']=$this->get_user_identifier().'/dashboard/index';
+	$this->load->view($this->get_user_identifier().'/_layout_main',$this->data);
+}
+
 public function get_user_identifier(){
 		if($this->ion_auth->in_group("members"))
 			{
