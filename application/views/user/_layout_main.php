@@ -25,7 +25,7 @@
 		  <li class="dropdown">
 			<a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-user">&nbsp </span><?php echo (string)$user->first_name;?><b class="caret"></b></a>
 			<ul class="dropdown-menu">
-				<li><?php echo anchor('user/profile','<span class="glyphicon glyphicon-tasks">&nbsp </span>Profile');?></li>
+				<li><?php echo anchor('user/account_settings','<span class="glyphicon glyphicon-tasks">&nbsp </span>Account');?></li>
 				<li><?php echo anchor('user/dashboard','<span class="glyphicon glyphicon-link">&nbsp </span>Some other link');?></li>
 				<li class="divider"></li>
 				<li><?php echo anchor('auth/logout','<span class="glyphicon glyphicon-log-out">&nbsp </span>Logout');?></li>

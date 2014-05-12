@@ -16,7 +16,6 @@ class MY_Controller extends CI_Controller {
 
 		$this->lang->load('auth');
 		$this->load->helper('language');
-		
 //		$this->output->cache(60);
 //		$this->output->enable_profiler(TRUE);
 		}
@@ -38,6 +37,8 @@ class MY_Controller extends CI_Controller {
 	public function my_plan(){
 	$user_id = $this->ion_auth->user()->row()->id;
 	$this->data['events']=$this->events_m->get($user_id);
+	$this->load->model('event/event_categories_m');
+	$this->data['event_categories'] = $this->event_categories_m->get();
 	$this->data['cal'] = $this->calendar();
 	$this->data['subview']=$this->get_user_identifier().'/dashboard/index';
 	$this->load->view($this->get_user_identifier().'/_layout_main',$this->data);

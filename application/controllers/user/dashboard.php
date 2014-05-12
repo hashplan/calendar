@@ -13,6 +13,8 @@ public	function __construct(){
 
 public function index(){
 	$this->data['events']=$this->events_m->get();
+	$this->load->model('event/event_categories_m');
+	$this->data['event_categories'] = $this->event_categories_m->get();
 	$this->data['cal'] = $this->calendar();
 	$this->data['subview']=$this->get_user_identifier().'/dashboard/index';
 	$this->load->view($this->get_user_identifier().'/_layout_main',$this->data);

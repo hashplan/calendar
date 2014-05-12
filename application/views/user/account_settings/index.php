@@ -1,12 +1,12 @@
-<!-- START THE FEATURETTES -->
-      <hr class="featurette-divider">
 <div class = "container">
 		<div class="col-md-2">
+		<div class = "thumbnail">
           <img src="<?php echo site_url('/assets/img/users/Stas.jpg');?>", alt="Stas image">
+		</div>
 		<hr>
          
         </div>
-      <div class = "col-md-6">
+      <div class = "col-md-8">
 			<h4>Welcome <span class="text-muted"><?php echo (string)$user->first_name." " .(string)$user->last_name;?></span></h4>
 			<h5>Here are your profile details:</h5>
 				<div class = "row">
@@ -86,19 +86,15 @@
 				
 					<div class = "row">
 						<?php 
-							if(count($user_profile)):
-								echo dump($user_profile);
+							if(count($account_settings)):
+								echo dump($account_settings);
 							else: 
 							endif;
 						?>
 					</div>
 				</div>
 		</div>
-	<div class = "col-md-4" style = "background-color: #F8F8F8">
+	<div class = "col-md-2" style = "background-color: #F8F8F8">
 		<h3>placeholder</h3>
 	</div>
-</div>
-<!--modal for event details-->
-<!-- Modal -->
-<div class="modal fade" id="event_modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 </div>

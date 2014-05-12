@@ -27,6 +27,7 @@
   </div>
       <div class = "col-md-8">
 			<h4>Welcome <span class="text-muted"><?php echo (string)$user->first_name." " .(string)$user->last_name;?></span></h4>
+			<p><?php echo anchor('event/events_per_metro/','Change Location<span class="caret"></span>', 'data-toggle="modal" data-target="#events_per_metro"');?></p>
 			<h5>Upcoming Events:</h5>
 				<div class = "row">
 					<form class="col-md-12">
@@ -40,20 +41,20 @@
 					-->
 		</div>
 		<br>
-				<div class = "row">
+				<div class = "col-md-12">
 					<div class="btn-group">
 					  <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">Event Category <span class="caret"></span>
 					  </button>
 					  <ul class="dropdown-menu" role="menu">
-					  <!--need php from the event category table-->
-						<li><a href="#">Music</a></li>
-						<li><a href="#">Dance</a></li>
-						<li><a href="#">Sporting</a></li>
-						<li><a href="#">Music</a></li>
-						<li><a href="#">Theater</a></li>
-						<li><a href="#">Free</a></li>
-						<li class="divider"></li>
-						<li><a href="#">Sponsored Events</a></li>
+						<?php if(count($event_categories)):
+									foreach ($event_categories as $category):?> 
+										<li>
+											<?php echo anchor('user/dashboard/filter_events', $category->name);?>
+										</li>
+							<?php endforeach; else: ?>
+											<div class = "row" style = "background-color: yellow">No events found, try going to "All Events" and adding something
+											</div>
+						<?php endif;?>
 					  </ul>
 					</div>
 					<div class="btn-group">
@@ -65,10 +66,12 @@
 						<li><a href="#">Upcoming Weekend</a></li>
 					  </ul>
 					</div>
-					<div>
-					<form>
-						<input type="text" class="datepicker">
-					</form>
+					<div class="btn-group">
+					  <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">Choose Date <span class="caret"></span>
+					  </button>
+					  <ul class="dropdown-menu" role="menu">
+						<div class = "datepicker"></div>
+					  </ul>
 					</div>
 				</div>
 			<hr>					
@@ -106,5 +109,9 @@
 </div>
 <!--modal for event details-->
 <!-- Modal -->
-<div class="modal fade" id="event_modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div class="modal fade" id="event_modal" tabindex="-1" role="dialog" aria-labelledby="event_modal" aria-hidden="true">
+</div>
+<!--modal for event per metro-->
+<!-- Modal -->
+<div class="modal fade" id="events_per_metro" tabindex="-1" role="dialog" aria-labelledby="events_per_metro" aria-hidden="true">
 </div>
