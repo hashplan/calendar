@@ -18,7 +18,7 @@
  * NOTE: If you change these, also change the error_reporting() code below
  *
  */
-if( $_SERVER['HTTP_HOST'] == 'www.hashplan.dev' || $_SERVER['HTTP_HOST'] == 'hashplan.dev' || dirname( __FILE__ ) == 'C:\wamp\www\calendar' )
+if( $_SERVER['HTTP_HOST'] == 'www.hashplan.dev' || $_SERVER['HTTP_HOST'] == 'www.hashplan.dev.my' || $_SERVER['HTTP_HOST'] == 'hashplan.dev.my' || $_SERVER['HTTP_HOST'] == 'hashplan.dev' || dirname( __FILE__ ) == 'C:\wamp\www\calendar' )
 {
 	define( 'ENVIRONMENT', 'development' );
 }
