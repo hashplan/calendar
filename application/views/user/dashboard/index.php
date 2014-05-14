@@ -28,7 +28,9 @@
 		</div>
 		<div class = "col-md-8">
 			<h4>Welcome <span class="text-muted"><?php echo (string)$user->first_name." " .(string)$user->last_name;?></span></h4>
-			<p><?php echo anchor('event/events_per_metro/','Change Location<span class="caret"></span>', 'data-toggle="modal" data-target="#events_per_metro"');?></p>
+			<div class="city-id" style="display:none">1</div>
+			<h5 class="city-name"></h5>
+			<p><?php echo anchor('user/dashboard/choose_city','Change Location<span class="caret"></span>', 'data-toggle="modal" data-target="#event_cities"');?></p>
 			<h5>Upcoming Events:</h5>
 			<div class = "row">
 				<form class="col-md-12">
@@ -101,5 +103,5 @@
 </div>
 <!--modal for event per metro-->
 <!-- Modal -->
-<div class="modal fade" id="events_per_metro" tabindex="-1" role="dialog" aria-labelledby="events_per_metro" aria-hidden="true">
+<div class="modal fade" id="event_cities" tabindex="-1" role="dialog" aria-labelledby="events_per_metro" aria-hidden="true">
 </div>

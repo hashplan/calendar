@@ -2,15 +2,20 @@
 
 class Events_m extends MY_Model {
 
-	public function get_all($offset = 0, $limit = 5, $name = NULL, $user_id = NULL){
+	public function get_all($offset = 0, $limit = 5, $name = NULL, $city_id = NULL, $user_id = NULL){
 		$this->db
 			->select('e.id AS eventId, e.name, e.datetime')
 			->from('events AS e')
+			->join('venues AS v', 'e.venueId = v.id', 'inner')
 			->order_by('e.datetime')
 			->limit($limit, $offset);
 
 		if ($name) {
 			$this->db->like('e.name', $name);
+		}
+
+		if ($city_id) {
+			$this->db->where('v.cityId', $city_id);
 		}
 
 		if ($user_id !== NULL) {

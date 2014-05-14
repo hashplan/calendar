@@ -26,9 +26,15 @@ class Dashboard extends MY_Controller {
 		$post = $this->input->post();
 		$name = !empty($post['name']) && strlen(trim($post['name'])) ? trim($post['name']) : NULL;
 		$offset = !empty($post['offset']) ? $post['offset'] : 0;
+		$city_id = !empty($post['city_id']) ? $post['city_id'] : NULL;
 		$limit = 5;
-		$events = $this->events_m->get_all($offset, $limit, $name);
+		$events = $this->events_m->get_all($offset, $limit, $name, $city_id);
 		$this->load->view($this->get_user_identifier() . '/dashboard/events', array('events' => $events));
+	}
+
+	public function choose_city() {
+		$this->load->model('location_m');
+		$this->load->view('/event/cities', array('cities' => $this->location_m->get_cities()));
 	}
 
 }
