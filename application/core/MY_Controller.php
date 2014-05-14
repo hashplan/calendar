@@ -1,6 +1,7 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 class MY_Controller extends CI_Controller {
 	public $data = array();
+	public $page_class;
 	
 	function __construct(){
 		parent::__construct();
@@ -8,6 +9,7 @@ class MY_Controller extends CI_Controller {
 		$this->data['errors']=array();
 		//$this->data['site_name']=config_item('site_name');
 		$this->data['meta_title']='# Plan';
+		$this->data['page_class'] = $this->page_class;
 		$this->load->library('ion_auth');
 		$this->load->library('form_validation');
 		$this->load->helper('url');

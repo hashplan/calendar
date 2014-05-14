@@ -15,7 +15,7 @@
 			</div>
 	<?php endforeach;
 else: ?>
-	<div class = "row" style = "background-color: yellow">
+	<div class="row no-events-row" style = "background-color: yellow">
 		<div class="col-md-12">
 			No events found, try going to "All Events" and adding something
 		</div>

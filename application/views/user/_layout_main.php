@@ -1,5 +1,5 @@
 <?php $this->load->view('/components/page_head');?>
-<body>
+<body class="page page-<?php echo $page_class ?>">
 <div class="navbar navbar-default navbar-fixed-top" role="navigation">
 	<div class="container-fluid">
 		<div class="navbar-header">
