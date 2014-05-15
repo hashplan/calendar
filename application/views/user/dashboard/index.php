@@ -45,20 +45,36 @@
 			</div>
 			<br>
 			<div class="row">
-				<div class = "col-md-12">
-					<div class="btn-group">
+				<div class="col-md-4">
+					<label for="event-preselects">Preselects:</label>
+					<select name="preselects" id="event-preselects" class="form-control">
+						<option value="0">Doesn't matter</option>
+						<option value="7">Next 7 days</option>
+						<option value="3">Next 3 days</option>
+						<option value="weekend">Upcoming Weekend</option>
+					</select>
+				</div>
+				<div class="col-md-4">
+					<input type="hidden" name="specific_date" id="date-hidden"/>
+					<label for="event-date">Choose specific date</label>
+					<button type="button" class="btn btn-default dropdown-toggle" id="event-date" data-toggle="dropdown">Choose Date <span class="caret"></span></button>
+					<ul class="dropdown-menu" role="menu">
+						<div class="datepicker"></div>
+					</ul>
+				</div>
+					<!--<div class="btn-group">
 						<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">Event Category <span class="caret"></span>
 						</button>
 						<ul class="dropdown-menu" role="menu">
-							<?php if(count($event_categories)):
-								foreach ($event_categories as $category):?>
+							<?php /*if(count($event_categories)):
+								foreach ($event_categories as $category):*/?>
 									<li>
-										<?php echo anchor('user/dashboard/filter_events', $category->name);?>
+										<?php /*echo anchor('user/dashboard/filter_events', $category->name);*/?>
 									</li>
-								<?php endforeach; else: ?>
+								<?php /*endforeach; else: */?>
 								<div class = "row" style = "background-color: yellow">No events found, try going to "All Events" and adding something
 								</div>
-							<?php endif;?>
+							<?php /*endif;*/?>
 						</ul>
 					</div>
 					<div class="btn-group">
@@ -70,14 +86,7 @@
 							<li><a href="#">Upcoming Weekend</a></li>
 						</ul>
 					</div>
-					<div class="btn-group">
-						<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">Choose Date <span class="caret"></span>
-						</button>
-						<ul class="dropdown-menu" role="menu">
-							<div class = "datepicker"></div>
-						</ul>
-					</div>
-				</div>
+					-->
 			</div>
 			<hr>
 			<div class="row">

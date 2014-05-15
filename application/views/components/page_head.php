@@ -26,7 +26,6 @@
 	<!--<script src="<?php echo site_url('assets/js/bootstrap-datepicker.js');?>"></script>-->
 	<script src="<?php echo site_url('assets/js/event_search.js');?>"></script>
 	<!--<script src="http://code.jquery.com/ui/1.10.2/jquery-ui.js" ></script>-->
-	<script src="<?php echo site_url('assets/js/datepicker_formatted.js');?>"></script>
 	<script src="<?php echo site_url('assets/js/tinymce/tinymce.min.js');?>"></script>
 	<script src="<?php echo site_url('assets/js/tooltip_for_event_to_plan.js');?>"></script>
 	<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBTf3-ayxTEKP8dZW7QWZIuoNnVBl0jas4&sensor=true"></script>

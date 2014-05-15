@@ -24,11 +24,13 @@ class Dashboard extends MY_Controller {
 
 	public function events_list() {
 		$post = $this->input->post();
-		$name = !empty($post['name']) && strlen(trim($post['name'])) ? trim($post['name']) : NULL;
-		$offset = !empty($post['offset']) ? $post['offset'] : 0;
-		$city_id = !empty($post['city_id']) ? $post['city_id'] : NULL;
-		$limit = 5;
-		$events = $this->events_m->get_all($offset, $limit, $name, $city_id);
+		$options = array();
+		if (!empty($post['preselects']) && ($post['preselects'] === 'weekend' || $post['preselects'] != 0)) $options['preselects'] = $post['preselects'];
+		if (!empty($post['offset'])) $options['offset'] = $post['offset'];
+		if (!empty($post['city_id'])) $options['city_id'] = $post['city_id'];
+		if (!empty($post['name']) && strlen(trim($post['name']))) $options['name'] = trim($post['name']);
+		if (!empty($post['specific_date'])) $options['specific_date'] = $post['specific_date'];
+		$events = $this->events_m->get_all($options);
 		$this->load->view($this->get_user_identifier() . '/dashboard/events', array('events' => $events));
 	}
 

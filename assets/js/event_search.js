@@ -1,18 +1,29 @@
 $(function() {
-	$('.page-dashboard #event_list').on('keyup', function() {
-		var data = { name: $('#event_list').val() };
-		if ($('.city-id').length > 0) {
-			data.city_id = $('.city-id').text();
+	// datepicker
+	$('.page-dashboard .datepicker').datepicker({
+		format:'yyyy-mm-dd',
+		changeMonth: true,
+		changeYear: true,
+		showOtherMonths: true,
+		selectOtherMonths: true,
+		//minDate: 0,
+		//maxDate: "+1M +10D",
+		showButtonPanel: true,
+		showOn: "focus",
+		onSelect: function(dateText) {
+			var dateParts = dateText.split('/');
+			$('#event-preselects').val('0');
+			$('#date-hidden').val(dateParts[2] +'-'+ dateParts[0] +'-'+ dateParts[1]);
+			fetchEvents();
 		}
-		$.ajax('/user/dashboard/events_list', {
-			type: 'POST',
-			data: data,
-			success: function(response) {
-				$('#search_result').html(response);
-			}
-		});
 	});
 
+	// filter events by text input
+	$('.page-dashboard #event_list').on('keyup', function() {
+		fetchEvents();
+	});
+
+	// scrolldown handler - fetch 5 more events on page bottom
 	if ($('.page-dashboard').length > 0) {
 		$(window).scroll(function() {
 			if($(window).scrollTop() + $(window).height() > $(document).height() - 100) {
@@ -35,6 +46,7 @@ $(function() {
 		});
 	}
 
+	// fetch events on location selection
 	$('.page-dashboard #event_cities').on('click', '.item-city-name', function(e) {
 		e.preventDefault();
 		var cityName = $(this).text();
@@ -42,11 +54,27 @@ $(function() {
 		$('h5.city-name').text(cityName);
 		$('.city-id').text(cityId);
 		$('#event_cities').modal('hide');
+		fetchEvents();
+	});
 
-		var data = {
-			name: $('#event_list').val(),
-			city_id: cityId
-		};
+	// filter events by date presets (next 3 days, next 7 days)
+	$('#event-preselects').on('change', function() {
+		$('#date-hidden').val('');
+		fetchEvents();
+	});
+
+	function fetchEvents() {
+		var data = { name: $('#event_list').val() };
+		if ($('.city-id').length > 0) {
+			data.city_id = $('.city-id').text();
+		}
+		if ($('#event-preselects').val() != 0) {
+			data.preselects = $('#event-preselects').val();
+		}
+		if ($('#date-hidden').val().length > 0) {
+			data.specific_date = $('#date-hidden').val();
+		}
+
 		$.ajax('/user/dashboard/events_list', {
 			type: 'POST',
 			data: data,
@@ -54,5 +82,5 @@ $(function() {
 				$('#search_result').html(response);
 			}
 		});
-	});
+	}
 });
