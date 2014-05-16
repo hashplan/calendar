@@ -10,6 +10,7 @@
 					<li>
 						<div class="item-city-id" style="display: none"><?php echo html_escape($city->id) ?></div>
 						<a href="#" class="item-city-name" aria-hidden="true"><?php echo html_escape($city->city) ?></a>
+						<span>(<?php echo $city->events_count ?>)</span>
 					</li>
 				<?php } ?>
 			</ul>

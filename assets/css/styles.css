@@ -18,3 +18,7 @@ h1,h2,h3{font-family:georgia, serif;}
 .event-buttons-wrapper a.btn {
 	float: none;
 }
+
+.event-group-date {
+	text-transform: uppercase;
+}

@@ -62,31 +62,6 @@
 						<div class="datepicker"></div>
 					</ul>
 				</div>
-					<!--<div class="btn-group">
-						<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">Event Category <span class="caret"></span>
-						</button>
-						<ul class="dropdown-menu" role="menu">
-							<?php /*if(count($event_categories)):
-								foreach ($event_categories as $category):*/?>
-									<li>
-										<?php /*echo anchor('user/dashboard/filter_events', $category->name);*/?>
-									</li>
-								<?php /*endforeach; else: */?>
-								<div class = "row" style = "background-color: yellow">No events found, try going to "All Events" and adding something
-								</div>
-							<?php /*endif;*/?>
-						</ul>
-					</div>
-					<div class="btn-group">
-						<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">Preselects <span class="caret"></span>
-						</button>
-						<ul class="dropdown-menu" role="menu">
-							<li><a href="#">Next 7 days</a></li>
-							<li><a href="#">Next 3 days</a></li>
-							<li><a href="#">Upcoming Weekend</a></li>
-						</ul>
-					</div>
-					-->
 			</div>
 			<hr>
 			<div class="row">

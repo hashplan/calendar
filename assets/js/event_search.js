@@ -26,13 +26,19 @@ $(function() {
 	// scrolldown handler - fetch 5 more events on page bottom
 	if ($('.page-dashboard').length > 0) {
 		$(window).scroll(function() {
-			if($(window).scrollTop() + $(window).height() > $(document).height() - 100) {
+			if($(window).scrollTop() + $(window).height() > $(document).height() - 1) {
 				var data = {
 					name: $('#event_list').val(),
-					offset: $('#search_result .panel').length
+					offset: $('#search_result .event-row').length
 				};
 				if ($('.city-id').length > 0) {
 					data.city_id = $('.city-id').text();
+				}
+				if ($('#event-preselects').val() != 0) {
+					data.preselects = $('#event-preselects').val();
+				}
+				if ($('#date-hidden').val().length > 0) {
+					data.specific_date = $('#date-hidden').val();
 				}
 				if ($('.no-events-row').length > 0) return;
 				$.ajax('/user/dashboard/events_list', {
@@ -40,6 +46,7 @@ $(function() {
 					data: data,
 					success: function(response) {
 						$(response).appendTo('#search_result');
+						$('.no-events-row').not(':first').remove();
 					}
 				});
 			}

@@ -13,7 +13,7 @@ class Events_m extends MY_Model {
 		}
 
 		$this->db
-			->select('e.eventId, e.name, e.datetime')
+			->select('e.eventId, e.name, e.datetime, DATE(e.datetime) AS date_only')
 			->from('events AS e')
 			->join('venues AS v', 'e.venueId = v.id', 'inner')
 			->order_by('e.datetime')
@@ -45,19 +45,20 @@ class Events_m extends MY_Model {
 				$date_range['start'] = date('Y-m-d H:i:s', strtotime('tomorrow'));
 				$date_range['end'] = date('Y-m-d H:i:s', strtotime('+'. ($options['preselects'] + 2) .' days midnight'));
 			}
-
-			if (!empty($date_range['start']) && !empty($date_range['end'])) {
-				$this->db->where('e.datetime >=', $date_range['start']);
-				$this->db->where('e.datetime <', $date_range['end']);
-			}
 		}
 
 		if (!empty($options['specific_date'])) {
 			$date_range['start'] = $options['specific_date'] .' 00:00:00';
 			$date_range['end'] = $options['specific_date'] .' 23:59:59';
-			$this->db->where('e.datetime >=', $date_range['start']);
-			$this->db->where('e.datetime <=', $date_range['end']);
 		}
+
+		if (empty($options['specific_date']) && empty($options['preselects'])) {
+			$date_range['start'] = date('Y-m-d') .' 00:00:00';
+			$date_range['end'] = date('Y-m-d', strtotime('+5 years')) .' 23:59:59';
+		}
+
+		$this->db->where('e.datetime >=', $date_range['start']);
+		$this->db->where('e.datetime <=', $date_range['end']);
 
 		return $this->db->get()->result();
 	}

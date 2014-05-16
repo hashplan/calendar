@@ -4,12 +4,12 @@ class Location_m extends MY_Model {
 
 	public function get_cities() {
 		return $this->db
-			->distinct()
-			->select('ma.id, ma.city')
-			->from('metroareas AS ma')
-			->join('venues v', 'ma.id = v.cityId', 'inner')
-			->join('events e', 'v.id = e.venueId', 'inner')
-			->order_by('ma.stateId')
+			->select('c.id, c.city, COUNT(e.eventId) AS events_count')
+			->from('events AS e')
+			->join('venues AS v', 'e.venueId = v.id', 'inner')
+			->join('cities AS c', 'v.cityId = c.id', 'inner')
+			->order_by('c.city')
+			->group_by('c.id')
 			->get()
 			->result();
 	}
