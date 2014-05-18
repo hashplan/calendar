@@ -83,9 +83,9 @@
 </div>
 <!--modal for event details-->
 <!-- Modal -->
-<div class="modal fade" id="event_modal" tabindex="-1" role="dialog" aria-labelledby="event_modal" aria-hidden="true">
+<div class="modal" id="event_modal" tabindex="-1" role="dialog" aria-labelledby="event_modal" aria-hidden="true">
 </div>
 <!--modal for event per metro-->
 <!-- Modal -->
-<div class="modal fade" id="event_cities" tabindex="-1" role="dialog" aria-labelledby="events_per_metro" aria-hidden="true">
+<div class="modal" id="event_cities" tabindex="-1" role="dialog" aria-labelledby="event_cities" aria-hidden="true">
 </div>
