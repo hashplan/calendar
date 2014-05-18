@@ -13,7 +13,7 @@ class Events_m extends MY_Model {
 		}
 
 		$this->db
-			->select('e.eventId, e.name, e.datetime, DATE(e.datetime) AS date_only')
+			->select('e.id, e.name, e.datetime, DATE(e.datetime) AS date_only')
 			->from('events AS e')
 			->join('venues AS v', 'e.venueId = v.id', 'inner')
 			->order_by('e.datetime')
