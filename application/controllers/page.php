@@ -5,6 +5,7 @@ class Page extends MY_Controller {
 		}
 		
 public function index(){
+	$this->output->cache(30);
 	$this->data['subview']='homepage';
 	$this->load->view('_layout_main',$this->data);
 }
