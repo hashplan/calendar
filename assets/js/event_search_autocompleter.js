@@ -1,13 +1,13 @@
 $(function(){
   $("#event_list").autocomplete({
-	source: "dashboard/events_autocomplete",
+	source: base_url + "dashboard/events_autocomplete",
 	dataType: 'jsonp',
   });
 	 
 	 $("#event_list").keyup(function(){
 		var value =  $("#event_list").val();
 		 $.ajax({
-				url:'dashboard/events_autocomplete',
+				url: base_url + 'dashboard/events_autocomplete',
 				type:'POST',
 				//minLength: 2,
 				data:  {name:value},

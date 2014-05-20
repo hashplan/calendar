@@ -41,8 +41,7 @@ $(function() {
 					data.specific_date = $('#date-hidden').val();
 				}
 				if ($('.no-events-row').length > 0) return;
-				$.ajax('/user/dashboard/events_list', {
-				//$.ajax('http://localhost/calendar/user/dashboard/events_list', {
+				$.ajax(base_url + 'user/dashboard/events_list', {
 					type: 'POST',
 					data: data,
 					success: function(response) {
@@ -83,8 +82,7 @@ $(function() {
 			data.specific_date = $('#date-hidden').val();
 		}
 
-		$.ajax('/user/dashboard/events_list', {
-		//$.ajax('http://localhost/calendar/user/dashboard/events_list', {
+		$.ajax(base_url + 'user/dashboard/events_list', {
 			type: 'POST',
 			data: data,
 			success: function(response) {
