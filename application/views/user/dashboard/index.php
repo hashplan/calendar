@@ -46,7 +46,16 @@
 			<br>
 			<div class="row">
 				<div class="col-md-4">
-					<label for="event-preselects">Preselects:</label>
+					<label for="event-preselects">Categories</label>
+					<select name="categories" id="event-categories" class="form-control">
+						<option value="0">Doesn't matter</option>
+						<?php foreach ($categories as $category) { ?>
+							<option value="<?php echo $category->id ?>"><?php echo html_escape($category->name) ?></option>
+						<?php } ?>
+					</select>
+				</div>
+				<div class="col-md-4">
+					<label for="event-preselects">Preselects</label>
 					<select name="preselects" id="event-preselects" class="form-control">
 						<option value="0">Doesn't matter</option>
 						<option value="7">Next 7 days</option>

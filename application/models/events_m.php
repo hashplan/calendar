@@ -19,6 +19,18 @@ class Events_m extends MY_Model {
 			->order_by('e.datetime')
 			->limit($options['limit'], $options['offset']);
 
+		if (!empty($options['category'])) {
+			$this->load->model('categories_m');
+			$categories = $this->categories_m->get_child_categories($options['category']);
+			$category_ids = array();
+			foreach ($categories as $cat) {
+				$category_ids[] = $cat->id;
+			}
+			$this->db->join('event_categories AS ec', 'e.id = ec.event_id', 'inner');
+			$this->db->join('categories AS c', 'ec.category_id = c.id', 'inner');
+			$this->db->where_in('c.id', $category_ids);
+		}
+
 		if (!empty($options['name'])) {
 			$this->db->like('e.name', $options['name']);
 		}

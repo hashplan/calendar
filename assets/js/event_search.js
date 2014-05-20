@@ -40,6 +40,9 @@ $(function() {
 				if ($('#date-hidden').val().length > 0) {
 					data.specific_date = $('#date-hidden').val();
 				}
+				if ($('#event-categories').val() != 0) {
+					data.category = $('#event-categories').val();
+				}
 				if ($('.no-events-row').length > 0) return;
 				$.ajax(base_url + 'user/dashboard/events_list', {
 					type: 'POST',
@@ -70,6 +73,9 @@ $(function() {
 		fetchEvents();
 	});
 
+	// filter events by category
+	$('#event-categories').on('change', fetchEvents);
+
 	function fetchEvents() {
 		var data = { name: $('#event_list').val() };
 		if ($('.city-id').length > 0) {
@@ -80,6 +86,10 @@ $(function() {
 		}
 		if ($('#date-hidden').val().length > 0) {
 			data.specific_date = $('#date-hidden').val();
+		}
+
+		if ($('#event-categories').val() != 0) {
+			data.category = $('#event-categories').val();
 		}
 
 		$.ajax(base_url + 'user/dashboard/events_list', {

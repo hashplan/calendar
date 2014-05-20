@@ -14,17 +14,21 @@ class Dashboard extends MY_Controller {
 	}
 
 	public function index(){
-		$this->load->model('event/event_categories_m');
-		$this->data['event_categories'] = $this->event_categories_m->get();
+		$this->load->model('categories_m');
+		$events_data = array(
+			'events' => $this->events_m->get_all(),
+			'categories' => $this->categories_m->get_top_level_categories(),
+		);
 		$this->data['cal'] = $this->calendar();
 		$this->data['subview']=$this->get_user_identifier().'/dashboard/index';
-		$this->data['events'] = $this->load->view($this->get_user_identifier() . '/dashboard/events', array('events' => $this->events_m->get_all()), true);
+		$this->data['events'] = $this->load->view($this->get_user_identifier() . '/dashboard/events', $events_data, true);
 		$this->load->view($this->get_user_identifier().'/_layout_main',$this->data);
 	}
 
 	public function events_list() {
 		$post = $this->input->post();
 		$options = array();
+		if (!empty($post['category']) && $post['category'] != 0) $options['category'] = $post['category'];
 		if (!empty($post['preselects']) && ($post['preselects'] === 'weekend' || $post['preselects'] != 0)) $options['preselects'] = $post['preselects'];
 		if (!empty($post['offset'])) $options['offset'] = $post['offset'];
 		if (!empty($post['city_id'])) $options['city_id'] = $post['city_id'];
