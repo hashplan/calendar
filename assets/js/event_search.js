@@ -42,6 +42,7 @@ $(function() {
 				}
 				if ($('.no-events-row').length > 0) return;
 				$.ajax('/user/dashboard/events_list', {
+				//$.ajax('http://localhost/calendar/user/dashboard/events_list', {
 					type: 'POST',
 					data: data,
 					success: function(response) {
@@ -83,6 +84,7 @@ $(function() {
 		}
 
 		$.ajax('/user/dashboard/events_list', {
+		//$.ajax('http://localhost/calendar/user/dashboard/events_list', {
 			type: 'POST',
 			data: data,
 			success: function(response) {

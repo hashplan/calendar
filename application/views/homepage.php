@@ -52,7 +52,7 @@
 			 <p class="lead">Here will be a write up of whatever we want. Something about how it works, how it benefits, what is happening, etc.</p>
 		</div>
 		 <div class = "col-md-6">
-				<img class = "featurette-image img-responsive" src="<?php echo site_url('/assets/img/howitworks/howitworks.png');?>" alt="How it works!">
+				<img class = "featurette-image img-responsive" src="<?php echo site_url('/assets/img/howitworks/howitworks2.png');?>" alt="How it works!">
 		</div>
 	</div>
 			
@@ -74,6 +74,6 @@
 			 <p class="lead">A lot of cool things to do. Start searching, scheduling, sharing and enjoying!</p>
 		</div>
 		 <div class = "col-md-6">
-				<img class = "featurette-image img-responsive img-rounded" src="<?php echo site_url('/assets/img/event_modal/yelp_logo - Copy.jpg');?>" alt="Image placeholder">
+				<img class = "featurette-image img-responsive img-rounded" src="<?php echo site_url('/assets/img/logo/hashplan.jpg');?>" alt="Image placeholder">
 		</div>
 	</div>
