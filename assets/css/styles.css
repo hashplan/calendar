@@ -22,3 +22,11 @@ h1,h2,h3{font-family:georgia, serif;}
 .event-group-date {
 	text-transform: uppercase;
 }
+
+#event_modal iframe {
+	width: 100%;
+}
+
+#event_modal .nav-tabs {
+	margin-bottom: 10px;
+}

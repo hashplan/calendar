@@ -74,4 +74,41 @@ class Events_m extends MY_Model {
 
 		return $this->db->get()->result();
 	}
+
+	public function get_event_by_id($id) {
+		return $this->db
+			->select('
+				e.id AS event_id,
+				e.name AS event_name,
+				e.description AS event_description,
+				e.typeId AS event_typeId,
+				e.datetime AS event_datetime,
+				e.venueId AS event_venueId,
+				e.stubhub_url AS event_stubhub_url,
+				e.insertedon AS event_insertedon,
+				e.insertedby AS event_insertedby,
+				e.updatedon AS event_updatedon,
+				e.updatedby AS event_updatedby,
+				v.id AS venue_id,
+				v.name AS venue_name,
+				v.address AS venue_address,
+				v.city AS venue_city,
+				v.cityId AS venue_cityId,
+				v.stateId AS venue_stateId,
+				v.zip AS venue_zip,
+				v.phone AS venue_phone,
+				v.website AS venue_website,
+				v.description AS venue_description,
+				v.typeId AS venue_typeId,
+				v.insertedon AS venue_insertedon,
+				v.insertedby AS venue_insertedby,
+				v.updatedon AS venue_updatedon,
+				v.updatedby AS venue_updatedby
+			')
+			->from('events AS e')
+			->join('venues AS v', 'e.venueId = v.id', 'inner')
+			->where('e.id', $id)
+			->get()
+			->row();
+	}
 }
