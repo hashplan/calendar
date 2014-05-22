@@ -22,6 +22,9 @@
 							<h4><?php echo html_escape(date('H:i T', strtotime($event->event_datetime))) ?></h4>
 						</div>
 						<div class="col-md-6">
+							<input type="hidden" class="event-name-hidden" value="<?php echo urlencode($event->event_name) ?>"/>
+							<input type="hidden" class="event-venue-hidden" value="<?php echo urlencode($event->venue_name) ?>"/>
+							<input type="hidden" class="event-city-hidden" value="<?php echo urlencode($event->city_city) ?>"/>
 							<div class="map-holder"></div>
 						</div>
 					</div>

@@ -4,11 +4,13 @@ $(function() {
 	$('#event_modal').on('shown.bs.modal', function(e) {
 		var intervalId = setInterval(function() {
 			if ($('#event_modal #event .map-holder').length === 1) {
+				var venueName = $('#event_modal #event .event-venue-hidden').val();
+				var cityName = $('#event_modal #event .event-city-hidden').val();
 				$('#event .map-holder').html('\
 					<iframe \
 						frameborder="0" \
 						style="border:0" \
-						src="https://www.google.com/maps/embed/v1/place?key=AIzaSyAxw8gzEEn1Kxqvjax4B9siYD0Pi9JoUfg&q=New+City+Likwid+Lounge,Gateway+Boulevard+Northwest,Edmonton,AB,Canada"> \
+						src="https://www.google.com/maps/embed/v1/place?key=AIzaSyAxw8gzEEn1Kxqvjax4B9siYD0Pi9JoUfg&q='+ venueName +','+ cityName +'"> \
 					</iframe>\
 				');
 				clearInterval(intervalId);
