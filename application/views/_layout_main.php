@@ -19,9 +19,9 @@
 	  
 	   <ul class="nav navbar-nav navbar-right">
 			  <li><?php echo anchor('auth/login','Login <span class="glyphicon glyphicon-log-in">&nbsp </span>', 'data-toggle="modal" data-target="#login_modal"');?></li>
-			  <li> &nbsp </li>
+			  <!--<li> &nbsp </li>
 			  <li><?php echo anchor('auth/create_user','Signup <span class="glyphicon glyphicon-pencil">&nbsp </span>', 'data-toggle="modal" data-target="#create_user_modal"');?></li>
-
+-->
 		</ul>
 		</div>
 	</div>

@@ -10,32 +10,32 @@
       </ol> 
       <div class="carousel-inner">
         <div class="item active">
-          <img src="<?php echo site_url('/assets/img/homepage/v2.0.png');?>" alt="I could really save!">
+          <img src="<?php echo site_url('/assets/img/logo/hash.png');?>" alt="I could really save!">
           <div class="container">
             <div class="carousel-caption">
-              <h1>I want to do this!</h1>
+              <h4>We are coming soon!</h4>
               <p></p>
-              <p><a class="btn btn-lg btn-primary" href="#" role="button">Do it now!</a></p>
+              <!--<p><a class="btn btn-sm btn-primary" href="#" role="button">Do it now!</a></p>-->
             </div>
           </div>
         </div>
         <div class="item">
-          <img src="<?php echo site_url('/assets/img/homepage/v3.0.png');?>" alt="How it works!">
+          <img src="<?php echo site_url('/assets/img/logo/hash.png');?>" alt="How it works!">
           <div class="container">
             <div class="carousel-caption">
-              <h1>How it works.</h1>
+              <h4>We will be live in a jiffy!</h4>
               <p></p>
-              <p><a class="btn btn-lg btn-primary" href="#" role="button">Learn more</a></p>
+              <!--<p><a class="btn btn-sm btn-primary responsive" href="#" role="button">Learn more</a></p>-->
             </div>
           </div>
         </div>
         <div class="item">
-          <img src="<?php echo site_url('/assets/img/homepage/v4.0.png');?>" alt="Get started!">
+          <img src="<?php echo site_url('/assets/img/logo/hash.png');?>" alt="Get started!">
           <div class="container">
             <div class="carousel-caption">
-              <h1>Get Started.</h1>
+              <h4>Just a bit longer!</h4>
               <p></p>
-              <p><a class="btn btn-lg btn-primary" href="#" role="button">Get Started!</a></p>
+              <!--<p><a class="btn btn-sm btn-primary" href="#" role="button">Get Started!</a></p>-->
             </div>
           </div>
         </div>
@@ -49,7 +49,7 @@
   <div class="row featurette">
 		<div class = "col-md-6">
 			<h2 class = "featurette-heading">How this works?<span class = "text-muted"> It'll blow your mind!</span></h2>
-			 <p class="lead">Here will be a write up of whatever we want. Something about how it works, how it benefits, what is happening, etc.</p>
+			 <p class="lead">Very easy!</p>
 		</div>
 		 <div class = "col-md-6">
 				<img class = "featurette-image img-responsive" src="<?php echo site_url('/assets/img/howitworks/howitworks2.png');?>" alt="How it works!">
@@ -62,15 +62,15 @@
 			<img class = "featurette-image img-responsive" src="<?php echo site_url('/assets/img/event_modal/map_placeholder.jpg');?>" alt="#plan map!">
 		</div>
 		 <div class = "col-md-6">
-			<h2 class = "featurette-heading">Some other featurette!<span class = "text-muted"> Check it out!</span></h2>
-			 <p class="lead">Some other paragraph.</p>	
+			<h2 class = "featurette-heading">Integration!<span class = "text-muted"> Check it out!</span></h2>
+			 <p class="lead">We integrate with maps and APIs to make your life easier.</p>	
 		</div>
 	</div>
 	
 <hr class="featurette-divider">
   <div class="row featurette">
 		<div class = "col-md-6">
-			<h2 class = "featurette-heading">What would you like to do?<span class = "text-muted"> Sign up and find it!</span></h2>
+			<h2 class = "featurette-heading">What would you like to do?<span class = "text-muted"> Soon you will be able to sign up and find it!</span></h2>
 			 <p class="lead">A lot of cool things to do. Start searching, scheduling, sharing and enjoying!</p>
 		</div>
 		 <div class = "col-md-6">
