@@ -1,6 +1,38 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
 class Events_m extends MY_Model {
+	public $private_event_rules = array(
+		'name'=>array(
+			'rules' => 'trim|required|xss_clean'
+			),
+		'description'=>array(
+			'rules' => 'trim|required|xss_clean'
+			),
+		'typeId' =>array(
+		'rules'=>''
+			),
+		'datetime' =>array(
+			'rules'=>''
+			),
+		'venueId' =>array(
+			'rules'=>''
+			),
+		'stubhub_url' =>array(
+			'rules'=>''
+			),
+		'insertedon' =>array(
+			'rules'=>''
+			),
+		'insertedby' =>array(
+			'rules'=>''
+			),
+		'updatedon' =>array(
+			'rules'=>''
+			),
+		'updatedby' =>array(
+			'rules'=>''
+			),
+	);
 
 	public function get_all($options = array()){
 		// $offset = 0, $limit = 5, $name = NULL, $city_id = NULL, $user_id = NULL
@@ -110,5 +142,20 @@ class Events_m extends MY_Model {
 			->where('e.id', $id)
 			->get()
 			->row();
+	}
+	
+	public function get_new_private_event(){
+		$private_event = new stdClass();
+		$private_event->name = '';
+		$private_event->description = '';
+		$private_event->typeId = '';
+		$private_event->datetime = '';
+		$private_event->venueId = '';
+		$private_event->stubhub_url = '';
+		$private_event->insertedon = '';
+		$private_event->insertedby = '';
+		$private_event->updatedon = '';
+		$private_event->updatedby = '';
+		return $private_event;
 	}
 }

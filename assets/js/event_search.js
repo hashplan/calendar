@@ -4,12 +4,12 @@ $(function() {
 		format:'yyyy-mm-dd',
 		changeMonth: true,
 		changeYear: true,
-		showOtherMonths: true,
-		selectOtherMonths: true,
+		//showOtherMonths: true,
+		//selectOtherMonths: true,
 		//minDate: 0,
 		//maxDate: "+1M +10D",
-		showButtonPanel: true,
-		showOn: "focus",
+		//showButtonPanel: true,
+		//showOn: "focus",
 		onSelect: function(dateText) {
 			var dateParts = dateText.split('/');
 			$('#event-preselects').val('0');

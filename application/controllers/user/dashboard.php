@@ -42,5 +42,40 @@ class Dashboard extends MY_Controller {
 		$this->load->model('location_m');
 		$this->load->view('/event/cities', array('cities' => $this->location_m->get_cities()));
 	}
+	
+	public function private_event($id = NULL){
+		//retrieve an event or set a new one
+		if($id){
+			$this->data['private_event'] = $this->events_m->get_event_by_id($id);
+			count($this->data['private_event'])||$this->data['errors'][]='Private event could not be found';
+		}
+		else {
+			$this->data['private_event'] = $this->events_m->get_new_private_event();
+		}
+		
+		//set up the form
+		$private_event_rules = $this->events_m->rules;
+		$this->form_validation->set_rules($private_event_rules);
+		
+		//process the form
+		if($this->form_validation->run()==TRUE){
+			$data['name'] = $this->input->post('private_event_name');
+			$data['description'] = $this->input->post('private_event_description');
+			$data['typeId'] = '';
+			$data['datetime'] = $this->input->post('private_event_date');
+			$data['venueId'] = '';
+			$data['stubhub_url'] = '';
+			$data['insertedon'] = '';
+			$data['insertedby'] = $user->email;
+			$data['updatedon'] = '';
+			$data['updatedby'] = '';
+			$this->events_m->save($data,$id);
+			redirect($this->get_user_identifier() . '/dashboard/events');
+		}
+		
+		//load view
+		$this->data['subview']=$this->get_user_identifier().'/dashboard/private_event_form';
+		$this->load->view($this->get_user_identifier().'/_layout_modal',$this->data);
+	}
 
 }

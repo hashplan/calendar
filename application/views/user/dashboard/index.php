@@ -7,6 +7,7 @@
 			<hr>
 
 			<!-- Single button -->
+			<?php echo anchor('user/dashboard/private_event',"ADD EVENT",'class = "btn btn-primary btn-block" data-toggle = "modal" data-target = "#private_event_form"');?>
 			<?php echo anchor('user/dashboard/my_trash/'.$user->id,"<span class='glyphicon glyphicon-trash'> &nbsp</span>Trash",'class = "btn btn-default btn-block"');?>
 			<!--<div class="btn-group btn-block">
 		<button type="button" class="btn btn-primary dropdown-toggle btn-block" data-toggle="dropdown">Events <span class="caret"></span>
@@ -97,4 +98,8 @@
 <!--modal for event per metro-->
 <!-- Modal -->
 <div class="modal" id="event_cities" tabindex="-1" role="dialog" aria-labelledby="event_cities" aria-hidden="true">
+</div>
+<!--modal for private event form-->
+<!-- Modal -->
+<div class="modal" id="private_event_form" tabindex="-1" role="dialog" aria-labelledby="private_event_form" aria-hidden="true">
 </div>
