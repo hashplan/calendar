@@ -30,3 +30,10 @@ h1,h2,h3{font-family:georgia, serif;}
 #event_modal .nav-tabs {
 	margin-bottom: 10px;
 }
+
+#event_modal .map-holder {
+	min-height: 100px;
+	background-image: url('/assets/img/icons/spinner.gif');
+	background-repeat: no-repeat;
+	background-position: 45% 20px;
+}

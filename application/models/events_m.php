@@ -142,7 +142,7 @@ class Events_m extends MY_Model {
 			')
 			->from('events AS e')
 			->join('venues AS v', 'e.venueId = v.id', 'inner')
-			->join('cities AS c', 'v.cityId = c.id', 'inner')
+			->join('cities AS c', 'v.cityId = c.id', 'left')
 			->where('e.id', $id)
 			->get()
 			->row();

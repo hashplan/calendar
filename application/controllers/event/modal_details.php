@@ -13,7 +13,7 @@ class Modal_details extends MY_Controller {
 		$this->load->model('events_m');
 		$event = $this->events_m->get_event_by_id($event_id);
 		$this->data['event'] = $event;
-		$this->data['subview'] = 'event/index';
-		$this->load->view('_layout_modal', $this->data);
+		$this->data['google_maps_embed_api_key'] = $this->config->item('google_maps_embed_api_key');
+		$this->load->view('event/index', $this->data);
 	}
 }

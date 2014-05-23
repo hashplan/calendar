@@ -7,6 +7,10 @@
 			<div class="modal-title" id="myModalLabel"><?php echo html_escape(date('l, F d', strtotime($event->event_datetime))) ?></div>
 		</div>
 		<div class="modal-body">
+			<input type="hidden" class="google-maps-embed-api-key" value="<?php echo $google_maps_embed_api_key ?>"/>
+			<input type="hidden" class="event-name-hidden" value="<?php echo urlencode($event->event_name) ?>"/>
+			<input type="hidden" class="event-venue-hidden" value="<?php echo urlencode($event->venue_name) ?>"/>
+			<input type="hidden" class="event-city-hidden" value="<?php echo urlencode(($event->city_city ? $event->city_city : $event->venue_city)) ?>"/>
 			<ul class="nav nav-tabs">
 				<li class="active"><a href="#event" data-toggle="tab">Overview</a></li>
 				<li><a href="#venue" data-toggle="tab">Venue</a></li>
@@ -22,9 +26,6 @@
 							<h4><?php echo html_escape(date('H:i T', strtotime($event->event_datetime))) ?></h4>
 						</div>
 						<div class="col-md-6">
-							<input type="hidden" class="event-name-hidden" value="<?php echo urlencode($event->event_name) ?>"/>
-							<input type="hidden" class="event-venue-hidden" value="<?php echo urlencode($event->venue_name) ?>"/>
-							<input type="hidden" class="event-city-hidden" value="<?php echo urlencode($event->city_city) ?>"/>
 							<div class="map-holder"></div>
 						</div>
 					</div>
