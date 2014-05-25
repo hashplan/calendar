@@ -5,27 +5,9 @@
 				<img src="<?php echo site_url('/assets/img/users/Stas.jpg');?>", alt="Stas image" class = "img-responsive img-rounded">
 			</div>
 			<hr>
-
 			<!-- Single button -->
-			<?php echo anchor('user/dashboard/private_event',"ADD EVENT",'class = "btn btn-primary btn-block" data-toggle = "modal" data-target = "#private_event_form"');?>
+			<?php echo anchor('user/dashboard/user_added_event',"ADD EVENT",'class = "btn btn-primary btn-block" data-toggle = "modal" data-target = "#user_added_event_form"');?>
 			<?php echo anchor('user/dashboard/my_trash/'.$user->id,"<span class='glyphicon glyphicon-trash'> &nbsp</span>Trash",'class = "btn btn-default btn-block"');?>
-			<!--<div class="btn-group btn-block">
-		<button type="button" class="btn btn-primary dropdown-toggle btn-block" data-toggle="dropdown">Events <span class="caret"></span>
-		</button>
-		<ul class="dropdown-menu" role="menu">
-			<li><?php echo anchor('user/dashboard/my_plan/'.$user->id,"Favorites");?></li>
-			<li class="divider"></li>
-			<li><a href="#">Local Events (in neighborhood)</a></li>
-			<li><a href="#">Shared Events</a></li>
-			<li><a href="#">Sporting Events</a></li>
-			<li><a href="#">Music Events</a></li>
-			<li><a href="#">Theater Events</a></li>
-			<li><a href="#">Free Events</a></li>
-			<li class="divider"></li>
-			<li><a href="#">Sponsored Events</a></li>
-		</ul>
-		</div>
-		-->
 		</div>
 		<div class = "col-md-8">
 			<h4>Welcome <span class="text-muted"><?php echo (string)$user->first_name." " .(string)$user->last_name;?></span></h4>
@@ -101,5 +83,5 @@
 </div>
 <!--modal for private event form-->
 <!-- Modal -->
-<div class="modal" id="private_event_form" tabindex="-1" role="dialog" aria-labelledby="private_event_form" aria-hidden="true">
+<div class="modal" id="user_added_event_form" tabindex="-1" role="dialog" aria-labelledby="user_added_event_form" aria-hidden="true">
 </div>

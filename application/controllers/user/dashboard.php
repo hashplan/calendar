@@ -43,38 +43,45 @@ class Dashboard extends MY_Controller {
 		$this->load->view('/event/cities', array('cities' => $this->location_m->get_cities()));
 	}
 	
-	public function private_event($id = NULL){
+	public function user_added_event($id = NULL){
 		//retrieve an event or set a new one
 		if($id){
-			$this->data['private_event'] = $this->events_m->get_event_by_id($id);
-			count($this->data['private_event'])||$this->data['errors'][]='Private event could not be found';
+			$this->data['user_added_event'] = $this->events_m->get_event_by_id($id);
+			count($this->data['user_added_event'])||$this->data['errors'][]='Event could not be found';
 		}
 		else {
-			$this->data['private_event'] = $this->events_m->get_new_private_event();
+			$this->data['user_added_event'] = $this->events_m->get_new_user_added_event();
 		}
 		
 		//set up the form
-		$private_event_rules = $this->events_m->rules;
-		$this->form_validation->set_rules($private_event_rules);
-		
+		$this->form_validation->set_rules('user_added_event_name', 'Event Name','trim|required|xss_clean');
+		$this->form_validation->set_rules('user_added_event_address', 'Event Address','trim|required|xss_clean');
+		$this->form_validation->set_rules('user_added_event_location', 'Event Location','trim|required|xss_clean');
+		$this->form_validation->set_rules('user_added_event_date', 'Event Date','required');
+		$this->form_validation->set_rules('user_added_event_time', 'Event Time','required');
+		$this->form_validation->set_rules('user_added_event_description', 'Event Description','trim|required|xss_clean');
+		$this->form_validation->set_rules('user_added_event_name', 'Event Name','trim|required|xss_clean');
+		$this->form_validation->set_rules('user_added_event_name', 'Event Name','trim|required|xss_clean');
+
 		//process the form
 		if($this->form_validation->run()==TRUE){
-			$data['name'] = $this->input->post('private_event_name');
-			$data['description'] = $this->input->post('private_event_description');
-			$data['typeId'] = '';
-			$data['datetime'] = $this->input->post('private_event_date');
-			$data['venueId'] = '';
-			$data['stubhub_url'] = '';
-			$data['insertedon'] = '';
-			$data['insertedby'] = $user->email;
-			$data['updatedon'] = '';
-			$data['updatedby'] = '';
-			$this->events_m->save($data,$id);
+			$data['form_post'] = $this->events_m->array_from_post(array( //array_from_post set in core/my_model
+			'user_added_event_name',
+			'user_added_event_address',
+			'user_added_event_location',
+			'user_added_event_date',
+			'user_added_event_time',
+			'user_added_event_description'
+			));
+			
+			$data['table_name'] = 'user_added_event';
+			$data['insertedby'] = $user_id = $this->ion_auth->user()->row()->id;
+			$this->events_m->save_user_added_event($data,$id);
 			redirect($this->get_user_identifier() . '/dashboard/events');
 		}
 		
 		//load view
-		$this->data['subview']=$this->get_user_identifier().'/dashboard/private_event_form';
+		$this->data['subview']=$this->get_user_identifier().'/dashboard/user_added_event_form';
 		$this->load->view($this->get_user_identifier().'/_layout_modal',$this->data);
 	}
 

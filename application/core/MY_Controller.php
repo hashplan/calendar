@@ -38,7 +38,8 @@ class MY_Controller extends CI_Controller {
 
 	public function my_plan(){
 	$user_id = $this->ion_auth->user()->row()->id;
-	$this->data['events']=$this->events_m->get($user_id);
+	$this->load->model('events_m');
+	$this->data['events']=$this->events_m->get_all($user_id);
 	$this->data['cal'] = $this->calendar();
 	$this->data['subview']=$this->get_user_identifier().'/dashboard/index';
 	$this->load->view($this->get_user_identifier().'/_layout_main',$this->data);

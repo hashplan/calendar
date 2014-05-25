@@ -24,4 +24,11 @@ class MY_Model extends CI_Model {
 		$this->db->insert('user_events', $data);
 	}		
 
+	public function array_from_post($fields){
+		$data = array();
+		foreach($fields as $field){
+			$data[$field]=$this->input->post($field);
+		}
+		return $data;
+	}
 }

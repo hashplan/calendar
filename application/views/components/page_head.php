@@ -32,7 +32,7 @@
 	<script src="<?php echo site_url('assets/js/tooltip_for_event_to_plan.js');?>"></script>
 	<script type="text/javascript">
 		tinymce.init({
-			selector: "textarea",
+			selector: "input_variable_here",
 			plugins: [
 				"advlist autolink autosave link image lists charmap print preview hr anchor pagebreak spellchecker",
 				"searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking",
