@@ -47,3 +47,39 @@ h1,h2,h3{font-family:georgia, serif;}
 	background-repeat: no-repeat;
 	background-position: 45% 20px;
 }
+
+#event_modal .yelp-content-holder .rating,
+#event_modal .yelp-content-holder .reviews-count {
+	display: inline-block;
+}
+
+
+#event_modal .yelp-content-holder .categories ul,
+#event_modal .yelp-content-holder .categories ul li {
+	padding: 0;
+	margin: 0;
+	list-style-type: none;
+}
+
+#event_modal .yelp-content-holder .image {
+	margin-bottom: 15px;
+}
+
+#event_modal .yelp-content-holder .image img {
+	width: 100px;
+	height: 100px;
+}
+
+#event_modal .yelp-content-holder .snippet img {
+	width: 50px;
+	height: 50px;
+	float: left;
+	margin-right: 10px;
+}
+
+#event_modal .yelp-content-holder .snippet p {
+	float: left;
+	display: inline-block;
+	margin-bottom: 0;
+	width: 85%;
+}

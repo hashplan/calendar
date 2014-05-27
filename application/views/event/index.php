@@ -31,30 +31,8 @@
 					</div>
 				</div>
 				<div class="tab-pane" id="venue">
-					<div class="row">
-						<div class="col-md-2">
-							<img src="<?php echo site_url('/assets/img/event_modal/yelp_logo.jpg'); ?>", alt="Yelp
-							logo">
-						</div>
-						<div class="col-md-6">
-							<p>Powered by Yelp</p>
-						</div>
+					<div class="yelp-content-holder empty">
 					</div>
-					<br>
-
-					<div class="row">
-						<div class="col-md-6" style="background-color:yellow">
-							Yelp Review and info
-						</div>
-						<div class="col-md-6" style="background-color:#F8F8F8">
-							Images of the venue
-						</div>
-					</div>
-					<hr>
-					<ul>
-						<li>Some Info</li>
-						<li>More Info</li>
-					</ul>
 				</div>
 				<div class="tab-pane" id="attendees">
 					<ol>
