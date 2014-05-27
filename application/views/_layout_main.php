@@ -1,5 +1,6 @@
 <?php $this->load->view('components/page_head');?>
 <!--<h1> <?php echo anchor('',strtoupper(config_item('site_name'))); ?> Search, Schedule, Share, Enjoy</h1>-->
+<body onload="startTime()">
 <div class="navbar navbar-default navbar-fixed-top" role="navigation">
 	<div class = "container-fluid">
 		<div class="navbar-header">
@@ -47,4 +48,5 @@
 <!-- Modal -->
 <div class="modal" id="create_user_modal" tabindex="-1" role="dialog" aria-labelledby="create_user_modal" aria-hidden="true">
 </div>
+</body>
  <?php $this->load->view('components/page_tail');?>

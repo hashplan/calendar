@@ -8,7 +8,7 @@ class MY_Controller extends CI_Controller {
 		$identifier = 'user';
 		$this->data['errors']=array();
 		//$this->data['site_name']=config_item('site_name');
-		$this->data['meta_title']='# Plan';
+		//$this->data['meta_title']='# Plan';
 		$this->data['page_class'] = $this->page_class;
 		$this->load->library('ion_auth');
 		$this->load->library('form_validation');

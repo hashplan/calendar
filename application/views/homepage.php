@@ -1,5 +1,10 @@
 <!--Main column-->
-  <!-- Carousel
+<div class="jumbotron homepage_timer">
+	<div class = "container col-md-8 col-md-offset-3">
+		<p>It is <span id = "homepage_timer"></span>, what are you going to do?</p>
+	</div>
+</div>
+ <!-- Carousel
     ================================================== -->
     <div id="homepage-slider" class="carousel slide" data-ride="carousel">
       <!-- Indicators -->
@@ -10,7 +15,7 @@
       </ol> 
       <div class="carousel-inner">
         <div class="item active">
-          <img src="<?php echo site_url('/assets/img/logo/hash.png');?>" alt="I could really save!">
+          <img src="<?php echo site_url('/assets/img/logo/plan.png');?>" alt="I could really save!">
           <div class="container">
             <div class="carousel-caption">
               <h4>We are coming soon!</h4>
@@ -20,7 +25,7 @@
           </div>
         </div>
         <div class="item">
-          <img src="<?php echo site_url('/assets/img/logo/hash.png');?>" alt="How it works!">
+          <img src="<?php echo site_url('/assets/img/logo/plan.png');?>" alt="How it works!">
           <div class="container">
             <div class="carousel-caption">
               <h4>We will be live in a jiffy!</h4>
@@ -30,7 +35,7 @@
           </div>
         </div>
         <div class="item">
-          <img src="<?php echo site_url('/assets/img/logo/hash.png');?>" alt="Get started!">
+          <img src="<?php echo site_url('/assets/img/logo/plan.png');?>" alt="Get started!">
           <div class="container">
             <div class="carousel-caption">
               <h4>Just a bit longer!</h4>
@@ -43,7 +48,6 @@
       <a class="left carousel-control" href="#homepage-slider" data-slide="prev"><span class="glyphicon glyphicon-chevron-left"></span></a>
       <a class="right carousel-control" href="#homepage-slider" data-slide="next"><span class="glyphicon glyphicon-chevron-right"></span></a>
     </div><!-- /.carousel -->
-	
 	<!-- START THE FEATURETTES -->
 <hr class="featurette-divider">
   <div class="row featurette">

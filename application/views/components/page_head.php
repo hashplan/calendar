@@ -4,8 +4,10 @@
 	<meta charset = "UTF-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<title><?php echo $meta_title; ?></title>
-
+	<title><?php echo config_item('meta_title'); ?></title>
+    <link rel="icon" type="image/ico" href="<?php echo site_url('assets/img/logo/h.png');?>"/>
+	<meta name="keywords" content="Events, social, calendar, plan, share, enjoy, music, sports, broadway, to do, comedy">
+	<meta name="description" content="Hashplan is a social application empowering users to search for events in their local community, schedule them on their plans and share with friends.">
 	<script type="text/javascript">
 		var base_url = "<?=base_url('/')?>";
 	</script>
@@ -47,4 +49,21 @@
 			toolbar_items_size: 'small',
 		});
 	</script>
+	<script>
+		function startTime() {
+			var today=new Date();
+			var h=today.getHours();
+			var m=today.getMinutes();
+			var s=today.getSeconds();
+			m = checkTime(m);
+			s = checkTime(s);
+			document.getElementById('homepage_timer').innerHTML = h+":"+m+":"+s;
+			var t = setTimeout(function(){startTime()},500);
+		}
+
+		function checkTime(i) {
+			if (i<10) {i = "0" + i};  // add zero in front of numbers < 10
+			return i;
+		}
+</script>
 </head>

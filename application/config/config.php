@@ -25,8 +25,8 @@ function __autoload($classname){
 */
 
 $config['base_url'] = (((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == "on") or (isset($_SERVER['REDIRECT_HTTPS']) && $_SERVER['REDIRECT_HTTPS'] == "on")) ? "https" : "http");
-//$config['base_url'] .= "://".$_SERVER['HTTP_HOST'];
-$config['base_url'] .= "://localhost/calendar";
+$config['base_url'] .= "://".$_SERVER['HTTP_HOST'];
+//$config['base_url'] .= "://localhost/calendar";
 
 /*
 |--------------------------------------------------------------------------
