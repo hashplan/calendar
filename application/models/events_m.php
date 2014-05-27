@@ -117,18 +117,64 @@ class Events_m extends MY_Model {
 	}
 	
 	public function get_new_user_added_event(){
-	$user_added_event = new stdClass();
-	$user_added_event->name = '';
-	$user_added_event->description = '';
-	$user_added_event->typeId = '';
-	$user_added_event->datetime = '';
-	$user_added_event->venueId = '';
-	$user_added_event->stubhub_url = '';
-	$user_added_event->insertedon = '';
-	$user_added_event->insertedby = '';
-	$user_added_event->updatedon = '';
-	$user_added_event->updatedby = '';
-	return $user_added_event;
+		$user_added_event = new stdClass();
+		$user_added_event->name = '';
+		$user_added_event->description = '';
+		$user_added_event->typeId = '';
+		$user_added_event->datetime = '';
+		$user_added_event->venueId = '';
+		$user_added_event->stubhub_url = '';
+		$user_added_event->insertedon = '';
+		$user_added_event->insertedby = '';
+		$user_added_event->updatedon = '';
+		$user_added_event->updatedby = '';
+		return $user_added_event;
+	}
+
+	public function get_favourite_events($event_id = NULL, $user_id = NULL) {
+		$user_id_is_correct = $user_id !== NULL && is_numeric($user_id) && $user_id;
+		if (!$user_id_is_correct) {
+			$this->load->library('Ion_auth');
+			$user_id = $this->ion_auth->user()->row()->id;;
+		}
+
+		$this->db->from('user_events');
+
+		$event_id_is_correct = $event_id !== NULL && is_numeric($event_id) && $event_id;
+		if ($event_id_is_correct) {
+			$this->db->where('eventId', $event_id);
+		}
+
+		$this->db->where('userId', $user_id);
+
+		return $this->db->get()->result();
+	}
+
+	public function add_to_favourites($event_id, $user_id = NULL) {
+		$event_id_is_correct = $event_id !== NULL && is_numeric($event_id) && $event_id;
+
+		$user_id_is_correct = $user_id !== NULL && is_numeric($user_id) && $user_id;
+		if (!$user_id_is_correct) {
+			$this->load->library('Ion_auth');
+			$user_id = $this->ion_auth->user()->row()->id;
+		}
+
+		$user_has_event = count($this->get_favourite_events($event_id, $user_id)) === 1;
+
+		if ($user_has_event) {
+		}
+		else if (!$user_has_event && $event_id_is_correct) {
+			$this->db->insert('user_events', array(
+				'id' => NULL,
+				'userId' => $user_id,
+				'eventId' => $event_id,
+				'deleted' => 0,
+				'insertedon' => date('Y-m-d H:i:s'),
+				'insertedby' => NULL,
+				'updatedon' => date('Y-m-d H:i:s'),
+				'updatedby' => NULL,
+			));
+		}
 	}
 	
 	

@@ -23,13 +23,13 @@ $(function() {
 		$(this).removeData('bs.modal');
 	})
 
-	//
+	// on open venue tab - fetch info from yelp
 	$('#event_modal').on('shown.bs.tab', 'a[href="#venue"]', function() {
 		if ($('.yelp-content-holder').hasClass('empty')) {
 			var venueName = $('#event_modal .event-venue-hidden').val();
 			var cityName = $('#event_modal .event-city-hidden').val();
 
-			$.ajax('/event/modal_details/yelp', {
+			$.ajax('/event/yelp', {
 				type: 'POST',
 				dataType: 'html',
 				data: { venue: venueName, city: cityName },
@@ -38,5 +38,15 @@ $(function() {
 				}
 			});
 		}
+	});
+
+	// add to favourites
+	$('#event_modal').on('click', '.button-add-to-favourites', function(e) {
+		var eventId = $('#event_modal .event-id-hidden').val();
+		$.ajax('/event/add_to_favourites/'+ eventId, {
+			type: 'POST',
+//			dataType: 'json',
+			dataType: 'text'
+		});
 	});
 });

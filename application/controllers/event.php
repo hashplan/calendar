@@ -1,5 +1,6 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
-class Modal_details extends MY_Controller {
+
+class Event extends MY_Controller {
 
 	public function __construct(){
 		parent::__construct();
@@ -9,11 +10,21 @@ class Modal_details extends MY_Controller {
 		$this->data['user'] = $this->ion_auth->user()->row();
 	}
 
-	public function index($event_id) {
+	public function add_to_favourites($event_id = NULL) {
+		$event_id_is_correct = $event_id !== NULL && is_numeric($event_id) && $event_id;
+		if (!$event_id_is_correct) {
+			return;
+		}
+		$this->load->model('events_m');
+		$this->events_m->add_to_favourites($event_id);
+	}
+
+	public function modal_details($event_id) {
 		$this->load->model('events_m');
 		$event = $this->events_m->get_event_by_id($event_id);
 		$this->data['event'] = $event;
 		$this->data['google_maps_embed_api_key'] = $this->config->item('google_maps_embed_api_key');
+		$this->data['is_favourite'] = count($this->events_m->get_favourite_events($event->event_id)) === 1;
 		$this->load->view('event/index', $this->data);
 	}
 
