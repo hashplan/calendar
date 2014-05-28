@@ -48,5 +48,9 @@
 <!-- Modal -->
 <div class="modal" id="create_user_modal" tabindex="-1" role="dialog" aria-labelledby="create_user_modal" aria-hidden="true">
 </div>
+<!--modal for contact form-->
+<!-- Modal -->
+<div class="modal" id="contact_form" tabindex="-1" role="dialog" aria-labelledby="contact_form" aria-hidden="true">
+</div>
 </body>
  <?php $this->load->view('components/page_tail');?>

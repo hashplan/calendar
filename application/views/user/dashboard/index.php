@@ -19,12 +19,6 @@
 				<form class="col-md-12">
 					<input type="text" id = "event_list" class="form-control" placeholder="Search for events...">
 				</form>
-
-				<!--<div class = "col-md-3">
-				<?php echo anchor('user/dashboard','<span class="glyphicon glyphicon-list-alt"> Full List</span>');?>
-				<?php echo anchor('user/dashboard/calendar','<span class="glyphicon glyphicon-calendar"> Calendar</span>');?>
-			</div>
-			-->
 			</div>
 			<br>
 			<div class="row">
@@ -38,7 +32,7 @@
 					</select>
 				</div>
 				<div class="col-md-4">
-					<label for="event-preselects">Preselects</label>
+					<label for="event-preselects">Day Preselects</label>
 					<select name="preselects" id="event-preselects" class="form-control">
 						<option value="0">Doesn't matter</option>
 						<option value="7">Next 7 days</option>
@@ -84,4 +78,8 @@
 <!--modal for private event form-->
 <!-- Modal -->
 <div class="modal" id="user_added_event_form" tabindex="-1" role="dialog" aria-labelledby="user_added_event_form" aria-hidden="true">
+</div>
+<!--modal for contact form-->
+<!-- Modal -->
+<div class="modal" id="contact_form" tabindex="-1" role="dialog" aria-labelledby="contact_form" aria-hidden="true">
 </div>

@@ -83,3 +83,8 @@ h1,h2,h3{font-family:georgia, serif;}
 	margin-bottom: 0;
 	width: 85%;
 }
+
+.form_error{
+	color: red;
+	font-style: italic;
+}

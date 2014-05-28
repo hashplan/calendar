@@ -5,10 +5,10 @@ class Migration extends CI_Controller{
 		}
 
 	public function index(){
-		var_dump($this->db);
+		/*var_dump($this->db);
 		$root=dirname(__FILE__);
 		var_dump($root);
-
+*/
 		$this->load->library('migration');
 		//$this->migration->version(4);
 		if ( !$this->migration->current()) {

@@ -5,7 +5,7 @@
 		<li><?php echo anchor('page/about','About');?></li>
 		<li><?php echo anchor('page/howitworks','How it Works');?></li>
 		<li><?php echo anchor('page/faq','FAQ');?></li>
-		<li><?php echo anchor('page/contact','Contact');?></li>
+		<li><?php echo anchor('email/contact','Contact', 'data-toggle="modal" data-target="#contact_form"');?></li>
 	  </ul>
     
 	<ul class = "nav navbar-nav navbar-right">

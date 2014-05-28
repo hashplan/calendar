@@ -60,8 +60,6 @@ class Dashboard extends MY_Controller {
 		$this->form_validation->set_rules('user_added_event_date', 'Event Date','required');
 		$this->form_validation->set_rules('user_added_event_time', 'Event Time','required');
 		$this->form_validation->set_rules('user_added_event_description', 'Event Description','trim|required|xss_clean');
-		$this->form_validation->set_rules('user_added_event_name', 'Event Name','trim|required|xss_clean');
-		$this->form_validation->set_rules('user_added_event_name', 'Event Name','trim|required|xss_clean');
 
 		//process the form
 		if($this->form_validation->run()==TRUE){
