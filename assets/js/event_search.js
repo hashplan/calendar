@@ -35,13 +35,11 @@ $(function() {
 				if ($('#event-categories').val() != 0) {
 					data.category = $('#event-categories').val();
 				}
-				if ($('.no-events-row').length > 0) return;
 				$.ajax(base_url + 'user/dashboard/events_list', {
 					type: 'POST',
 					data: data,
 					success: function(response) {
 						$(response).appendTo('#search_result');
-						$('.no-events-row').not(':first').remove();
 					}
 				});
 			}
@@ -89,6 +87,12 @@ $(function() {
 			data: data,
 			success: function(response) {
 				$('#search_result').html(response);
+				if (response.trim().length === 0) {
+					$('.no-events-row').addClass('shown').removeClass('hidden');
+				}
+				else {
+					$('.no-events-row').addClass('hidden').removeClass('shown');
+				}
 			}
 		});
 	}

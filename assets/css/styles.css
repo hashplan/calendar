@@ -33,6 +33,14 @@ h1,h2,h3{font-family:georgia, serif;}
 	text-transform: uppercase;
 }
 
+.no-events-row.shown {
+	display: block;
+}
+
+.no-events-row.hidden {
+	display: none;
+}
+
 #event_modal iframe {
 	width: 100%;
 }

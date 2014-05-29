@@ -52,6 +52,15 @@
 					<?php echo $events ?>
 				</div>
 			</div>
+			<div class="row no-events-row <?php echo ($has_events ? 'hidden' : 'shown') ?>">
+				<div class="col-md-12">
+					<div class="panel panel-warning">
+						<div class="panel-heading">
+							No events found, try going to "All Events" and adding something
+						</div>
+					</div>
+				</div>
+			</div>
 		</div>
 		<div class = "col-md-2">
 			<h4>Events of Interest</h4>

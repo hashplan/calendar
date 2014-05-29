@@ -15,13 +15,15 @@ class Dashboard extends MY_Controller {
 
 	public function index(){
 		$this->load->model('categories_m');
+		$events = $this->events_m->get_all();
 		$events_data = array(
-			'events' => $this->events_m->get_all(),
+			'events' => $events,
 			'categories' => $this->categories_m->get_top_level_categories(),
 		);
 		$this->data['cal'] = $this->calendar();
 		$this->data['subview']=$this->get_user_identifier().'/dashboard/index';
 		$this->data['events'] = $this->load->view($this->get_user_identifier() . '/dashboard/events', $events_data, true);
+		$this->data['has_events'] = count($events) > 0;
 		$this->load->view($this->get_user_identifier().'/_layout_main',$this->data);
 	}
 
