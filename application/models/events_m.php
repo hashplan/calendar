@@ -138,7 +138,7 @@ class Events_m extends MY_Model {
 			$user_id = $this->ion_auth->user()->row()->id;;
 		}
 
-		$this->db->from('user_events');
+		$this->db->from('events_favourited');
 
 		$event_id_is_correct = $event_id !== NULL && is_numeric($event_id) && $event_id;
 		if ($event_id_is_correct) {
@@ -164,15 +164,9 @@ class Events_m extends MY_Model {
 		if ($user_has_event) {
 		}
 		else if (!$user_has_event && $event_id_is_correct) {
-			$this->db->insert('user_events', array(
-				'id' => NULL,
+			$this->db->insert('events_favourited', array(
 				'userId' => $user_id,
 				'eventId' => $event_id,
-				'deleted' => 0,
-				'insertedon' => date('Y-m-d H:i:s'),
-				'insertedby' => NULL,
-				'updatedon' => date('Y-m-d H:i:s'),
-				'updatedby' => NULL,
 			));
 		}
 	}
