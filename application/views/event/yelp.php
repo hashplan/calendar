@@ -15,20 +15,32 @@
 <div class="row">
 	<div class="col-md-12 categories">
 		<ul>
-			<?php foreach ($business['categories'] as $category) { ?>
-				<li><a href="/<?php echo html_escape($category[1]) ?>"><?php echo html_escape($category[0]) ?></a></li>
-			<?php } ?>
+			<?php if (!empty($business['categories'])) {
+				foreach ($business['categories'] as $category) { ?>
+					<li><a href="/<?php echo html_escape($category[1]) ?>"><?php echo html_escape($category[0]) ?></a></li>
+				<?php }
+			} ?>
 		</ul>
 	</div>
 </div>
 <div class="row">
 	<div class="col-md-12 image">
-		<img src="<?php echo $business['image_url'] ?>"/>
+		<?php if (!empty($business['image_url'])) { ?>
+			<img src="<?php echo $business['image_url'] ?>"/>
+		<?php } else { ?>
+			<img src="<?php echo base_url('assets/img/icons/no-image-100.png') ?>"/>
+		<?php } ?>
 	</div>
 </div>
 <div class="row">
 	<div class="col-md-12 snippet">
-		<img src="<?php echo $business['snippet_image_url'] ?>"/>
-		<p><?php echo html_escape($business['snippet_text']) ?></p>
+		<?php if (!empty($business['snippet_image_url'])) { ?>
+			<img src="<?php echo $business['snippet_image_url'] ?>"/>
+		<?php } else { ?>
+			<img src="<?php echo base_url('assets/img/icons/no-image-100.png') ?>"/>
+		<?php }
+		if (!empty($business['snippet_text'])) { ?>
+			<p><?php echo html_escape($business['snippet_text']) ?></p>
+		<?php } ?>
 	</div>
 </div>
