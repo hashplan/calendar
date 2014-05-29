@@ -24,7 +24,7 @@ if(count($events)) {
 				<!--add to events for user id a specific event id-->
 				<div class="btn-group btn-group-xs event-buttons-wrapper">
 					<?php echo anchor('user/dashboard/add_event_to_user/'.$event->id, '<i class="glyphicon glyphicon-plus"></i>', array('title' => 'Add to my Events', 'class' => 'btn btn-default')).
-						anchor('user/dashboard/delete_event_from_user/'.$event->id, '<i class="glyphicon glyphicon-trash"></i>', array('title' => 'Delete Event', 'class' => 'btn btn-default'));?>
+						anchor('event/delete/'.$event->id, '<i class="glyphicon glyphicon-trash"></i>', array('title' => 'Delete Event', 'class' => 'btn btn-default'));?>
 				</div>
 			</div>
 		</div>

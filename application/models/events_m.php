@@ -16,6 +16,7 @@ class Events_m extends MY_Model {
 			->select('e.id, e.name, e.datetime, DATE(e.datetime) AS date_only')
 			->from('events AS e')
 			->join('venues AS v', 'e.venueId = v.id', 'inner')
+			->where('NOT EXISTS (SELECT 1 FROM events_deleted ed WHERE e.id = ed.eventId)', '', FALSE)
 			->order_by('e.datetime')
 			->limit($options['limit'], $options['offset']);
 
@@ -150,6 +151,25 @@ class Events_m extends MY_Model {
 		return $this->db->get()->result();
 	}
 
+	public function get_deleted_events($event_id = NULL, $user_id = NULL) {
+		$user_id_is_correct = $user_id !== NULL && is_numeric($user_id) && $user_id;
+		if (!$user_id_is_correct) {
+			$this->load->library('Ion_auth');
+			$user_id = $this->ion_auth->user()->row()->id;;
+		}
+
+		$this->db->from('events_deleted');
+
+		$event_id_is_correct = $event_id !== NULL && is_numeric($event_id) && $event_id;
+		if ($event_id_is_correct) {
+			$this->db->where('eventId', $event_id);
+		}
+
+		$this->db->where('userId', $user_id);
+
+		return $this->db->get()->result();
+	}
+
 	public function add_to_favourites($event_id, $user_id = NULL) {
 		$event_id_is_correct = $event_id !== NULL && is_numeric($event_id) && $event_id;
 
@@ -159,12 +179,33 @@ class Events_m extends MY_Model {
 			$user_id = $this->ion_auth->user()->row()->id;
 		}
 
-		$user_has_event = count($this->get_favourite_events($event_id, $user_id)) === 1;
+		$already_favourite = count($this->get_favourite_events($event_id, $user_id)) === 1;
 
-		if ($user_has_event) {
+		if ($already_favourite) {
 		}
-		else if (!$user_has_event && $event_id_is_correct) {
+		else if (!$already_favourite && $event_id_is_correct) {
 			$this->db->insert('events_favourited', array(
+				'userId' => $user_id,
+				'eventId' => $event_id,
+			));
+		}
+	}
+
+	public function delete($event_id, $user_id = NULL) {
+		$event_id_is_correct = $event_id !== NULL && is_numeric($event_id) && $event_id;
+
+		$user_id_is_correct = $user_id !== NULL && is_numeric($user_id) && $user_id;
+		if (!$user_id_is_correct) {
+			$this->load->library('Ion_auth');
+			$user_id = $this->ion_auth->user()->row()->id;
+		}
+
+		$already_deleted = count($this->get_deleted_events($event_id, $user_id)) === 1;
+
+		if ($already_deleted) {
+		}
+		else if (!$already_deleted && $event_id_is_correct) {
+			$this->db->insert('events_deleted', array(
 				'userId' => $user_id,
 				'eventId' => $event_id,
 			));

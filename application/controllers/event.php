@@ -19,6 +19,16 @@ class Event extends MY_Controller {
 		$this->events_m->add_to_favourites($event_id);
 	}
 
+	public function delete($event_id = NULL) {
+		$event_id_is_correct = $event_id !== NULL && is_numeric($event_id) && $event_id;
+		if (!$event_id_is_correct) {
+			return;
+		}
+		$this->load->model('events_m');
+		$this->events_m->delete($event_id);
+		redirect(base_url('user/dashboard'));
+	}
+
 	public function modal_details($event_id) {
 		$this->load->model('events_m');
 		$event = $this->events_m->get_event_by_id($event_id);
