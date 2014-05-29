@@ -48,15 +48,13 @@ class Events_m extends MY_Model {
 			$date_range = array();
 			if ($options['preselects'] == 'weekend') {
 				$date_range['start'] = date('Y-m-d H:i:s', strtotime('next Saturday'));
-				$date_range['end'] = date('Y-m-d H:i:s', strtotime('next Monday'));
+				$date_range['end'] = date('Y-m-d H:i:s', strtotime('next Sunday'));
+				$date_range['end'] = str_replace('00:00:00', '23:59:59', $date_range['end']);
 			}
 			else if (is_numeric($options['preselects'])) {
-				// example, preselects = 7 (next seven days)
-				// today is 15.05.2014 12:12:12
-				// start = tomorrow = 16.05.2014 00:00:00
-				// end = 7 + 1 (today) + 1 (for next day first second) = 24.05.2014 00:00:00
 				$date_range['start'] = date('Y-m-d H:i:s', strtotime('tomorrow'));
-				$date_range['end'] = date('Y-m-d H:i:s', strtotime('+'. ($options['preselects'] + 2) .' days midnight'));
+				$date_range['end'] = date('Y-m-d H:i:s', strtotime('+'. ($options['preselects']) .' days midnight'));
+				$date_range['end'] = str_replace('00:00:00', '23:59:59', $date_range['end']);
 			}
 		}
 
