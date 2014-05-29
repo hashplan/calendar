@@ -11,7 +11,7 @@
 		</div>
 		<div class = "col-md-8">
 			<h4>Welcome <span class="text-muted"><?php echo (string)$user->first_name." " .(string)$user->last_name;?></span></h4>
-			<div class="city-id" style="display:none">1</div>
+			<div class="city-id" style="display:none"></div>
 			<h5 class="city-name"></h5>
 			<p><?php echo anchor('user/dashboard/choose_city','Change Location<span class="caret"></span>', 'data-toggle="modal" data-target="#event_cities"');?></p>
 			<h5>Upcoming Events:</h5>
@@ -43,10 +43,7 @@
 				<div class="col-md-4">
 					<input type="hidden" name="specific_date" id="date-hidden"/>
 					<label for="event-date">Choose specific date</label>
-					<button type="button" class="btn btn-default dropdown-toggle" id="event-date" data-toggle="dropdown">Choose Date <span class="caret"></span></button>
-					<ul class="dropdown-menu" role="menu">
-						<div class="datepicker"></div>
-					</ul>
+					<input type="text" class="form-control" id="event-date"/>
 				</div>
 			</div>
 			<hr>

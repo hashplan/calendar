@@ -1,19 +1,11 @@
 $(function() {
 	// datepicker
-	$('.page-dashboard .datepicker').datepicker({
-		format:'yyyy-mm-dd',
+	$('.page-dashboard #event-date').datepicker({
+		dateFormat:'yy-mm-dd',
 		changeMonth: true,
 		changeYear: true,
-		//showOtherMonths: true,
-		//selectOtherMonths: true,
-		//minDate: 0,
-		//maxDate: "+1M +10D",
-		//showButtonPanel: true,
-		//showOn: "focus",
 		onSelect: function(dateText) {
-			var dateParts = dateText.split('/');
 			$('#event-preselects').val('0');
-			$('#date-hidden').val(dateParts[2] +'-'+ dateParts[0] +'-'+ dateParts[1]);
 			fetchEvents();
 		}
 	});
@@ -37,8 +29,8 @@ $(function() {
 				if ($('#event-preselects').val() != 0) {
 					data.preselects = $('#event-preselects').val();
 				}
-				if ($('#date-hidden').val().length > 0) {
-					data.specific_date = $('#date-hidden').val();
+				if ($('#event-date').val().length > 0) {
+					data.specific_date = $('#event-date').val();
 				}
 				if ($('#event-categories').val() != 0) {
 					data.category = $('#event-categories').val();
@@ -69,7 +61,7 @@ $(function() {
 
 	// filter events by date presets (next 3 days, next 7 days)
 	$('#event-preselects').on('change', function() {
-		$('#date-hidden').val('');
+		$('#event-date').val('');
 		fetchEvents();
 	});
 
@@ -84,8 +76,8 @@ $(function() {
 		if ($('#event-preselects').val() != 0) {
 			data.preselects = $('#event-preselects').val();
 		}
-		if ($('#date-hidden').val().length > 0) {
-			data.specific_date = $('#date-hidden').val();
+		if ($('#event-date').val().length > 0) {
+			data.specific_date = $('#event-date').val();
 		}
 
 		if ($('#event-categories').val() != 0) {

@@ -13,10 +13,8 @@
 	</script>
 	<!-- Bootstrap -->
 	<link href="<?php echo site_url('assets/css/bootstrap.min.css');?>" rel="stylesheet">
-	<link href="<?php echo site_url('assets/css/datepicker.css');?>" rel="stylesheet">
 	<link href="<?php echo site_url('assets/css/styles.css');?>" rel="stylesheet">
-	<!--<link href="<?php echo site_url('assets/css/css/smoothness/jquery-ui-1.10.4.custom.min.css');?>" rel="stylesheet">-->
-	<!--<link href="http://code.jquery.com/ui/1.10.2/themes/smoothness/jquery-ui.css" rel="Stylesheet"></link>-->
+	<link href="<?php echo site_url('assets/css/css/smoothness/jquery-ui-1.10.4.custom.min.css');?>" rel="stylesheet">
 
 	<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries
     WARNING: Respond.js doesn't work if you view the page via file:// 
@@ -46,7 +44,7 @@
 			toolbar3: "table | hr removeformat | subscript superscript | charmap emoticons | print fullscreen | ltr rtl | spellchecker | visualchars visualblocks nonbreaking template pagebreak restoredraft",
 
 			menubar: true,
-			toolbar_items_size: 'small',
+			toolbar_items_size: 'small'
 		});
 	</script>
 	<script>
