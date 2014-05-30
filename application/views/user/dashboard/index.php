@@ -7,7 +7,8 @@
 			<hr>
 			<!-- Single button -->
 			<?php echo anchor('user/dashboard/user_added_event',"ADD EVENT",'class = "btn btn-primary btn-block" data-toggle = "modal" data-target = "#user_added_event_form"');?>
-			<?php echo anchor('user/dashboard/my_trash/'.$user->id,"<span class='glyphicon glyphicon-trash'> &nbsp</span>Trash",'class = "btn btn-default btn-block"');?>
+			<?php echo anchor('user/dashboard/favourite',"<span class='glyphicon glyphicon-thumbs-up'> &nbsp</span>Favourites",'class = "btn btn-default btn-block button-favourites"');?>
+			<?php echo anchor('user/dashboard/trash',"<span class='glyphicon glyphicon-trash'> &nbsp</span>Trash",'class = "btn btn-default btn-block button-trash"');?>
 		</div>
 		<div class = "col-md-8">
 			<h4>Welcome <span class="text-muted"><?php echo (string)$user->first_name." " .(string)$user->last_name;?></span></h4>
@@ -15,6 +16,7 @@
 			<h5 class="city-name"></h5>
 			<p><?php echo anchor('user/dashboard/choose_city','Change Location<span class="caret"></span>', 'data-toggle="modal" data-target="#event_cities"');?></p>
 			<h5>Upcoming Events:</h5>
+			<input type="hidden" id="events-type" value="<?php echo $events_type ?>">
 			<div class = "row">
 				<form class="col-md-12">
 					<input type="text" id = "event_list" class="form-control" placeholder="Search for events...">

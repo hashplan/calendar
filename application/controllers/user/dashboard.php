@@ -15,7 +15,7 @@ class Dashboard extends MY_Controller {
 
 	public function index(){
 		$this->load->model('categories_m');
-		$events = $this->events_m->get_all();
+		$events = $this->events_m->get_all(array('events_type' => 'all'));
 		$events_data = array(
 			'events' => $events,
 			'categories' => $this->categories_m->get_top_level_categories(),
@@ -24,6 +24,37 @@ class Dashboard extends MY_Controller {
 		$this->data['subview']=$this->get_user_identifier().'/dashboard/index';
 		$this->data['events'] = $this->load->view($this->get_user_identifier() . '/dashboard/events', $events_data, true);
 		$this->data['has_events'] = count($events) > 0;
+		$this->data['events_type'] = 'all';
+		$this->load->view($this->get_user_identifier().'/_layout_main',$this->data);
+	}
+
+	public function trash() {
+		$this->load->model('categories_m');
+		$events = $this->events_m->get_all(array('events_type' => 'deleted'));
+		$events_data = array(
+			'events' => $events,
+			'categories' => $this->categories_m->get_top_level_categories(),
+		);
+		$this->data['cal'] = $this->calendar();
+		$this->data['subview']=$this->get_user_identifier().'/dashboard/index';
+		$this->data['events'] = $this->load->view($this->get_user_identifier() . '/dashboard/events', $events_data, true);
+		$this->data['has_events'] = count($events) > 0;
+		$this->data['events_type'] = 'deleted';
+		$this->load->view($this->get_user_identifier().'/_layout_main',$this->data);
+	}
+
+	public function favourite() {
+		$this->load->model('categories_m');
+		$events = $this->events_m->get_all(array('events_type' => 'favourite'));
+		$events_data = array(
+			'events' => $events,
+			'categories' => $this->categories_m->get_top_level_categories(),
+		);
+		$this->data['cal'] = $this->calendar();
+		$this->data['subview']=$this->get_user_identifier().'/dashboard/index';
+		$this->data['events'] = $this->load->view($this->get_user_identifier() . '/dashboard/events', $events_data, true);
+		$this->data['has_events'] = count($events) > 0;
+		$this->data['events_type'] = 'favourite';
 		$this->load->view($this->get_user_identifier().'/_layout_main',$this->data);
 	}
 
@@ -36,6 +67,12 @@ class Dashboard extends MY_Controller {
 		if (!empty($post['city_id'])) $options['city_id'] = $post['city_id'];
 		if (!empty($post['name']) && strlen(trim($post['name']))) $options['name'] = trim($post['name']);
 		if (!empty($post['specific_date'])) $options['specific_date'] = $post['specific_date'];
+		if (!empty($post['events_type']) && in_array($post['events_type'], array('deleted', 'favourite'))) {
+			$options['events_type'] = $post['events_type'];
+		}
+		else {
+			$options['events_type'] = 'all';
+		}
 		$events = $this->events_m->get_all($options);
 		$this->load->view($this->get_user_identifier() . '/dashboard/events', array('events' => $events));
 	}

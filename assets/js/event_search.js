@@ -32,6 +32,11 @@ $(function() {
 				if ($('#event-categories').val() != 0) {
 					data.category = $('#event-categories').val();
 				}
+				var eventsType = 'all';
+				if ($('#events-type').val() === 'favourite' || $('#events-type').val() === 'deleted') {
+					eventsType = $('#events-type').val();
+				}
+				data.events_type = eventsType;
 				$.ajax(base_url + 'user/dashboard/events_list', {
 					type: 'POST',
 					data: data,
@@ -78,6 +83,12 @@ $(function() {
 		if ($('#event-categories').val() != 0) {
 			data.category = $('#event-categories').val();
 		}
+
+		var eventsType = 'all';
+		if ($('#events-type').val() === 'favourite' || $('#events-type').val() === 'deleted') {
+			eventsType = $('#events-type').val();
+		}
+		data.events_type = eventsType;
 
 		$.ajax(base_url + 'user/dashboard/events_list', {
 			type: 'POST',

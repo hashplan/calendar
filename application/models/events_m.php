@@ -16,7 +16,6 @@ class Events_m extends MY_Model {
 			->select('e.id, e.name, e.datetime, DATE(e.datetime) AS date_only')
 			->from('events AS e')
 			->join('venues AS v', 'e.venueId = v.id', 'inner')
-			->where('NOT EXISTS (SELECT 1 FROM events_deleted ed WHERE e.id = ed.eventId)', '', FALSE)
 			->order_by('e.datetime')
 			->limit($options['limit'], $options['offset']);
 
@@ -30,6 +29,19 @@ class Events_m extends MY_Model {
 			$this->db->join('event_categories AS ec', 'e.id = ec.event_id', 'inner');
 			$this->db->join('categories AS c', 'ec.category_id = c.id', 'inner');
 			$this->db->where_in('c.id', $category_ids);
+		}
+
+		if (!empty($options['events_type'])) {
+			if ($options['events_type'] === 'deleted') {
+				$this->db->join('events_deleted AS ed', 'e.id = ed.eventId', 'inner');
+			}
+			else if ($options['events_type'] === 'favourite') {
+				$this->db->join('events_favourited AS ef', 'e.id = ef.eventId', 'inner');
+				$this->db->where('NOT EXISTS (SELECT 1 FROM events_deleted ed WHERE e.id = ed.eventId)', '', FALSE);
+			}
+			else {
+				$this->db->where('NOT EXISTS (SELECT 1 FROM events_deleted ed WHERE e.id = ed.eventId)', '', FALSE);
+			}
 		}
 
 		if (!empty($options['name'])) {
