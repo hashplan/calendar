@@ -1,13 +1,10 @@
 $(function() {
 	// datepicker
 	$('.page-dashboard #event-date').datepicker({
-		dateFormat:'yy-mm-dd',
-		changeMonth: true,
-		changeYear: true,
-		onSelect: function(dateText) {
-			$('#event-preselects').val('0');
-			fetchEvents();
-		}
+		format:'yyyy-mm-dd'
+	}).on('changeDate', function(event) {
+		$('#event-preselects').val('0');
+		fetchEvents();
 	});
 
 	// filter events by text input
