@@ -2,7 +2,9 @@
 class Dashboard extends MY_Controller {
 //inherits from core/my controller
 
-	public $page_class = 'dashboard';
+	public $data = array(
+		'sub_layout' => 'layouts/user_page',
+	);
 
 	public	function __construct(){
 		parent::__construct();
@@ -14,48 +16,19 @@ class Dashboard extends MY_Controller {
 	}
 
 	public function index(){
-		$this->load->model('categories_m');
-		$events = $this->events_m->get_all(array('events_type' => 'all'));
-		$events_data = array(
-			'events' => $events,
-			'categories' => $this->categories_m->get_top_level_categories(),
-		);
-		$this->data['cal'] = $this->calendar();
-		$this->data['subview']=$this->get_user_identifier().'/dashboard/index';
-		$this->data['events'] = $this->load->view($this->get_user_identifier() . '/dashboard/events', $events_data, true);
-		$this->data['has_events'] = count($events) > 0;
-		$this->data['events_type'] = 'all';
-		$this->load->view($this->get_user_identifier().'/_layout_main',$this->data);
+		$this->_render_events_list_page('calendar');
+	}
+
+	public function all() {
+		$this->_render_events_list_page('all');
 	}
 
 	public function trash() {
-		$this->load->model('categories_m');
-		$events = $this->events_m->get_all(array('events_type' => 'deleted'));
-		$events_data = array(
-			'events' => $events,
-			'categories' => $this->categories_m->get_top_level_categories(),
-		);
-		$this->data['cal'] = $this->calendar();
-		$this->data['subview']=$this->get_user_identifier().'/dashboard/index';
-		$this->data['events'] = $this->load->view($this->get_user_identifier() . '/dashboard/events', $events_data, true);
-		$this->data['has_events'] = count($events) > 0;
-		$this->data['events_type'] = 'deleted';
-		$this->load->view($this->get_user_identifier().'/_layout_main',$this->data);
+		$this->_render_events_list_page('deleted');
 	}
 
 	public function favourite() {
-		$this->load->model('categories_m');
-		$events = $this->events_m->get_all(array('events_type' => 'favourite'));
-		$events_data = array(
-			'events' => $events,
-			'categories' => $this->categories_m->get_top_level_categories(),
-		);
-		$this->data['cal'] = $this->calendar();
-		$this->data['subview']=$this->get_user_identifier().'/dashboard/index';
-		$this->data['events'] = $this->load->view($this->get_user_identifier() . '/dashboard/events', $events_data, true);
-		$this->data['has_events'] = count($events) > 0;
-		$this->data['events_type'] = 'favourite';
-		$this->load->view($this->get_user_identifier().'/_layout_main',$this->data);
+		$this->_render_events_list_page('favourite');
 	}
 
 	public function events_list() {
@@ -82,44 +55,22 @@ class Dashboard extends MY_Controller {
 		$this->load->view('/event/cities', array('cities' => $this->location_m->get_cities()));
 	}
 	
-	public function user_added_event($id = NULL){
-		//retrieve an event or set a new one
-		if($id){
-			$this->data['user_added_event'] = $this->events_m->get_event_by_id($id);
-			count($this->data['user_added_event'])||$this->data['errors'][]='Event could not be found';
-		}
-		else {
-			$this->data['user_added_event'] = $this->events_m->get_new_user_added_event();
-		}
-		
-		//set up the form
-		$this->form_validation->set_rules('user_added_event_name', 'Event Name','trim|required|xss_clean');
-		$this->form_validation->set_rules('user_added_event_address', 'Event Address','trim|required|xss_clean');
-		$this->form_validation->set_rules('user_added_event_location', 'Event Location','trim|required|xss_clean');
-		$this->form_validation->set_rules('user_added_event_date', 'Event Date','required');
-		$this->form_validation->set_rules('user_added_event_time', 'Event Time','required');
-		$this->form_validation->set_rules('user_added_event_description', 'Event Description','trim|required|xss_clean');
+	protected function _render_events_list_page($events_type) {
+		$this->data['page_class'] = 'user-events';
+		$this->data['view'] = $this->get_user_identifier().'/dashboard/index';
 
-		//process the form
-		if($this->form_validation->run()==TRUE){
-			$data['form_post'] = $this->events_m->array_from_post(array( //array_from_post set in core/my_model
-			'user_added_event_name',
-			'user_added_event_address',
-			'user_added_event_location',
-			'user_added_event_date',
-			'user_added_event_time',
-			'user_added_event_description'
-			));
-			
-			$data['table_name'] = 'user_added_event';
-			$data['insertedby'] = $user_id = $this->ion_auth->user()->row()->id;
-			$this->events_m->save_user_added_event($data,$id);
-			redirect($this->get_user_identifier() . '/dashboard/events');
-		}
-		
-		//load view
-		$this->data['subview']=$this->get_user_identifier().'/dashboard/user_added_event_form';
-		$this->load->view($this->get_user_identifier().'/_layout_modal',$this->data);
+		$this->load->model('categories_m');
+		$events = $this->events_m->get_all(array('events_type' => $events_type));
+		$events_data = array(
+			'events' => $events,
+			'categories' => $this->categories_m->get_top_level_categories(),
+		);
+		$this->data['data']['events'] = $this->load->view($this->get_user_identifier() . '/dashboard/events', $events_data, true);
+
+		$this->data['data']['has_events'] = count($events) > 0;
+		$this->data['data']['events_type'] = $events_type;
+
+		$this->_render_page();
 	}
 
 }

@@ -1,6 +1,6 @@
 $(function() {
 	// datepicker
-	$('.page-dashboard #event-date').datepicker({
+	$('.page-user-events #event-date').datepicker({
 		format:'yyyy-mm-dd'
 	}).on('changeDate', function(event) {
 		$('#event-preselects').val('0');
@@ -8,12 +8,12 @@ $(function() {
 	});
 
 	// filter events by text input
-	$('.page-dashboard #event_list').on('keyup', function() {
+	$('.page-user-events #event_list').on('keyup', function() {
 		fetchEvents();
 	});
 
 	// scrolldown handler - fetch 5 more events on page bottom
-	if ($('.page-dashboard').length > 0) {
+	if ($('.page-user-events').length > 0) {
 		$(window).scroll(function() {
 			if($(window).scrollTop() + $(window).height() > $(document).height() - 1) {
 				var data = {
@@ -49,7 +49,7 @@ $(function() {
 	}
 
 	// fetch events on location selection
-	$('.page-dashboard #event_cities').on('click', '.item-city-name', function(e) {
+	$('.page-user-events #event_cities').on('click', '.item-city-name', function(e) {
 		e.preventDefault();
 		var cityName = $(this).text();
 		var cityId = $(this).siblings('.item-city-id').text();
