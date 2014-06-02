@@ -29,6 +29,16 @@ class Event extends MY_Controller {
 		redirect(base_url('user/dashboard'));
 	}
 
+	public function restore_from_trash($event_id = NULL) {
+		$event_id_is_correct = $event_id !== NULL && is_numeric($event_id) && $event_id;
+		if (!$event_id_is_correct) {
+			return;
+		}
+		$this->load->model('events_m');
+		$this->events_m->restore_from_trash($event_id);
+		redirect(base_url('user/dashboard/trash'));
+	}
+
 	public function add_to_calendar($id = NULL){
 		//retrieve an event or set a new one
 		if($id){

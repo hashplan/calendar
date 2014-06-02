@@ -12,8 +12,11 @@ class Events_m extends MY_Model {
 			$options['offset'] = 0;
 		}
 
+		$is_deleted = !empty($options['events_type']) && $options['events_type'] === 'deleted' ? 1 : 0;
+
 		$this->db
 			->select('e.id, e.name, e.datetime, DATE(e.datetime) AS date_only')
+			->select($is_deleted .' AS is_deleted', FALSE)
 			->from('events AS e')
 			->join('venues AS v', 'e.venueId = v.id', 'inner')
 			->order_by('e.datetime')
@@ -194,6 +197,10 @@ class Events_m extends MY_Model {
 		if ($already_favourite) {
 		}
 		else if (!$already_favourite && $event_id_is_correct) {
+			$this->db->delete('events_deleted', array(
+				'userId' => $user_id,
+				'eventId' => $event_id,
+			));
 			$this->db->insert('events_favourited', array(
 				'userId' => $user_id,
 				'eventId' => $event_id,
@@ -215,7 +222,30 @@ class Events_m extends MY_Model {
 		if ($already_deleted) {
 		}
 		else if (!$already_deleted && $event_id_is_correct) {
+			$this->db->delete('events_favourited', array(
+				'userId' => $user_id,
+				'eventId' => $event_id,
+			));
 			$this->db->insert('events_deleted', array(
+				'userId' => $user_id,
+				'eventId' => $event_id,
+			));
+		}
+	}
+
+	public function restore_from_trash($event_id, $user_id = NULL) {
+		$event_id_is_correct = $event_id !== NULL && is_numeric($event_id) && $event_id;
+
+		$user_id_is_correct = $user_id !== NULL && is_numeric($user_id) && $user_id;
+		if (!$user_id_is_correct) {
+			$this->load->library('Ion_auth');
+			$user_id = $this->ion_auth->user()->row()->id;
+		}
+
+		$is_deleted = count($this->get_deleted_events($event_id, $user_id)) === 1;
+
+		if ($is_deleted) {
+			$this->db->delete('events_deleted', array(
 				'userId' => $user_id,
 				'eventId' => $event_id,
 			));

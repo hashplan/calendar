@@ -22,8 +22,13 @@ foreach ($events as $i => $event) {
 			<?php $d= strtotime($event->datetime); echo "<p>". date("l, F jS, Y @ g:ia",$d)."</p>";?>
 			<!--add to events for user id a specific event id-->
 			<div class="btn-group btn-group-xs event-buttons-wrapper">
-				<?php echo anchor('event/add_to_calendar/'. $event->id, '<i class="glyphicon glyphicon-plus"></i>', array('title' => 'Add to my Events', 'class' => 'btn btn-default')).
-					anchor('event/delete_from_user_list/'. $event->id, '<i class="glyphicon glyphicon-trash"></i>', array('title' => 'Delete Event', 'class' => 'btn btn-default'));?>
+				<?php if ($event->is_deleted) {
+					echo anchor('event/restore_from_trash/'. $event->id, '<i class="glyphicon glyphicon-new-window"></i>', array('title' => 'Restore', 'class' => 'btn btn-default'));
+				}
+				else {
+					echo anchor('event/add_to_calendar/'. $event->id, '<i class="glyphicon glyphicon-plus"></i>', array('title' => 'Add to my Events', 'class' => 'btn btn-default'));
+					echo anchor('event/delete_from_user_list/'. $event->id, '<i class="glyphicon glyphicon-trash"></i>', array('title' => 'Delete Event', 'class' => 'btn btn-default'));
+				} ?>
 			</div>
 		</div>
 	</div>
