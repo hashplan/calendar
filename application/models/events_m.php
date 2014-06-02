@@ -13,10 +13,12 @@ class Events_m extends MY_Model {
 		}
 
 		$is_deleted = !empty($options['events_type']) && $options['events_type'] === 'deleted' ? 1 : 0;
+		$is_in_calendar = !empty($options['events_type']) && $options['events_type'] === 'my' ? 1 : 0;
 
 		$this->db
 			->select('e.id, e.name, e.datetime, DATE(e.datetime) AS date_only')
 			->select($is_deleted .' AS is_deleted', FALSE)
+			->select($is_in_calendar .' AS is_in_calendar', FALSE)
 			->from('events AS e')
 			->join('venues AS v', 'e.venueId = v.id', 'inner')
 			->order_by('e.datetime')
@@ -40,6 +42,10 @@ class Events_m extends MY_Model {
 			}
 			else if ($options['events_type'] === 'favourite') {
 				$this->db->join('events_favourited AS ef', 'e.id = ef.eventId', 'inner');
+				$this->db->where('NOT EXISTS (SELECT 1 FROM events_deleted ed WHERE e.id = ed.eventId)', '', FALSE);
+			}
+			else if ($options['events_type'] === 'my') {
+				$this->db->join('user_events AS ue', 'e.id = ue.eventId', 'inner');
 				$this->db->where('NOT EXISTS (SELECT 1 FROM events_deleted ed WHERE e.id = ed.eventId)', '', FALSE);
 			}
 			else {
@@ -251,7 +257,67 @@ class Events_m extends MY_Model {
 			));
 		}
 	}
-	
+
+	public function get_calendar_events($event_id = NULL, $user_id = NULL) {
+		$user_id_is_correct = $user_id !== NULL && is_numeric($user_id) && $user_id;
+		if (!$user_id_is_correct) {
+			$this->load->library('Ion_auth');
+			$user_id = $this->ion_auth->user()->row()->id;;
+		}
+
+		$this->db->from('user_events');
+
+		$event_id_is_correct = $event_id !== NULL && is_numeric($event_id) && $event_id;
+		if ($event_id_is_correct) {
+			$this->db->where('eventId', $event_id);
+		}
+
+		$this->db->where('userId', $user_id);
+
+		return $this->db->get()->result();
+	}
+
+	public function add_to_calendar($event_id, $user_id = NULL) {
+		$event_id_is_correct = $event_id !== NULL && is_numeric($event_id) && $event_id;
+
+		$user_id_is_correct = $user_id !== NULL && is_numeric($user_id) && $user_id;
+		if (!$user_id_is_correct) {
+			$this->load->library('Ion_auth');
+			$user_id = $this->ion_auth->user()->row()->id;
+		}
+
+		$already_in_calendar = count($this->get_calendar_events($event_id, $user_id)) === 1;
+		if (!$already_in_calendar) {
+			$this->db->insert('user_events', array(
+				'userId' => $user_id,
+				'eventId' => $event_id,
+				'insertedon' => NULL,
+				'insertedby' => NULL,
+				'updatedon' => NULL,
+				'updatedby' => NULL,
+				'ownerId' => NULL,
+			));
+		}
+	}
+
+	public function restore_from_calendar($event_id, $user_id = NULL) {
+		$event_id_is_correct = $event_id !== NULL && is_numeric($event_id) && $event_id;
+
+		$user_id_is_correct = $user_id !== NULL && is_numeric($user_id) && $user_id;
+		if (!$user_id_is_correct) {
+			$this->load->library('Ion_auth');
+			$user_id = $this->ion_auth->user()->row()->id;
+		}
+
+		$already_in_calendar = count($this->get_calendar_events($event_id, $user_id)) === 1;
+
+		if ($already_in_calendar) {
+			$this->db->delete('user_events', array(
+				'userId' => $user_id,
+				'eventId' => $event_id,
+			));
+		}
+	}
 	
 	public function save_user_added_event($data, $id = NULL){
 		//set timestamps

@@ -16,7 +16,7 @@ class Dashboard extends MY_Controller {
 	}
 
 	public function index(){
-		$this->_render_events_list_page('calendar');
+		$this->_render_events_list_page('my');
 	}
 
 	public function all() {
@@ -40,7 +40,7 @@ class Dashboard extends MY_Controller {
 		if (!empty($post['city_id'])) $options['city_id'] = $post['city_id'];
 		if (!empty($post['name']) && strlen(trim($post['name']))) $options['name'] = trim($post['name']);
 		if (!empty($post['specific_date'])) $options['specific_date'] = $post['specific_date'];
-		if (!empty($post['events_type']) && in_array($post['events_type'], array('deleted', 'favourite'))) {
+		if (!empty($post['events_type']) && in_array($post['events_type'], array('deleted', 'favourite', 'my'))) {
 			$options['events_type'] = $post['events_type'];
 		}
 		else {

@@ -39,7 +39,18 @@ class Event extends MY_Controller {
 		redirect(base_url('user/dashboard/trash'));
 	}
 
-	public function add_to_calendar($id = NULL){
+	public function add_to_calendar($event_id = NULL) {
+		$event_id_is_correct = $event_id !== NULL && is_numeric($event_id) && $event_id;
+		if (!$event_id_is_correct) {
+			return;
+		}
+		$this->load->model('events_m');
+		$this->events_m->add_to_calendar($event_id);
+		redirect(base_url('user/dashboard'));
+	}
+
+	// should rename it later to smth like add_event or add_user_event
+	public function add($id = NULL){
 		//retrieve an event or set a new one
 		if($id){
 			$this->data['user_added_event'] = $this->events_m->get_event_by_id($id);

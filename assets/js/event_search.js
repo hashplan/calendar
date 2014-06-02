@@ -33,7 +33,7 @@ $(function() {
 					data.category = $('#event-categories').val();
 				}
 				var eventsType = 'all';
-				if ($('#events-type').val() === 'favourite' || $('#events-type').val() === 'deleted') {
+				if (['favourite', 'deleted', 'my'].indexOf($('#events-type').val())) {
 					eventsType = $('#events-type').val();
 				}
 				data.events_type = eventsType;
@@ -85,7 +85,7 @@ $(function() {
 		}
 
 		var eventsType = 'all';
-		if ($('#events-type').val() === 'favourite' || $('#events-type').val() === 'deleted') {
+		if (['favourite', 'deleted', 'my'].indexOf($('#events-type').val())) {
 			eventsType = $('#events-type').val();
 		}
 		data.events_type = eventsType;
