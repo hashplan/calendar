@@ -24,16 +24,17 @@
 			</div>	
 			<br>
 			<div class = "row">
-				<div class="col-md-4">
-					<input type="hidden" name="user_added_event_date" id="date-hidden"/>
-					<button type="button" class="btn btn-default dropdown-toggle" id="user_added_event_date" data-toggle="dropdown">Choose Date <span class="caret"></span></button>
-					<ul class="dropdown-menu" role="menu">
-						<div class="datepicker"></div>
-					</ul>
-				</div>
+			
+			<div class="col-md-4">
+				<input type="hidden" name="user_added_event_date"/>
+				<label for="user_added_event_date">Choose Date</label>
+				<input type="text" class="form-control" id="user_added_event_date"/>
+			</div>
+			
 				<div class = "col-md-4">
-					<input type="hidden" name="user_added_event_time" id="time-hidden"/>
-					<button type="button" class="btn btn-default dropdown-toggle" id="user_added_event_time" data-toggle="dropdown">Choose Time <span class="caret"></span></button>
+					<input type="hidden" name="user_added_event_time"/>
+					<label for="user_added_event_time">Choose Time</label>
+					<button type="button" class="btn btn-default dropdown-toggle" id="user_added_event_time" data-toggle="dropdown">HH:MM<span class="caret"></span></button>
 					<ul class="dropdown-menu" role="menu">
 						<div class="NEED TO GET TIME"></div>
 					</ul>
@@ -47,7 +48,6 @@
 			</div>
 			<br>
 			<p><?php echo form_submit('submit', 'Save','class = "btn btn-primary btn-sm"');?>
-				  <?php echo anchor(site_url('user/dashboard'),"Close",'class = "btn btn-default btn-sm"');?>
 			</p>
 
 		<?php echo form_close();?>

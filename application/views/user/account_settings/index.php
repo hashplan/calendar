@@ -1,10 +1,9 @@
 <div class = "container">
 		<div class="col-md-2">
-		<div class = "thumbnail">
-          <img src="<?php echo site_url('/assets/img/users/Stas.jpg');?>", alt="Stas image">
-		</div>
+			<div class = "thumbnail">
+			  <img src="<?php echo site_url('/assets/img/users/Stas.jpg');?>", alt="Stas image">
+			</div>
 		<hr>
-         
         </div>
       <div class = "col-md-8">
 			<h4>Welcome <span class="text-muted"><?php echo (string)$user->first_name." " .(string)$user->last_name;?></span></h4>
@@ -16,20 +15,24 @@
 			<hr>					
 				<div class = "col-md-12">
 					<ul class="nav nav-tabs">
-						<li class="active"><a href="#location" data-toggle="tab">Location</a></li>
+						<li class="active"><a href="#settings" data-toggle="tab">Settings</a></li>
 						<li><a href="#teams" data-toggle="tab">Teams</a></li>
 						<li><a href="#favorites" data-toggle="tab">Favorites</a></li>
 						<li><a href="#other_calendars" data-toggle="tab">Other Calendars</a></li>
 					</ul>
 					<div id='content' class="tab-content">
-					  <div class="tab-pane active" id="location">
+					  <div class="tab-pane active" id="settings">
 						<div class = "row">
 							<div class = "col-md-7">
-								<div id = "map-canvas" class = "map-canvas-user">
+								<br>
+								<h4>Change your profile picture:</h4>
+								<div id = "user_avatar">
+									<?php echo form_open_multipart('user/account_settings/avatar_upload/'.$user->id);
+									echo form_upload('userfile');
+									echo form_submit('upload','Upload');
+									echo form_close();
+									?>
 								</div>
-							</div>
-							<div class = "col-md-5">
-								<p>This is where you are</p>
 							</div>
 						</div>
 						<hr>
@@ -83,15 +86,6 @@
 							</div>
 					  </div>
 					</div>    
-				
-					<div class = "row">
-						<?php 
-							if(count($account_settings)):
-								echo dump($account_settings);
-							else: 
-							endif;
-						?>
-					</div>
 				</div>
 		</div>
 	<div class = "col-md-2" style = "background-color: #F8F8F8">

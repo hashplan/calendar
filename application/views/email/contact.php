@@ -23,7 +23,6 @@
 				</form>
 			</div>
 			<br>
-			<p><?php echo form_submit('submit', 'Save','class = "btn btn-primary btn-sm"');?>
-				  <?php echo anchor(site_url('user/dashboard'),"Close",'class = "btn btn-default btn-sm"');?>
+			<p><?php echo form_submit('submit', 'Submit','class = "btn btn-primary btn-sm"');?>
 			</p>
 		<?php echo form_close();?>
