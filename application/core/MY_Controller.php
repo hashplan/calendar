@@ -1,15 +1,40 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 class MY_Controller extends CI_Controller {
-	public $data = array();
-	public $page_class;
-	
+	public $data = array(
+		'page_class' => 'generic'
+	);
+	public $layout = 'layouts/default';
+
+	protected function _render_page() {
+		$this->load->view($this->layout, $this->data);
+	}
+
 	function __construct(){
 		parent::__construct();
+		// Set default empty data if missing
+		if (empty($this->data)) {
+			$this->data = array();
+		}
+
+		// Set layout if missing
+		if (empty($this->layout)) {
+			$this->layout = 'default';
+		}
+
+		// Set page_class if missing
+		if (empty($this->data['page_class'])) {
+			$this->data['page_class']= 'generic';
+		}
+
+		if (empty($this->data['data'])) {
+			$this->data['data'] = array();
+		}
+
 		$identifier = 'user';
 		$this->data['errors']=array();
 		//$this->data['site_name']=config_item('site_name');
 		//$this->data['meta_title']='# Plan';
-		$this->data['page_class'] = $this->page_class;
+//		$this->data['page_class'] = $this->page_class;
 		$this->load->library('ion_auth');
 		$this->load->library('form_validation');
 		$this->load->helper('url');

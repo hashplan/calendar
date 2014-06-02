@@ -48,10 +48,11 @@
 $active_group = 'default';
 $active_record = TRUE;
 
-$db['default']['hostname'] = 'localhost';
-$db['default']['username'] = 'root';
-$db['default']['password'] = '';
-$db['default']['database'] = 'calendar';
+$db['default']['hostname'] = '127.0.0.1';
+$db['default']['port'] = 4040;
+$db['default']['username'] = 'calendar';
+$db['default']['password'] = 'calendar';
+$db['default']['database'] = 'calendar_ext';
 $db['default']['dbdriver'] = 'mysql';
 $db['default']['dbprefix'] = '';
 $db['default']['pconnect'] = TRUE;
