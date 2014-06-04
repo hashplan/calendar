@@ -15,7 +15,7 @@
 	</ol>
 	<div class="carousel-inner">
 		<div class="item active">
-			<img src="<?php echo site_url('/assets/img/logo/plan.png');?>" alt="I could really save!">
+			<img src="<?php echo site_url('/assets/img/homepage/crowd for homepage.jpg');?>" alt="Hashplan crowd!">
 			<div class="container">
 				<div class="carousel-caption">
 					<h4>We are coming soon!</h4>
