@@ -18,7 +18,7 @@
 			<img src="<?php echo site_url('/assets/img/homepage/crowd for homepage.jpg');?>" alt="Hashplan crowd!">
 			<div class="container">
 				<div class="carousel-caption">
-					<h4>We are coming soon!</h4>
+					<h4>Hashplan helps ensure that you never miss an event!</h4>
 					<p></p>
 					<!--<p><a class="btn btn-sm btn-primary" href="#" role="button">Do it now!</a></p>-->
 				</div>
@@ -28,7 +28,7 @@
 			<img src="<?php echo site_url('/assets/img/logo/plan.png');?>" alt="How it works!">
 			<div class="container">
 				<div class="carousel-caption">
-					<h4>We will be live in a jiffy!</h4>
+					<h4>PLAN IT!  Track your plans and share with friends!</h4>
 					<p></p>
 					<!--<p><a class="btn btn-sm btn-primary responsive" href="#" role="button">Learn more</a></p>-->
 				</div>
@@ -38,7 +38,7 @@
 			<img src="<?php echo site_url('/assets/img/logo/plan.png');?>" alt="Get started!">
 			<div class="container">
 				<div class="carousel-caption">
-					<h4>Just a bit longer!</h4>
+					<h4>We will be live in a jiffy!</h4>
 					<p></p>
 					<!--<p><a class="btn btn-sm btn-primary" href="#" role="button">Get Started!</a></p>-->
 				</div>
