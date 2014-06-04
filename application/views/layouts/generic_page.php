@@ -1,3 +1,4 @@
+<body onload="startTime()">
 <div class="navbar navbar-default navbar-fixed-top" role="navigation">
 	<div class = "container-fluid">
 		<div class="navbar-header">
@@ -46,3 +47,4 @@
 <!-- Modal -->
 <div class="modal" id="contact_form" tabindex="-1" role="dialog" aria-labelledby="contact_form" aria-hidden="true">
 </div>
+</body>

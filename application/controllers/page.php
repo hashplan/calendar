@@ -7,7 +7,7 @@ class Page extends MY_Controller {
 
 	public function index(){
 		$this->data['page_class'] = 'homepage';
-		$this->data['view'] = 'page/homepage';
+		$this->data['view'] = 'page/homepage2';
 		$this->_render_page();
 	}
 

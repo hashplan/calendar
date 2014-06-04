@@ -50,6 +50,7 @@ $active_record = TRUE;
 
 $db['default']['hostname'] = '127.0.0.1';
 $db['default']['port'] = 4040;
+//$db['default']['port'] = '';
 $db['default']['username'] = 'calendar';
 $db['default']['password'] = 'calendar';
 $db['default']['database'] = 'calendar_ext';
