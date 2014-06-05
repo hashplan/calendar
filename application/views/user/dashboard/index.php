@@ -1,7 +1,8 @@
-<h4>Welcome <span class="text-muted"><?php echo (string)$user->first_name." " .(string)$user->last_name;?></span></h4>
+<h2>Welcome <span class="text-muted"><?php echo (string)$user->first_name." " .(string)$user->last_name;?></span></h2>
+<br>
 <div class="city-id" style="display:none"></div>
 <h5 class="city-name"></h5>
-<p><?php echo anchor('user/dashboard/choose_city','Change Location<span class="caret"></span>', 'data-toggle="modal" data-target="#event_cities"');?></p>
+<p><?php echo anchor('user/dashboard/choose_metro','Change Location<span class="caret"></span>', 'data-toggle="modal" data-target="#event_cities"');?></p>
 <h5>Upcoming Events:</h5>
 <input type="hidden" id="events-type" value="<?php echo $events_type ?>">
 <div class = "row">

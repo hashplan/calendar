@@ -13,5 +13,15 @@ class Location_m extends MY_Model {
 			->get()
 			->result();
 	}
-
+	
+	public function get_metro_areas() {
+		return $this->db	
+			->select('ma.id, ma.city, count(v.Id) as count')
+			->from('metroareas as ma')
+			->join('venues as v', 'v.cityId  = ma.id')
+			->group_by('ma.id, ma.city')
+			->order_by('ma.city')
+			->get()
+			->result();
+	}
 } 

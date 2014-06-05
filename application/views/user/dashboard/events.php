@@ -18,7 +18,7 @@ foreach ($events as $i => $event) {
 		<div class="panel-body">
 			<!-- Button trigger modal -->
 			<h4><?php echo anchor('event/modal_details/'.$event->id, $event->name, 'data-toggle="modal" data-target="#event_modal"');?></h4>
-			<p><?php echo html_escape($event->name) ?><p>
+			<p><?php echo html_escape($event->venue_name) ?><p>
 			<?php $d= strtotime($event->datetime); echo "<p>". date("l, F jS, Y @ g:ia",$d)."</p>";?>
 			<!--add to events for user id a specific event id-->
 			<div class="btn-group btn-group-xs event-buttons-wrapper">

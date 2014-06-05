@@ -6,11 +6,11 @@
 		</div>
 		<div class="modal-body">
 			<ul>
-				<?php foreach($cities as $city) { ?>
+				<?php foreach($metros as $metro) { ?>
 					<li>
-						<div class="item-city-id" style="display: none"><?php echo html_escape($city->id) ?></div>
-						<a href="#" class="item-city-name" aria-hidden="true"><?php echo html_escape($city->city) ?></a>
-						<span class = "badge"><?php echo $city->events_count ?></span>
+						<div class="item-city-id" style="display: none"><?php echo html_escape($metro->id) ?></div>
+						<a href="#" class="item-city-name" aria-hidden="true"><?php echo html_escape($metro->city) ?></a>
+						<span class = "badge"><?php echo $metro->count ?></span>
 					</li>
 				<?php } ?>
 			</ul>

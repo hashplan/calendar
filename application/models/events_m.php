@@ -16,7 +16,7 @@ class Events_m extends MY_Model {
 		$is_in_calendar = !empty($options['events_type']) && $options['events_type'] === 'my' ? 1 : 0;
 
 		$this->db
-			->select('e.id, e.name, e.datetime, DATE(e.datetime) AS date_only')
+			->select('e.id, e.name, v.name as venue_name, e.datetime, DATE(e.datetime) AS date_only')
 			->select($is_deleted .' AS is_deleted', FALSE)
 			->select($is_in_calendar .' AS is_in_calendar', FALSE)
 			->from('events AS e')

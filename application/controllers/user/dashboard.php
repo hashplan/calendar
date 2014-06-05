@@ -55,6 +55,11 @@ class Dashboard extends MY_Controller {
 		$this->load->view('/event/cities', array('cities' => $this->location_m->get_cities()));
 	}
 	
+	public function choose_metro() {
+		$this->load->model('location_m');
+		$this->load->view('/event/metros',array('metros'=>$this->location_m->get_metro_areas()));
+	}
+	
 	protected function _render_events_list_page($events_type) {
 		$this->data['page_class'] = 'user-events';
 		$this->data['view'] = $this->get_user_identifier().'/dashboard/index';
