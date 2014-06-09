@@ -20,7 +20,7 @@ $(function() {
 					name: $('#event_list').val(),
 					offset: $('#search_result .event-row').length
 				};
-				if ($('.city-id').length > 0) {
+				if ($('.city-id').text() > 0) {
 					data.city_id = $('.city-id').text();
 				}
 				if ($('#event-preselects').val() != 0) {
@@ -53,24 +53,35 @@ $(function() {
 		e.preventDefault();
 		var cityName = $(this).text();
 		var cityId = $(this).siblings('.item-city-id').text();
-		$('h5.city-name').text(cityName);
+		$('h5.city-name').text('Location: '+ cityName);
 		$('.city-id').text(cityId);
 		$('#event_cities').modal('hide');
 		fetchEvents();
 	});
 
 	// filter events by date presets (next 3 days, next 7 days)
-	$('#event-preselects').on('change', function() {
+	$('.page-user-events #event-preselects').on('change', function() {
 		$('#event-date').val('');
 		fetchEvents();
 	});
 
 	// filter events by category
-	$('#event-categories').on('change', fetchEvents);
+	$('.page-user-events #event-categories').on('change', fetchEvents);
+
+	// reset events
+	$('.page-user-events #event-reset').on('click', function() {
+		$('.city-id').text('0');
+		$('h5.city-name').text("Location: Doesn't matter");
+		$('#event-preselects').val(0);
+		$('#event-date').val('');
+		$('#event-categories').val(0);
+		$('#event_list').val('');
+		fetchEvents();
+	});
 
 	function fetchEvents() {
 		var data = { name: $('#event_list').val() };
-		if ($('.city-id').length > 0) {
+		if ($('.city-id').text() > 0) {
 			data.city_id = $('.city-id').text();
 		}
 		if ($('#event-preselects').val() != 0) {
