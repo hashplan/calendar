@@ -124,13 +124,13 @@ class Events_m extends MY_Model {
 				v.insertedby AS venue_insertedby,
 				v.updatedon AS venue_updatedon,
 				v.updatedby AS venue_updatedby,
-				c.id AS city_id,
-				c.city AS city_city,
-				c.stateId AS city_state_id
+				ma.id AS city_id,
+				ma.city AS city_city,
+				ma.stateId AS city_state_id
 			')
 			->from('events AS e')
 			->join('venues AS v', 'e.venueId = v.id', 'inner')
-			->join('cities AS c', 'v.cityId = c.id', 'left')
+			->join('metroareas AS ma', 'v.cityId = ma.id', 'left')
 			->where('e.id', $id)
 			->get()
 			->row();

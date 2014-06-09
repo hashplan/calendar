@@ -2,24 +2,13 @@
 
 class Location_m extends MY_Model {
 
-	public function get_cities() {
-		return $this->db
-			->select('c.id, c.city, COUNT(e.id) AS events_count')
-			->from('events AS e')
-			->join('venues AS v', 'e.venueId = v.id', 'inner')
-			->join('cities AS c', 'v.cityId = c.id', 'inner')
-			->order_by('c.city')
-			->group_by('c.id')
-			->get()
-			->result();
-	}
-	
 	public function get_metro_areas() {
 		return $this->db	
 			->select('ma.id, ma.city, count(v.Id) as count')
 			->from('metroareas as ma')
-			->join('venues as v', 'v.cityId  = ma.id')
-			->group_by('ma.id, ma.city')
+			->join('venues as v', 'v.cityId  = ma.id', 'inner')
+			->join('events as e', 'e.venueId = v.id AND e.datetime > CURDATE() + INTERVAL 1 DAY', 'inner')
+			->group_by('ma.id')
 			->order_by('ma.city')
 			->get()
 			->result();
