@@ -37,6 +37,10 @@ $(function() {
 					eventsType = $('#events-type').val();
 				}
 				data.events_type = eventsType;
+				if ($('#user-id').length > 0) {
+					data.user_id = $('#user-id').val();
+				}
+
 				$.ajax(base_url + 'user/events/events_list', {
 					type: 'POST',
 					data: data,
@@ -100,6 +104,10 @@ $(function() {
 			eventsType = $('#events-type').val();
 		}
 		data.events_type = eventsType;
+
+		if ($('#user-id').length > 0) {
+			data.user_id = $('#user-id').val();
+		}
 
 		$.ajax(base_url + 'user/events/events_list', {
 			type: 'POST',

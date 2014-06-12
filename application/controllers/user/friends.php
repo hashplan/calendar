@@ -15,6 +15,7 @@ class Friends extends MY_Controller {
 		$this->data['page_class'] = 'friends';
 		$this->data['view'] = $this->get_user_identifier().'/dashboard/friends';
 		$this->data['data']['page_title'] = 'Current friends';
+		$this->data['user'] = $this->user;
 
 		$this->load->model('users_m');
 		$this->data['data']['friends'] = $this->users_m->get_friends();

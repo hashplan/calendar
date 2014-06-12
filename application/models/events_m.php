@@ -4,6 +4,15 @@ class Events_m extends MY_Model {
 
 	public function get_all($options = array()){
 		// $offset = 0, $limit = 5, $name = NULL, $city_id = NULL, $user_id = NULL
+		$current_user_id = $this->ion_auth->user()->row()->id;
+		$this->load->model('users_m');
+		$user_id = !empty($options['user_id']) && $this->users_m->user_id_is_correct($options['user_id'])
+			? $options['user_id']
+			: $current_user_id;
+
+		$is_admin_or_owner = $this->users_m->is_admin_or_owner($user_id);
+		$is_friend_of = $this->users_m->is_friend_of($user_id);
+
 		if (empty($options['limit'])) {
 			$options['limit'] = 5;
 		}
@@ -37,19 +46,26 @@ class Events_m extends MY_Model {
 		}
 
 		if (!empty($options['events_type'])) {
-			if ($options['events_type'] === 'deleted') {
-				$this->db->join('events_deleted AS ed', 'e.id = ed.eventId', 'inner');
+
+
+			if ($options['events_type'] === 'deleted' && $is_admin_or_owner) {
+				$this->db->join('events_deleted AS ed', 'e.id = ed.eventId AND ed.userId = '. $this->db->escape($user_id), 'inner');
 			}
-			else if ($options['events_type'] === 'favourite') {
-				$this->db->join('events_favourited AS ef', 'e.id = ef.eventId', 'inner');
-				$this->db->where('NOT EXISTS (SELECT 1 FROM events_deleted ed WHERE e.id = ed.eventId)', '', FALSE);
+			else if ($options['events_type'] === 'favourite' && $is_admin_or_owner) {
+				$this->db->join('events_favourited AS ef', 'e.id = ef.eventId AND ef.userId = '. $this->db->escape($user_id), 'inner');
+				$this->db->where('NOT EXISTS (SELECT 1 FROM events_deleted ed WHERE e.id = ed.eventId AND ed.userId = '. $this->db->escape($user_id) .')', '', FALSE);
 			}
-			else if ($options['events_type'] === 'my') {
-				$this->db->join('user_events AS ue', 'e.id = ue.eventId', 'inner');
-				$this->db->where('NOT EXISTS (SELECT 1 FROM events_deleted ed WHERE e.id = ed.eventId)', '', FALSE);
+			else if ($options['events_type'] === 'my' &&
+					($is_admin_or_owner || $is_friend_of))
+			{
+				$this->db->join('user_events AS ue', 'e.id = ue.eventId AND ue.userId = '. $this->db->escape($user_id), 'inner');
+				$this->db->where('NOT EXISTS (SELECT 1 FROM events_deleted ed WHERE e.id = ed.eventId AND ed.userId = '. $this->db->escape($user_id) .')', '', FALSE);
+			}
+			else if ($options['events_type'] === 'all' && $is_admin_or_owner) {
+				$this->db->where('NOT EXISTS (SELECT 1 FROM events_deleted ed WHERE e.id = ed.eventId AND ed.userId = '. $this->db->escape($user_id) .')', '', FALSE);
 			}
 			else {
-				$this->db->where('NOT EXISTS (SELECT 1 FROM events_deleted ed WHERE e.id = ed.eventId)', '', FALSE);
+				// 403
 			}
 		}
 
@@ -59,10 +75,6 @@ class Events_m extends MY_Model {
 
 		if (!empty($options['city_id'])) {
 			$this->db->where('v.cityId', $options['city_id']);
-		}
-
-		if (!empty($options['user_id'])) {
-			$this->db->join('user_events AS ue', 'e.id = ue.eventId AND ue.deleted = 0 AND ue.userId = '. $this->db->escape($options['user_id']));
 		}
 
 		if (!empty($options['preselects'])) {

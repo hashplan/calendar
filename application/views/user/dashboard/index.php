@@ -20,6 +20,7 @@
 			<h5 class="city-name">Location: doesn't matter</h5>
 			<p><?php echo anchor('user/events/choose_metro','Change Location<span class="caret"></span>', 'data-toggle="modal" data-target="#event_cities"');?></p>
 			<h5>Upcoming Events:</h5>
+			<input type="hidden" id="user-id" value="<?php echo $user_id ?>">
 			<input type="hidden" id="events-type" value="<?php echo $events_type ?>">
 			<div class = "row">
 				<div class="col-md-8">

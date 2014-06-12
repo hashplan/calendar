@@ -40,6 +40,8 @@
 
 $route['default_controller'] = "page";
 $route['404_override'] = '';
+
+$route['user/events/(:num)'] = 'user/events/index/$1';
 //$route['event/modal_details/(:num)']='event/modal_details/index/$1';
 
 /* End of file routes.php */

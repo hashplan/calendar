@@ -12,16 +12,13 @@ class Events extends MY_Controller {
 		if(!$this->ion_auth->in_group("members")){
 			redirect('auth/login','refresh');
 		}
-		$this->data['user'] = $this->ion_auth->user()->row();
+		$this->data['user'] = $this->user;
 		$this->load->model('events_m');
 		$this->load->model('users_m');
 	}
 
 	public function index($user_id = NULL) {
-		if ($this->users_m->is_admin_or_owner($this->user->id) ||
-			($this->users_m->user_id_is_correct($user_id) && $this->users_m->is_friend_of($user_id))) {
-			$this->_render_events_list_page('my');
-		}
+		$this->_render_events_list_page('my', $user_id);
 	}
 
 	public function all() {
@@ -45,6 +42,7 @@ class Events extends MY_Controller {
 		if (!empty($post['city_id'])) $options['city_id'] = $post['city_id'];
 		if (!empty($post['name']) && strlen(trim($post['name']))) $options['name'] = trim($post['name']);
 		if (!empty($post['specific_date'])) $options['specific_date'] = $post['specific_date'];
+		if (!empty($post['user_id'])) $options['user_id'] = $post['user_id'];
 		if (!empty($post['events_type']) && in_array($post['events_type'], array('deleted', 'favourite', 'my'))) {
 			$options['events_type'] = $post['events_type'];
 		}
@@ -60,12 +58,13 @@ class Events extends MY_Controller {
 		$this->load->view('/event/metros',array('metros'=>$this->location_m->get_metro_areas()));
 	}
 	
-	protected function _render_events_list_page($events_type) {
+	protected function _render_events_list_page($events_type, $user_id = NULL) {
 		$this->data['page_class'] = 'user-events';
 		$this->data['view'] = $this->get_user_identifier().'/dashboard/index';
+		$this->data['user_id'] = $this->users_m->user_id_is_correct($user_id) ? $user_id : $this->user->id;
 
 		$this->load->model('categories_m');
-		$events = $this->events_m->get_all(array('events_type' => $events_type));
+		$events = $this->events_m->get_all(array('events_type' => $events_type, 'user_id' => $user_id));
 		$events_data = array(
 			'events' => $events,
 			'categories' => $this->categories_m->get_top_level_categories(),
