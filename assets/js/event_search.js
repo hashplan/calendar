@@ -37,7 +37,7 @@ $(function() {
 					eventsType = $('#events-type').val();
 				}
 				data.events_type = eventsType;
-				$.ajax(base_url + 'user/dashboard/events_list', {
+				$.ajax(base_url + 'user/events/events_list', {
 					type: 'POST',
 					data: data,
 					success: function(response) {
@@ -101,7 +101,7 @@ $(function() {
 		}
 		data.events_type = eventsType;
 
-		$.ajax(base_url + 'user/dashboard/events_list', {
+		$.ajax(base_url + 'user/events/events_list', {
 			type: 'POST',
 			data: data,
 			success: function(response) {

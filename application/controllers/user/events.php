@@ -1,10 +1,11 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
-class Dashboard extends MY_Controller {
+class Events extends MY_Controller {
 //inherits from core/my controller
 
 	public $data = array(
 		'sub_layout' => 'layouts/user_page',
 	);
+	public $user = NULL;
 
 	public	function __construct(){
 		parent::__construct();
@@ -13,10 +14,14 @@ class Dashboard extends MY_Controller {
 		}
 		$this->data['user'] = $this->ion_auth->user()->row();
 		$this->load->model('events_m');
+		$this->load->model('users_m');
 	}
 
-	public function index(){
-		$this->_render_events_list_page('my');
+	public function index($user_id = NULL) {
+		if ($this->users_m->is_admin_or_owner($this->user->id) ||
+			($this->users_m->user_id_is_correct($user_id) && $this->users_m->is_friend_of($user_id))) {
+			$this->_render_events_list_page('my');
+		}
 	}
 
 	public function all() {

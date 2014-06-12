@@ -102,3 +102,48 @@ h1,h2,h3{font-family:georgia, serif;}
 	color: red;
 	font-style: italic;
 }
+
+/* Event pages - end */
+
+
+/* Friends pages - start */
+.page-friends .panel .panel-body {
+	position: relative;
+}
+
+.page-friends .left-section {
+	float: left;
+	margin-right: 15px;
+}
+
+.page-friends .right-section {
+	float: left;
+}
+
+.page-friends .panel .friend-pic img {
+	width: 60px;
+	height: 60px;
+}
+
+.page-friends .panel .friend-view-plans-button {
+	position: absolute;
+	right: 10px;
+	bottom: 10px;
+}
+
+.page-friends .people-you-may-know .dude-pic img {
+	width: 40px;
+	height: 40px;
+}
+
+.page-friends .people-you-may-know .row {
+	margin-bottom: 20px;
+}
+
+.page-friends .people-you-may-know .glyphicon-remove {
+	font-size: 12px;
+	color: #CCCCCC;
+	position: absolute;
+	top: 0;
+	right: 20px;
+}

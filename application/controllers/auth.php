@@ -86,7 +86,7 @@ class Auth extends MY_Controller {
 							elseif ($this->ion_auth->in_group("members"))
 							{        
 								//redirect them to the master controller
-							  redirect('user/dashboard','refresh');        
+							  redirect('user/events','refresh');
 
 							}
 							else

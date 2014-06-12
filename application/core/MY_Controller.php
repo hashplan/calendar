@@ -3,13 +3,14 @@ class MY_Controller extends CI_Controller {
 	public $data = array(
 		'page_class' => 'generic'
 	);
+	public $user = NULL;
 	public $layout = 'layouts/default';
 
 	protected function _render_page() {
 		$this->load->view($this->layout, $this->data);
 	}
 
-	function __construct(){
+	function __construct() {
 		parent::__construct();
 		// Set default empty data if missing
 		if (empty($this->data)) {
@@ -32,9 +33,6 @@ class MY_Controller extends CI_Controller {
 
 		$identifier = 'user';
 		$this->data['errors']=array();
-		//$this->data['site_name']=config_item('site_name');
-		//$this->data['meta_title']='# Plan';
-//		$this->data['page_class'] = $this->page_class;
 		$this->load->library('ion_auth');
 		$this->load->library('form_validation');
 		$this->load->helper('url');
@@ -43,40 +41,10 @@ class MY_Controller extends CI_Controller {
 
 		$this->lang->load('auth');
 		$this->load->helper('language');
-//		$this->output->cache(60);
-//		$this->output->enable_profiler(TRUE);
-		}
-		
-	public function add_event_to_user(){
-	$user_id = $this->ion_auth->user()->row()->id;
-	$event_id = $this->uri->segment(4);
-	$this->events_m->add_event_to_user($user_id, $event_id);
-	redirect($this->get_user_identifier().'/dashboard/my_plan/'.$user_id);
-}
 
-	public function delete_event_from_user(){
-	$user_id = $this->ion_auth->user()->row()->id;
-	$event_id = $this->uri->segment(4);
-	$this->events_m->delete_event_from_user($user_id, $event_id);
-	redirect($this->get_user_identifier().'/dashboard/my_plan/'.$user_id);
-}
-
-	public function my_plan(){
-	$user_id = $this->ion_auth->user()->row()->id;
-	$this->load->model('events_m');
-	$this->data['events']=$this->events_m->get_all($user_id);
-	$this->data['cal'] = $this->calendar();
-	$this->data['subview']=$this->get_user_identifier().'/dashboard/index';
-	$this->load->view($this->get_user_identifier().'/_layout_main',$this->data);
-}
-
-	public function my_trash(){
-	$user_id = $this->ion_auth->user()->row()->id;
-	$this->data['events']=$this->events_m->get_trash($user_id);
-	$this->data['cal'] = $this->calendar();
-	$this->data['subview']=$this->get_user_identifier().'/dashboard/index';
-	$this->load->view($this->get_user_identifier().'/_layout_main',$this->data);
-}
+		// Some user mess
+		$this->user = $this->ion_auth->user()->row();
+	}
 
 public function get_user_identifier(){
 		if($this->ion_auth->in_group("members"))
@@ -93,7 +61,7 @@ public function get_user_identifier(){
 public function calendar(){
 $prefs = array (
                'show_next_prev'  => TRUE,
-               'next_prev_url'   => 'http://localhost/calendar/user/dashboard'
+               'next_prev_url'   => 'http://localhost/calendar/user/events'
              );
 
 $this->load->library('calendar');

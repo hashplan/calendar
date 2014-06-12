@@ -26,7 +26,7 @@ class Event extends MY_Controller {
 		}
 		$this->load->model('events_m');
 		$this->events_m->delete($event_id);
-		redirect(base_url('user/dashboard'));
+		redirect(base_url('user/events'));
 	}
 
 	public function restore_from_trash($event_id = NULL) {
@@ -36,7 +36,7 @@ class Event extends MY_Controller {
 		}
 		$this->load->model('events_m');
 		$this->events_m->restore_from_trash($event_id);
-		redirect(base_url('user/dashboard/trash'));
+		redirect(base_url('user/events/trash'));
 	}
 
 	public function add_to_calendar($event_id = NULL) {
@@ -46,7 +46,7 @@ class Event extends MY_Controller {
 		}
 		$this->load->model('events_m');
 		$this->events_m->add_to_calendar($event_id);
-		redirect(base_url('user/dashboard'));
+		redirect(base_url('user/events'));
 	}
 
 	// should rename it later to smth like add_event or add_user_event
