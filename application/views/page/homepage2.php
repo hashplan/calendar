@@ -1,9 +1,5 @@
 <!--Main column-->
-<div class="jumbotron homepage_timer">
-	<div class = "container col-md-8 col-md-offset-3">
-		<p>It is <span id = "homepage_timer"></span>, what are you going to do?</p>
-	</div>
-</div>
+
 <!-- Carousel
 	================================================== -->
 <div id="homepage-slider" class="carousel slide" data-ride="carousel">
@@ -18,29 +14,43 @@
 			<img src="<?php echo site_url('/assets/img/homepage/crowd for homepage.jpg');?>" alt="Hashplan crowd!">
 			<div class="container">
 				<div class="carousel-caption">
-					<h4>Hashplan helps ensure that you never miss an event!</h4>
-					<p></p>
-					<!--<p><a class="btn btn-sm btn-primary" href="#" role="button">Do it now!</a></p>-->
+					<div class="homepage_timer">
+						<div class = "col-md-12">
+							<h1>It is <span id = "homepage_timer"></span>, what are you going to do?</h1>
+									<h3>Make plans and share them with friends!</h3>
+						</div>
+					</div>
+					<div class = "col-md-12">
+						<?php echo anchor('auth/create_user','Signup! <span class="glyphicon glyphicon-pencil">&nbsp </span>', 'class="btn btn-md btn-success"');?>
+					</div>
 				</div>
 			</div>
 		</div>
 		<div class="item">
-			<img src="<?php echo site_url('/assets/img/logo/plan.png');?>" alt="Hashplan event!">
+			<img src="<?php echo site_url('/assets/img/homepage/baseball game2.jpg');?>" alt="Baseball game!">
 			<div class="container">
 				<div class="carousel-caption">
-					<h4>PLAN IT!  Track your plans and share with friends!</h4>
+				<div class = "col-md-12">
+					<h3>Plan It!  Track your plans and share with friends!</h3>
 					<p></p>
-					<!--<p><a class="btn btn-sm btn-primary responsive" href="#" role="button">Learn more</a></p>-->
+				</div>
+					<div class = "col-md-12">
+						<?php echo anchor('auth/create_user','Signup! <span class="glyphicon glyphicon-pencil">&nbsp </span>', 'class="btn btn-md btn-success"');?>
+					</div>
 				</div>
 			</div>
 		</div>
 		<div class="item">
-			<img src="<?php echo site_url('/assets/img/logo/plan.png');?>" alt="Hashplan concert!">
+			<img src="<?php echo site_url('/assets/img/homepage/Beer Garden with Boat2.jpg');?>" alt="Beer garden outside!">
 			<div class="container">
 				<div class="carousel-caption">
-					<h4>We will be live in a jiffy!</h4>
+				<div class = "col-md-12">
+					<h4>Only a few hours from Happy Hour!</h4>
 					<p></p>
-					<!--<p><a class="btn btn-sm btn-primary" href="#" role="button">Get Started!</a></p>-->
+				</div>
+					<div class = "col-md-12">
+						<?php echo anchor('auth/create_user','Signup! <span class="glyphicon glyphicon-pencil">&nbsp </span>', 'class="btn btn-md btn-success"');?>
+					</div>
 				</div>
 			</div>
 		</div>

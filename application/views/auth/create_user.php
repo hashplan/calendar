@@ -1,7 +1,6 @@
 <div class="modal-dialog modal-sm">
     <div class="modal-content">
       <div class="modal-header">
-	  <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 		<!--<h3><?php echo lang('create_user_heading');?></h3>-->
 		<p><?php echo lang('create_user_subheading');?></p>
 

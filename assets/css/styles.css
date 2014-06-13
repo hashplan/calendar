@@ -7,17 +7,27 @@ h1,h2,h3{font-family:georgia, serif;}
 #map-canvas, .map-canvas-user {height:265px; width: 265px;margin: 0px; padding: 0px}
 
 #homepage_timer {
-	width: 200px;
 	color: #3276b1;
 }
 
-.jumbotron.homepage_timer{
-	background-color: #f5f5f5;
-	padding-top: 20px;
+.carousel-caption {
+    top: 0;
+	left: 0;
+	text-align: left;
+    bottom: auto;
 }
 
 .navbar-fixed-top {
 	position: static;
+	margin-bottom: 0px;
+}
+
+.jumbotron-about {
+    opacity: .7;
+	margin-top: 25px;
+	padding-top: 20px;
+	padding-bottom: 10px;
+
 }
 
 .event-buttons-wrapper {
