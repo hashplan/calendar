@@ -504,8 +504,8 @@ class Auth extends MY_Controller {
 			);
 
 		}
-					$this->data['subview']='auth/create_user';
-			$this->_render_page('_layout_modal', $this->data);
+			$this->data['subview']='auth/create_user';
+			$this->_render_page('_layout_plain', $this->data);
 	}
 
 	//edit a user
