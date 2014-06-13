@@ -5,12 +5,14 @@
 		</div>
 	</div>
 	<div class="row">
-		<div class="col-md-3"></div>
+		<div class="col-md-3">
+			<?php echo $left_block ?>
+		</div>
 
 		<div class="col-md-6">
 			<div class="row">
 				<div class="col-md-12">
-					<input type="hidden" id="friends-page-type" value="<?php echo $friends_page_type ?>"/>
+					<input type="hidden" id="friends-page-type" value="<?php echo $page_type ?>"/>
 					<input type="text" placeholder="Search" class="form-control" id="friends-name"/>
 					<a href="#" class="friends-advanced-search">Advanced search</a>
 				</div>
@@ -21,7 +23,7 @@
 						<div class="panel-heading">Friends</div>
 					</div>
 					<div id="friends-list">
-						<?php echo $friends_list ?>
+						<?php echo $users_list ?>
 					</div>
 				</div>
 			</div>

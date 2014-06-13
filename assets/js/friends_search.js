@@ -12,6 +12,13 @@ $(function() {
 		else if ($('#friends-page-type').val() === 'add_friends') {
 			url = base_url + 'user/friends/people_you_may_know_list';
 		}
+		else if ($('#friends-page-type').val() === 'friends_invites') {
+			url = base_url + 'user/friends/inviters_list';
+		}
+		else if ($('#friends-page-type').val() === 'friends_invites_sent') {
+			url = base_url + 'user/friends/invited_list';
+		}
+
 		var data = {
 			name: $('#friends-name').val()
 		};

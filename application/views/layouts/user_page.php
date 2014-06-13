@@ -20,7 +20,7 @@
 						<li><?php echo anchor('user/friends/add', 'Add friends') ?></li>
 					</ul>
 				</li>
-				<li><?php echo anchor('user/dashboard/invites/', 'Invites');?></li>
+				<li><?php echo anchor('user/friends/invites/', 'Invites');?></li>
 			</ul>
 
 			<!--Side bar-->

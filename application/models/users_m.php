@@ -225,4 +225,66 @@ class Users_m extends MY_Model {
 		return $this->db->query($sql, array($user_id, $connection_user_id, $connection_user_id, $user_id))->row();
 	}
 
+	public function get_inviters($options = array()) {
+		$user_id = !empty($options['user_id']) && !$this->user_id_is_correct($options['user_id'])
+			? $options['user_id']
+			: $this->ion_auth->user()->row()->id;
+
+		$users_raw = $this->db
+			->select('u.*, uc.*')
+			->from('user_connections AS uc')
+			->join('users AS u', 'uc.userId = u.id', 'inner')
+			->where('uc.type', 'friend_request')
+			->where('uc.connectionUserId', $user_id)
+			->order_by('first_name')
+			->order_by('last_name')
+			->get()
+			->result();
+
+		$users = array();
+		foreach ($users_raw as $user) {
+			$user->name = $this->generate_full_name($user);
+			if (!empty($options['name'])) {
+				if (stripos($user->name, $options['name']) !== FALSE) {
+					$users[] = $user;
+				}
+				continue;
+			}
+			$users[] = $user;
+		}
+
+		return $users;
+	}
+
+	public function get_invited($options = array()) {
+		$user_id = !empty($options['user_id']) && !$this->user_id_is_correct($options['user_id'])
+			? $options['user_id']
+			: $this->ion_auth->user()->row()->id;
+
+		$users_raw = $this->db
+			->select('u.*, uc.*')
+			->from('user_connections AS uc')
+			->join('users AS u', 'uc.connectionUserId = u.id', 'inner')
+			->where('uc.type', 'friend_request')
+			->where('uc.userId', $user_id)
+			->order_by('first_name')
+			->order_by('last_name')
+			->get()
+			->result();
+
+		$users = array();
+		foreach ($users_raw as $user) {
+			$user->name = $this->generate_full_name($user);
+			if (!empty($options['name'])) {
+				if (stripos($user->name, $options['name']) !== FALSE) {
+					$users[] = $user;
+				}
+				continue;
+			}
+			$users[] = $user;
+		}
+
+		return $users;
+	}
+
 }
