@@ -29,6 +29,8 @@
 	<script src="<?php echo site_url('assets/js/bootstrap.min.js');?>"></script>
 	<script src="<?php echo site_url('assets/js/bootstrap-datepicker.js');?>"></script>
 	<script src="<?php echo site_url('assets/js/event_search.js');?>"></script>
+	<script src="<?php echo site_url('assets/js/friends_search.js');?>"></script>
+	<script src="<?php echo site_url('assets/js/people_you_may_know.js');?>"></script>
 	<script src="<?php echo site_url('assets/js/user_added_event_form.js');?>"></script>
 	<script src="<?php echo site_url('assets/js/event_modal.js');?>"></script>
 	<script src="<?php echo site_url('assets/js/tinymce/tinymce.min.js');?>"></script>
