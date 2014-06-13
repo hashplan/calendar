@@ -119,10 +119,11 @@ class Users_m extends MY_Model {
 		return $mutual_friends_count;
 	}
 
-	public function get_people_user_may_know($user_id = NULL, $friends_count = 2) {
-		if (!$this->user_id_is_correct($user_id)) {
-			$user_id = $this->ion_auth->user()->row()->id;;
-		}
+	public function get_people_user_may_know($options = array()) {
+		$user_id = !empty($options['user_id']) && $this->user_id_is_correct($options['user_id'])
+			? $options['user_id']
+			: $this->ion_auth->user()->row()->id;
+		$friends_count = empty($options['friends_count']) ? 2 : $options['friends_count'];
 
 		$friends = $this->get_friends(array('user_id' => $user_id));
 		$friends_ids = $placeholders = array();
@@ -132,8 +133,8 @@ class Users_m extends MY_Model {
 		}
 		$placeholders = join(', ', $placeholders);
 
-		$query = $this->db->query('
-			SELECT t.user_id, COUNT(t.friend_id) friends_count, u.* /* 111111111111111111 */
+		$people_raw = $this->db->query('
+			SELECT t.user_id, COUNT(t.friend_id) friends_count, u.*
 			FROM
 			(
 				SELECT uc1.userId user_id, uc1.connectionUserId friend_id
@@ -149,15 +150,28 @@ class Users_m extends MY_Model {
 				AND uc2.type = "friend"
 			) t
 			INNER JOIN users u ON t.user_id = u.id
-			WHERE NOT EXISTS (SELECT 1 FROM user_connections uc3 WHERE uc3.userId = t.user_id AND uc3.connectionUserId = ? AND uc3.type = "removed")
-			AND NOT EXISTS (SELECT 1 FROM user_connections uc4 WHERE uc4.userId = ? AND uc4.connectionUserId = t.user_id AND uc4.type = "removed")
+			WHERE NOT EXISTS (SELECT 1 FROM user_connections uc3 WHERE uc3.userId = t.user_id AND uc3.connectionUserId = ? AND uc3.type IN ("removed", "friend_request"))
+			AND NOT EXISTS (SELECT 1 FROM user_connections uc4 WHERE uc4.userId = ? AND uc4.connectionUserId = t.user_id AND uc4.type IN ("removed", "friend_request"))
+			AND u.id != ?
 			GROUP BY t.user_id
 			HAVING COUNT(t.friend_id) >= ?
 			ORDER BY friends_count DESC
-			', array_merge($friends_ids, $friends_ids, $friends_ids, $friends_ids, array($user_id, $user_id, $friends_count))
-		);
+			', array_merge($friends_ids, $friends_ids, $friends_ids, $friends_ids, array($user_id, $user_id, $user_id, $friends_count))
+		)->result();
 
-		return $query->result();
+		$people = array();
+		foreach ($people_raw as $dude) {
+			$dude->name = $this->generate_full_name($dude);
+			if (!empty($options['raw'])) {
+				if (stripos($dude->name, $options['name']) !== FALSE) {
+					$people[] = $dude;
+				}
+				continue;
+			}
+			$people[] = $dude;
+		}
+
+		return $people;
 	}
 
 // First name + last name OR username if both missing
@@ -170,25 +184,29 @@ class Users_m extends MY_Model {
 		return $name;
 	}
 
-	public function remove_from_lists($connection_user_id) {
+	public function set_connection_between_users($connection_user_id, $user_id = NULL, $type = NULL) {
 		if (!$this->user_id_is_correct($connection_user_id)) {
 			return;
 		}
 
-		$user_id = $this->ion_auth->user()->row()->id;
+		$type_is_correct = $type !== NULL && in_array($type, array('removed', 'friend_request', 'friend'));
+		if (!$type_is_correct) {
+			return;
+		}
+
+		$user_id = $this->user_id_is_correct($user_id) ? $user_id : $this->ion_auth->user()->row()->id;
 		if ($connection = $this->get_connection_between_users($user_id, $connection_user_id)) {
 			$this->db
 				->where('id', $connection->id)
-				->update('user_connections', array('type' => 'removed'));
+				->update('user_connections', array('type' => $type));
 		}
 		else {
 			$this->db->insert('user_connections', array(
 				'userId' => $user_id,
 				'connectionUserId' => $connection_user_id,
-				'type' => 'removed'
+				'type' => $type
 			));
 		}
-
 	}
 
 	public function get_connection_between_users($user_id, $connection_user_id) {

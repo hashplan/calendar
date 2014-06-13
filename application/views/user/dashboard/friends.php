@@ -10,6 +10,7 @@
 		<div class="col-md-6">
 			<div class="row">
 				<div class="col-md-12">
+					<input type="hidden" id="friends-page-type" value="<?php echo $friends_page_type ?>"/>
 					<input type="text" placeholder="Search" class="form-control" id="friends-name"/>
 					<a href="#" class="friends-advanced-search">Advanced search</a>
 				</div>
@@ -31,8 +32,8 @@
 				<div class="panel-heading">People you may know</div>
 			</div>
 
-			<div id="people-you-may-know-list">
-				<?php echo $people_you_may_know_list ?>
+			<div id="people-you-may-know-block">
+				<?php echo $people_you_may_know_block ?>
 			</div>
 		</div>
 	</div>

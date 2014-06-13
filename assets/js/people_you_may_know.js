@@ -1,5 +1,5 @@
 $(function() {
-	$('.page-friends').on('click', '.remove-from-lists-link', function(e) {
+	$('.page-friends #people-you-may-know-block').on('click', '.remove-from-lists-link', function(e) {
 		e.preventDefault();
 		var userId = $(this).siblings('.dude-id').val();
 		$.ajax(base_url + 'user/friends/remove_from_lists', {
@@ -10,13 +10,23 @@ $(function() {
 			}
 		});
 	});
-
-	function fetchPeopleYouMayKnow() {
-		$.ajax(base_url + 'user/friends/people_you_may_know', {
+	$('.page-friends #people-you-may-know-block').on('click', '.connect-link', function(e) {
+		e.preventDefault();
+		var url = $(this).attr('href');
+		$.ajax(url, {
 			type: 'POST',
 //			data: data,
 			success: function(response) {
-				$('#people-you-may-know-list').html(response);
+			}
+		});
+	});
+
+	function fetchPeopleYouMayKnow() {
+		$.ajax(base_url + 'user/friends/people_you_may_know_block', {
+			type: 'POST',
+//			data: data,
+			success: function(response) {
+				$('#people-you-may-know-block').html(response);
 			}
 		});
 	}

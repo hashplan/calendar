@@ -131,16 +131,16 @@ h1,h2,h3{font-family:georgia, serif;}
 	bottom: 10px;
 }
 
-.page-friends #people-you-may-know-list .dude-pic img {
+.page-friends #people-you-may-know-block .dude-pic img {
 	width: 40px;
 	height: 40px;
 }
 
-.page-friends #people-you-may-know-list .row {
+.page-friends #people-you-may-know-block .row {
 	margin-bottom: 20px;
 }
 
-.page-friends #people-you-may-know-list .glyphicon-remove {
+.page-friends #people-you-may-know-block .glyphicon-remove {
 	font-size: 12px;
 	color: #CCCCCC;
 	position: absolute;

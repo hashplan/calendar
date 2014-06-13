@@ -8,6 +8,8 @@
 			<div class="right-section">
 				<div class="dude-name">
 					<?php echo html_escape($dude->name) ?>
+					<br>
+					<?php echo anchor('user/friends/friend_request/'. $dude->id, '<i class="glyphicon glyphicon-plus-sign"></i>Connect', array('class' => 'connect-link')) ?>
 				</div>
 			</div>
 			<a href="#" class="remove-from-lists-link"><i class="glyphicon glyphicon-remove"></i></a>
