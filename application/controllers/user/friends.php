@@ -1,6 +1,6 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-class Friends extends MY_Controller {
+class Friends extends AuthController {
 
 	public $data = array(
 		'sub_layout' => 'layouts/user_page',
@@ -13,6 +13,7 @@ class Friends extends MY_Controller {
 	}
 
 	public function index() {
+        Menu::setActive('user/friends/friends_current');
 		$page_class = 'friends';
 		$page_title = 'Current friends';
 		$page_type = 'friends';
@@ -22,15 +23,17 @@ class Friends extends MY_Controller {
 	}
 
 	public function add() {
+        Menu::setActive('user/friends/friends_add');
 		$page_class = 'friends';
 		$page_title = 'Add friends';
 		$page_type = 'add_friends';
 		$left_block = '';
-		$users = $this->users_m->$this->users_m->get_people_user_may_know();
+		$users = $this->users_m->get_people_user_may_know();
 		$this->_render_users_page($page_class, $page_title, $page_type, $left_block, $users);
 	}
 
 	public function invites($invite_type = NULL) {
+        Menu::setActive('user/invites');
 		if ($invite_type === 'sent') {
 			$this->_invites_sent();
 		}

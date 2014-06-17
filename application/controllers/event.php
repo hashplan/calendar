@@ -1,12 +1,9 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-class Event extends MY_Controller {
+class Event extends AuthController {
 
 	public function __construct(){
 		parent::__construct();
-		if(!$this->ion_auth->in_group("members")){
-			redirect('auth/login','refresh');
-		}
 		$this->data['user'] = $this->ion_auth->user()->row();
 	}
 
@@ -54,7 +51,7 @@ class Event extends MY_Controller {
 		//retrieve an event or set a new one
 		if($id){
 			$this->data['user_added_event'] = $this->events_m->get_event_by_id($id);
-			count($this->data['user_added_event'])||$this->data['errors'][]='Event could not be found';
+            $this->data['errors'][]=!count($this->data['user_added_event'])?'Event could not be found':'';
 		}
 		else {
 			$this->data['user_added_event'] = $this->events_m->get_new_user_added_event();
@@ -106,7 +103,7 @@ class Event extends MY_Controller {
 		if ($term && $location) {
 			$raw_data = $this->yelp_oauth->search_request($term, $location);
 			if (substr($raw_data, -2) === '[]') {
-				$raw_data = substr($raw_data, 0, strlen($data) - 2);
+				$raw_data = substr($raw_data, 0, strlen($raw_data) - 2);
 			}
 			if (($data = json_decode($raw_data, TRUE)) && json_last_error() === JSON_ERROR_NONE) {
 				$business = $data['businesses'][0];

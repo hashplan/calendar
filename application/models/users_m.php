@@ -2,10 +2,6 @@
 
 class Users_m extends MY_Model {
 
-	public function __construct() {
-		$this->load->library('Ion_auth');
-	}
-
 	public function user_id_is_correct($user_id) {
 		return is_numeric($user_id) && $user_id > 0;
 	}
@@ -177,7 +173,8 @@ class Users_m extends MY_Model {
 // First name + last name OR username if both missing
 	public function generate_full_name($user) {
 		$name = $user->first_name .' '. $user->last_name;
-		if (empty(trim($name))) {
+        $name = trim($name);
+		if (empty($name)) {
 			$name = $user->username;
 		}
 

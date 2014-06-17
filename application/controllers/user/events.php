@@ -1,5 +1,5 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
-class Events extends MY_Controller {
+class Events extends AuthController {
 //inherits from core/my controller
 
 	public $data = array(
@@ -9,9 +9,6 @@ class Events extends MY_Controller {
 
 	public	function __construct(){
 		parent::__construct();
-		if(!$this->ion_auth->in_group("members")){
-			redirect('auth/login','refresh');
-		}
 		$this->data['user'] = $this->user;
 		$this->load->model('events_m');
 		$this->load->model('users_m');
@@ -22,6 +19,7 @@ class Events extends MY_Controller {
 	}
 
 	public function all() {
+        Menu::setActive('user/events_all');
 		$this->_render_events_list_page('all');
 	}
 
