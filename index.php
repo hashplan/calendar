@@ -22,7 +22,7 @@ if( $_SERVER['HTTP_HOST'] == 'www.hashplan.dev' || $_SERVER['HTTP_HOST'] == 'www
 {
 	define( 'ENVIRONMENT', 'development' );
 }
-elseif( $_SERVER['HTTP_HOST'] == 'www.hashplan.com' || $_SERVER['HTTP_HOST'] == 'hashplan.com' || $_SERVER['HTTP_HOST'] == '54.187.99.182' )
+elseif( $_SERVER['HTTP_HOST'] == 'www.hashplans.com' || $_SERVER['HTTP_HOST'] == 'hashplans.com' || $_SERVER['HTTP_HOST'] == '54.187.99.182' )
 {
 	define( 'ENVIRONMENT', 'production' );
 }
