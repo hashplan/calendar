@@ -37,6 +37,9 @@ class Friends extends AuthController {
 		if ($invite_type === 'sent') {
 			$this->_invites_sent();
 		}
+		else if ($invite_type === 'events') {
+			$this->_invites_events();
+		}
 		else {
 			$this->_invites_received();
 		}
@@ -47,16 +50,27 @@ class Friends extends AuthController {
 		$page_title = 'Invites to connect with friends';
 		$page_type = 'friends_invites';
 		$left_block = $this->load->view('user/dashboard/invites_left_block', array(), TRUE);
-		$users = $this->users_m->get_inviters();
+		$users = $this->users_m->get_users_which_sent_friend_request();
+		$this->_render_users_page($page_class, $page_title, $page_type, $left_block, $users);
+	}
+
+	protected function _invites_events() {
+		$page_class = 'friends';
+		$page_title = 'Invites to visit events';
+		$page_type = 'events_invites';
+		$left_block = $this->load->view('user/dashboard/invites_left_block', array(), TRUE);
+		$users = $this->users_m->get_users_which_sent_event_invite();
 		$this->_render_users_page($page_class, $page_title, $page_type, $left_block, $users);
 	}
 
 	protected function _invites_sent() {
 		$page_class = 'friends';
 		$page_title = 'Sent invites';
-		$page_type = 'friends_invites_sent';
+		$page_type = 'invites_sent';
 		$left_block = $this->load->view('user/dashboard/invites_left_block', array(), TRUE);
-		$users = $this->users_m->get_invited();
+		$users_you_sent_friend_request = $this->users_m->get_users_you_sent_friend_request();
+		$users_you_sent_event_invite = $this->users_m->get_users_you_sent_event_invite();
+		$users = array_merge($users_you_sent_friend_request, $users_you_sent_event_invite);
 		$this->_render_users_page($page_class, $page_title, $page_type, $left_block, $users);
 	}
 
@@ -95,7 +109,7 @@ class Friends extends AuthController {
 		if (!empty($post['name']) && strlen(trim($post['name']))) $options['name'] = trim($post['name']);
 
 		$friends_all = $this->users_m->get_friends();
-		$friends_after_filter = $this->users_m->get_inviters($options);
+		$friends_after_filter = $this->users_m->get_users_which_sent_friend_request($options);
 
 		$friends_all_ids = array();
 		foreach ($friends_all as $friend) {
@@ -118,13 +132,13 @@ class Friends extends AuthController {
 		$this->load->view('user/dashboard/users_list', array('people' => $friends_after_filter, 'page_type' => 'friends_invites'));
 	}
 
-	public function invited_list() {
+	public function inviters_events_list() {
 		$post = $this->input->post();
 		$options = array();
 		if (!empty($post['name']) && strlen(trim($post['name']))) $options['name'] = trim($post['name']);
 
 		$friends_all = $this->users_m->get_friends();
-		$friends_after_filter = $this->users_m->get_invited($options);
+		$inviters_after_filter = $this->users_m->get_users_which_sent_event_invite($options);
 
 		$friends_all_ids = array();
 		foreach ($friends_all as $friend) {
@@ -132,19 +146,65 @@ class Friends extends AuthController {
 		}
 		$friend = NULL;
 
-		$friends_after_filter_ids = array();
-		foreach ($friends_after_filter as $friend) {
-			$friends_after_filter_ids[] = $friend->id;
+		$inviters_after_filter_ids = array();
+		foreach ($inviters_after_filter as $inviter) {
+			$inviters_after_filter_ids[] = $inviter->id;
 		}
 
-		$mutual_friends_count = $this->users_m->get_mutual_friends_count($friends_after_filter_ids, $friends_all_ids);
-		foreach ($friends_after_filter as $friend) {
-			$friend->mutual_friends_count = !empty($mutual_friends_count[$friend->id])
-				? $mutual_friends_count[$friend->id]
+		$mutual_friends_count = $this->users_m->get_mutual_friends_count($inviters_after_filter_ids, $friends_all_ids);
+		foreach ($inviters_after_filter as $inviter) {
+			$inviter->mutual_friends_count = !empty($mutual_friends_count[$inviter->id])
+				? $mutual_friends_count[$inviter->id]
 				: 0;
 		}
 
-		$this->load->view('user/dashboard/users_list', array('people' => $friends_after_filter, 'page_type' => 'friends_invites_sent'));
+		$this->load->view('user/dashboard/users_list', array('people' => $inviters_after_filter, 'page_type' => 'events_invites'));
+	}
+
+	public function invited_list() {
+		$post = $this->input->post();
+		$options = array();
+		if (!empty($post['name']) && strlen(trim($post['name']))) $options['name'] = trim($post['name']);
+
+		$friends_all = $this->users_m->get_friends();
+		$friend_request_receivers = $this->users_m->get_users_you_sent_friend_request($options);
+
+		$friends_all_ids = array();
+		foreach ($friends_all as $friend) {
+			$friends_all_ids[] = $friend->id;
+		}
+
+		$friend_request_receivers_after_filter_ids = array();
+		foreach ($friend_request_receivers as $receiver) {
+			$friend_request_receivers_after_filter_ids[] = $receiver->id;
+		}
+		$receiver = NULL;
+
+		$mutual_friends_count = $this->users_m->get_mutual_friends_count($friend_request_receivers_after_filter_ids, $friends_all_ids);
+		foreach ($friend_request_receivers as $receiver) {
+			$receiver->mutual_friends_count = !empty($mutual_friends_count[$receiver->id])
+				? $mutual_friends_count[$receiver->id]
+				: 0;
+		}
+		$receiver = NULL;
+
+		$event_invite_receivers = $this->users_m->get_users_you_sent_event_invite($options);
+		$event_invite_receivers_after_filter_ids = array();
+		foreach ($event_invite_receivers as $receiver) {
+			$event_invite_receivers_after_filter_ids[] = $receiver->id;
+		}
+		$receiver = NULL;
+
+		$mutual_friends_count = $this->users_m->get_mutual_friends_count($event_invite_receivers_after_filter_ids, $friends_all_ids);
+		foreach ($event_invite_receivers as $receiver) {
+			$receiver->mutual_friends_count = !empty($mutual_friends_count[$receiver->id])
+				? $mutual_friends_count[$receiver->id]
+				: 0;
+		}
+
+		$people = array_merge($friend_request_receivers, $event_invite_receivers);
+
+		$this->load->view('user/dashboard/users_list', array('people' => $people, 'page_type' => 'invites_sent'));
 	}
 
 	public function people_you_may_know_list() {
@@ -200,6 +260,12 @@ class Friends extends AuthController {
 	public function friend_accept($friend_id = NULL) {
 		$this->users_m->set_connection_between_users($friend_id, NULL, 'friend_request', 'friend');
 		redirect('user/friends/invites');
+	}
+
+	public function event_invite_accept($inviter_id, $event_id) {
+		$this->users_m->set_connection_between_users($inviter_id, NULL, 'event_invite', 'event_invite_accepted', $event_id);
+		// todo: moar logic
+		redirect('user/friends/invites/events');
 	}
 
 	protected function _render_users_page($page_class, $page_title, $page_type, $left_block, $users) {

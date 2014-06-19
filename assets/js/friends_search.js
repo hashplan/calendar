@@ -15,8 +15,11 @@ $(function() {
 		else if ($('#friends-page-type').val() === 'friends_invites') {
 			url = base_url + 'user/friends/inviters_list';
 		}
-		else if ($('#friends-page-type').val() === 'friends_invites_sent') {
+		else if ($('#friends-page-type').val() === 'invites_sent') {
 			url = base_url + 'user/friends/invited_list';
+		}
+		else if ($('#friends-page-type').val() === 'events_invites') {
+			url = base_url + 'user/friends/inviters_events_list';
 		}
 
 		var data = {

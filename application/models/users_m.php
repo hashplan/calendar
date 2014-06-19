@@ -69,6 +69,27 @@ class Users_m extends MY_Model {
 		return $is_friend;
 	}
 
+	public function get_connection_type_full_name($connection_type) {
+		switch ($connection_type) {
+			case 'friend':
+				$name = 'Friend';
+				break;
+			case 'removed':
+				$name = 'Removed';
+				break;
+			case 'friend_request':
+				$name = 'Friend Request';
+				break;
+			case 'event_invite':
+				$name = 'Event Invite';
+				break;
+			default:
+				$name = NULL;
+		}
+
+		return $name;
+	}
+
 
 	public function get_mutual_friends($user_ids = array(), $friends_to_search_ids = array()) {
 		if (empty($user_ids) || empty($friends_to_search_ids)) {
@@ -198,7 +219,7 @@ class Users_m extends MY_Model {
 			->delete('user_connections');
 	}
 
-	public function set_connection_between_users($connection_user_id, $user_id = NULL, $type_to_search = NULL, $type_to_set = NULL) {
+	public function set_connection_between_users($connection_user_id, $user_id = NULL, $type_to_search = NULL, $type_to_set = NULL, $event_id = NULL) {
 		if (!$this->user_id_is_correct($connection_user_id)) {
 			return;
 		}
@@ -210,7 +231,7 @@ class Users_m extends MY_Model {
 
 		$user_id = $this->user_id_is_correct($user_id) ? $user_id : $this->ion_auth->user()->row()->id;
 
-		$connections = $this->get_connection_between_users($user_id, $connection_user_id, $type_to_search);
+		$connections = $this->get_connection_between_users($user_id, $connection_user_id, $type_to_search, $event_id);
 		if (!empty($connections)) {
 			$connection = reset($connections);
 			$this->db
@@ -226,8 +247,8 @@ class Users_m extends MY_Model {
 		}
 	}
 
-	public function get_connection_between_users($user_id, $connection_user_id, $types = NULL) {
-		$types_clause1 = $types_clause2 = '';
+	public function get_connection_between_users($user_id, $connection_user_id, $types = NULL, $event_id = NULL) {
+		$types_clause1 = $types_clause2 = $event_id_clause1 = $event_id_clause2 = '';
 		if (is_string($types)) {
 			$types = array($types);
 		}
@@ -236,36 +257,56 @@ class Users_m extends MY_Model {
 			$types_clause1 .= ' AND uc1.type IN ('. join(', ', $type_placeholders) .') ';
 			$types_clause2 .= ' AND uc2.type IN ('. join(', ', $type_placeholders) .') ';
 		}
+		$event_id_is_correct = $event_id !== NULL && is_numeric($event_id) && $event_id > 0;
+		if ($event_id_is_correct) {
+			$event_id_clause1 = ' AND uc1.eventId = ? ';
+			$event_id_clause2 = ' AND uc2.eventId = ? ';
+		}
 
 		$sql = "
-			SELECT uc1.*
+			SELECT uc1.* /* get_connection_between_users */
 			FROM user_connections uc1
 			WHERE uc1.userId = ?
 			AND uc1.connectionUserId = ?".
-			$types_clause1 ."
+			$types_clause1 .
+			$event_id_clause1 ."
 			UNION
 			SELECT uc2.*
 			FROM user_connections uc2
 			WHERE uc2.connectionUserId = ?
 			AND uc2.userId = ?".
-			$types_clause2 ."
+			$types_clause2 .
+			$event_id_clause2 ."
 		";
 
-		$parameters = array($user_id, $connection_user_id, $user_id, $connection_user_id);
+		$parameters = array();
+		$parameters[] = $user_id;
+		$parameters[] = $connection_user_id;
 		if (is_array($types) && count($types) > 0) {
-			$parameters = array_merge(array($user_id, $connection_user_id), $types, array($user_id, $connection_user_id), $types);
+			$parameters = array_merge($parameters, $types);
+		}
+		if ($event_id_is_correct) {
+			$parameters[] = $event_id;
+		}
+		$parameters[] = $user_id;
+		$parameters[] = $connection_user_id;
+		if (is_array($types) && count($types) > 0) {
+			$parameters = array_merge($parameters, $types);
+		}
+		if ($event_id_is_correct) {
+			$parameters[] = $event_id;
 		}
 
 		return $this->db->query($sql, $parameters)->result();
 	}
 
-	public function get_inviters($options = array()) {
+	public function get_users_which_sent_friend_request($options = array()) {
 		$user_id = !empty($options['user_id']) && !$this->user_id_is_correct($options['user_id'])
 			? $options['user_id']
 			: $this->ion_auth->user()->row()->id;
 
 		$users_raw = $this->db
-			->select('u.*, uc.*, u.id AS id, uc.id AS user_connection_id /* get_inviters */')
+			->select('u.*, uc.*, u.id AS id, uc.id AS user_connection_id /* get_users_which_sent_friend_request */')
 			->from('user_connections AS uc')
 			->join('users AS u', 'uc.userId = u.id', 'inner')
 			->where('uc.type', 'friend_request')
@@ -284,19 +325,20 @@ class Users_m extends MY_Model {
 				}
 				continue;
 			}
+			$user->connection_type_full = $this->get_connection_type_full_name($user->type);
 			$users[] = $user;
 		}
 
 		return $users;
 	}
 
-	public function get_invited($options = array()) {
+	public function get_users_you_sent_friend_request($options = array()) {
 		$user_id = !empty($options['user_id']) && !$this->user_id_is_correct($options['user_id'])
 			? $options['user_id']
 			: $this->ion_auth->user()->row()->id;
 
 		$users_raw = $this->db
-			->select('u.*, uc.*')
+			->select('u.*, uc.*, u.id AS id, uc.id AS user_connection_id /* get_users_you_sent_friend_request */')
 			->from('user_connections AS uc')
 			->join('users AS u', 'uc.connectionUserId = u.id', 'inner')
 			->where('uc.type', 'friend_request')
@@ -315,6 +357,73 @@ class Users_m extends MY_Model {
 				}
 				continue;
 			}
+			$user->connection_type_full = $this->get_connection_type_full_name($user->type);
+			$users[] = $user;
+		}
+
+		return $users;
+	}
+
+	public function get_users_you_sent_event_invite($options = array()) {
+		$user_id = !empty($options['user_id']) && !$this->user_id_is_correct($options['user_id'])
+			? $options['user_id']
+			: $this->ion_auth->user()->row()->id;
+
+		$users_raw = $this->db
+			->select('u.*, uc.*, u.id AS id, uc.id AS user_connection_id /* get_users_you_sent_event_invite */')
+			->from('user_connections AS uc')
+			->join('users AS u', 'uc.connectionUserId = u.id', 'inner')
+			->where('uc.type', 'event_invite')
+			->where('uc.eventid IS NOT NULL', NULL, FALSE)
+			->where('uc.userId', $user_id)
+			->order_by('first_name')
+			->order_by('last_name')
+			->get()
+			->result();
+
+		$users = array();
+		foreach ($users_raw as $user) {
+			$user->name = $this->generate_full_name($user);
+			if (!empty($options['name'])) {
+				if (stripos($user->name, $options['name']) !== FALSE) {
+					$users[] = $user;
+				}
+				continue;
+			}
+			$user->connection_type_full = $this->get_connection_type_full_name($user->type);
+			$users[] = $user;
+		}
+
+		return $users;
+	}
+
+	public function get_users_which_sent_event_invite($options = array()) {
+		$user_id = !empty($options['user_id']) && !$this->user_id_is_correct($options['user_id'])
+			? $options['user_id']
+			: $this->ion_auth->user()->row()->id;
+
+		$users_raw = $this->db
+			->select('u.*, uc.*, u.id AS id, uc.id AS user_connection_id /* get_users_you_sent_event_invite */')
+			->from('user_connections AS uc')
+			->join('users AS u', 'uc.userId = u.id', 'inner')
+			->where('uc.type', 'event_invite')
+			->where('uc.eventid IS NOT NULL', NULL, FALSE)
+			->where('uc.connectionUserId', $user_id)
+			->order_by('first_name')
+			->order_by('last_name')
+			->get()
+			->result();
+
+		$users = array();
+		foreach ($users_raw as $user) {
+			$user->name = $this->generate_full_name($user);
+			if (!empty($options['name'])) {
+				if (stripos($user->name, $options['name']) !== FALSE) {
+					$users[] = $user;
+				}
+				continue;
+			}
+			$user->connection_type_full = $this->get_connection_type_full_name($user->type);
 			$users[] = $user;
 		}
 
