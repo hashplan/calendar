@@ -7,10 +7,12 @@
 			<div class="right-section">
 				<div class="friend-name"><?php echo anchor('user/events/'. $dude->id, $dude->name) ?></div>
 				<div class="friend-mutual-count"><?php echo html_escape($dude->mutual_friends_count) ?> shared connections</div>
-				<?php if ($friends_page_type === 'friends') {
+				<?php if ($page_type === 'friends') {
 					echo anchor('user/events/'. $dude->id, 'View plans', array('class' => 'btn btn-primary friend-view-plans-button'));
-				} else if ($friends_page_type === 'add_friends') {
+				} else if ($page_type === 'add_friends') {
 					echo anchor('user/friends/friend_request/'. $dude->id, 'Connect', array('class' => 'btn btn-primary friend-view-plans-button'));
+				} else if ($page_type === 'friends_invites') {
+					echo anchor('user/friends/friend_accept/'. $dude->id, 'Connect', array('class' => 'btn btn-primary friend-view-plans-button'));
 				} ?>
 			</div>
 		</div>

@@ -13,7 +13,7 @@ class Friends extends AuthController {
 	}
 
 	public function index() {
-        Menu::setActive('user/friends/friends_current');
+		Menu::setActive('user/friends/friends_current');
 		$page_class = 'friends';
 		$page_title = 'Current friends';
 		$page_type = 'friends';
@@ -23,7 +23,7 @@ class Friends extends AuthController {
 	}
 
 	public function add() {
-        Menu::setActive('user/friends/friends_add');
+		Menu::setActive('user/friends/friends_add');
 		$page_class = 'friends';
 		$page_title = 'Add friends';
 		$page_type = 'add_friends';
@@ -33,7 +33,7 @@ class Friends extends AuthController {
 	}
 
 	public function invites($invite_type = NULL) {
-        Menu::setActive('user/invites');
+		Menu::setActive('user/invites');
 		if ($invite_type === 'sent') {
 			$this->_invites_sent();
 		}
@@ -86,7 +86,7 @@ class Friends extends AuthController {
 				: 0;
 		}
 
-		$this->load->view('user/dashboard/users_list', array('people' => $friends_after_filter, 'friends_page_type' => 'friends'));
+		$this->load->view('user/dashboard/users_list', array('people' => $friends_after_filter, 'page_type' => 'friends'));
 	}
 
 	public function inviters_list() {
@@ -115,7 +115,7 @@ class Friends extends AuthController {
 				: 0;
 		}
 
-		$this->load->view('user/dashboard/users_list', array('people' => $friends_after_filter, 'friends_page_type' => 'friends_invites'));
+		$this->load->view('user/dashboard/users_list', array('people' => $friends_after_filter, 'page_type' => 'friends_invites'));
 	}
 
 	public function invited_list() {
@@ -144,7 +144,7 @@ class Friends extends AuthController {
 				: 0;
 		}
 
-		$this->load->view('user/dashboard/users_list', array('people' => $friends_after_filter, 'friends_page_type' => 'friends_invites_sent'));
+		$this->load->view('user/dashboard/users_list', array('people' => $friends_after_filter, 'page_type' => 'friends_invites_sent'));
 	}
 
 	public function people_you_may_know_list() {
@@ -173,7 +173,7 @@ class Friends extends AuthController {
 				: 0;
 		}
 
-		$this->load->view('user/dashboard/users_list', array('people' => $people_after_filter, 'friends_page_type' => 'add_friends'));
+		$this->load->view('user/dashboard/users_list', array('people' => $people_after_filter, 'page_type' => 'add_friends'));
 	}
 
 	public function people_you_may_know_block() {
@@ -187,12 +187,19 @@ class Friends extends AuthController {
 	public function remove_from_lists() {
 		$post = $this->input->post();
 		if (!empty($post['user_id'])) {
-			$this->users_m->set_connection_between_users($post['user_id'], NULL, 'removed');
+			$this->users_m->delete_connection_between_users($post['user_id'], NULL);
+			$this->users_m->set_connection_between_users($post['user_id'], NULL, NULL, 'removed');
 		}
 	}
 
-	public function friend_request($user_id = NULL) {
-		$this->users_m->set_connection_between_users($user_id, NULL, 'friend_request');
+	public function friend_request($friend_id = NULL) {
+		$this->users_m->set_connection_between_users($friend_id, NULL, NULL, 'friend_request');
+		redirect('user/friends/add');
+	}
+
+	public function friend_accept($friend_id = NULL) {
+		$this->users_m->set_connection_between_users($friend_id, NULL, 'friend_request', 'friend');
+		redirect('user/friends/invites');
 	}
 
 	protected function _render_users_page($page_class, $page_title, $page_type, $left_block, $users) {
@@ -221,7 +228,7 @@ class Friends extends AuthController {
 		}
 		$this->data['data']['people_you_may_know_block'] = $this->load->view('user/dashboard/people_you_may_know_block', array('people_you_may_know' => $people_you_may_know), TRUE);
 
-		$users_list = $this->load->view('user/dashboard/users_list', array('people' => $users, 'friends_page_type' => 'friends'), TRUE);
+		$users_list = $this->load->view('user/dashboard/users_list', array('people' => $users, 'page_type' => $page_type), TRUE);
 		$this->data['data']['users_list'] = $users_list;
 
 		$this->_render_page();

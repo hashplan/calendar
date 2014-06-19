@@ -21,7 +21,7 @@ class Users_m extends MY_Model {
 		// CI active record doesnt support UNION
 		// UNION is used to avoid full table scan
 		$sql = "
-			SELECT u.*
+			SELECT u.* /* get_friends */
 			FROM (
 				SELECT uc1.connectionUserId friend_id, uc1.type
 				FROM user_connections uc1
@@ -80,7 +80,7 @@ class Users_m extends MY_Model {
 		$placeholders_friends_to_search_ids = join(',', array_fill(0, count($friends_to_search_ids), '?'));
 
 		$query = $this->db->query('
-			SELECT uc1.userId friend_id, uc1.connectionUserId friend_friend_id
+			SELECT uc1.userId friend_id, uc1.connectionUserId friend_friend_id /* get_mutual_friends */
 			FROM user_connections uc1
 			WHERE uc1.userId IN ('. $placeholders_user_ids .')
 			AND uc1.connectionUserId IN ('. $placeholders_friends_to_search_ids .')
@@ -130,7 +130,7 @@ class Users_m extends MY_Model {
 		$placeholders = join(', ', $placeholders);
 
 		$people_raw = $this->db->query('
-			SELECT t.user_id, COUNT(t.friend_id) friends_count, u.*
+			SELECT t.user_id, COUNT(t.friend_id) friends_count, u.* /* get_people_user_may_know */
 			FROM
 			(
 				SELECT uc1.userId user_id, uc1.connectionUserId friend_id
@@ -158,7 +158,7 @@ class Users_m extends MY_Model {
 		$people = array();
 		foreach ($people_raw as $dude) {
 			$dude->name = $this->generate_full_name($dude);
-			if (!empty($options['raw'])) {
+			if (!empty($options['name'])) {
 				if (stripos($dude->name, $options['name']) !== FALSE) {
 					$people[] = $dude;
 				}
@@ -181,45 +181,82 @@ class Users_m extends MY_Model {
 		return $name;
 	}
 
-	public function set_connection_between_users($connection_user_id, $user_id = NULL, $type = NULL) {
+	public function delete_connection_between_users($connection_user_id, $user_id = NULL) {
+		if (!$this->user_id_is_correct($connection_user_id)) {
+			return;
+		}
+		$user_id = $this->user_id_is_correct($user_id) ? $user_id : $this->ion_auth->user()->row()->id;
+
+		$this->db
+			->where('connectionUserId', $connection_user_id)
+			->where('userId', $user_id)
+			->delete('user_connections');
+
+		$this->db
+			->where('userId', $connection_user_id)
+			->where('connectionUserId', $user_id)
+			->delete('user_connections');
+	}
+
+	public function set_connection_between_users($connection_user_id, $user_id = NULL, $type_to_search = NULL, $type_to_set = NULL) {
 		if (!$this->user_id_is_correct($connection_user_id)) {
 			return;
 		}
 
-		$type_is_correct = $type !== NULL && in_array($type, array('removed', 'friend_request', 'friend'));
+		$type_is_correct = $type_to_set !== NULL;
 		if (!$type_is_correct) {
 			return;
 		}
 
 		$user_id = $this->user_id_is_correct($user_id) ? $user_id : $this->ion_auth->user()->row()->id;
-		if ($connection = $this->get_connection_between_users($user_id, $connection_user_id)) {
+
+		$connections = $this->get_connection_between_users($user_id, $connection_user_id, $type_to_search);
+		if (!empty($connections)) {
+			$connection = reset($connections);
 			$this->db
 				->where('id', $connection->id)
-				->update('user_connections', array('type' => $type));
+				->update('user_connections', array('type' => $type_to_set));
 		}
 		else {
 			$this->db->insert('user_connections', array(
 				'userId' => $user_id,
 				'connectionUserId' => $connection_user_id,
-				'type' => $type
+				'type' => $type_to_set
 			));
 		}
 	}
 
-	public function get_connection_between_users($user_id, $connection_user_id) {
+	public function get_connection_between_users($user_id, $connection_user_id, $types = NULL) {
+		$types_clause1 = $types_clause2 = '';
+		if (is_string($types)) {
+			$types = array($types);
+		}
+		if (is_array($types) && count($types) > 0) {
+			$type_placeholders = array_fill(0, count($types), '?');
+			$types_clause1 .= ' AND uc1.type IN ('. join(', ', $type_placeholders) .') ';
+			$types_clause2 .= ' AND uc2.type IN ('. join(', ', $type_placeholders) .') ';
+		}
+
 		$sql = "
 			SELECT uc1.*
 			FROM user_connections uc1
 			WHERE uc1.userId = ?
-			AND uc1.connectionUserId = ?
+			AND uc1.connectionUserId = ?".
+			$types_clause1 ."
 			UNION
 			SELECT uc2.*
 			FROM user_connections uc2
 			WHERE uc2.connectionUserId = ?
-			AND uc2.userId = ?
+			AND uc2.userId = ?".
+			$types_clause2 ."
 		";
 
-		return $this->db->query($sql, array($user_id, $connection_user_id, $connection_user_id, $user_id))->row();
+		$parameters = array($user_id, $connection_user_id, $user_id, $connection_user_id);
+		if (is_array($types) && count($types) > 0) {
+			$parameters = array_merge(array($user_id, $connection_user_id), $types, array($user_id, $connection_user_id), $types);
+		}
+
+		return $this->db->query($sql, $parameters)->result();
 	}
 
 	public function get_inviters($options = array()) {
@@ -228,7 +265,7 @@ class Users_m extends MY_Model {
 			: $this->ion_auth->user()->row()->id;
 
 		$users_raw = $this->db
-			->select('u.*, uc.*')
+			->select('u.*, uc.*, u.id AS id, uc.id AS user_connection_id /* get_inviters */')
 			->from('user_connections AS uc')
 			->join('users AS u', 'uc.userId = u.id', 'inner')
 			->where('uc.type', 'friend_request')

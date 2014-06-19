@@ -10,16 +10,6 @@ $(function() {
 			}
 		});
 	});
-	$('.page-friends #people-you-may-know-block').on('click', '.connect-link', function(e) {
-		e.preventDefault();
-		var url = $(this).attr('href');
-		$.ajax(url, {
-			type: 'POST',
-//			data: data,
-			success: function(response) {
-			}
-		});
-	});
 
 	function fetchPeopleYouMayKnow() {
 		$.ajax(base_url + 'user/friends/people_you_may_know_block', {
