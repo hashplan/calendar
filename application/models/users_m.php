@@ -239,11 +239,16 @@ class Users_m extends MY_Model {
 				->update('user_connections', array('type' => $type_to_set));
 		}
 		else {
-			$this->db->insert('user_connections', array(
+			$values = array(
 				'userId' => $user_id,
 				'connectionUserId' => $connection_user_id,
 				'type' => $type_to_set
-			));
+			);
+			$event_id_is_correct = $event_id !== NULL && is_numeric($event_id) && $event_id > 0;
+			if ($event_id_is_correct) {
+				$values['eventId'] = $event_id;
+			}
+			$this->db->insert('user_connections', $values);
 		}
 	}
 
@@ -428,6 +433,50 @@ class Users_m extends MY_Model {
 		}
 
 		return $users;
+	}
+
+	public function get_friends_you_can_invite_on_event($options = array()) {
+		$user_id = !empty($options['user_id']) && !$this->user_id_is_correct($options['user_id'])
+			? $options['user_id']
+			: $this->ion_auth->user()->row()->id;
+
+		$event_id_is_correct = $options['event_id'] !== NULL && is_numeric($options['event_id']) && $options['event_id'] > 0;
+		if (!$event_id_is_correct) {
+			return array();
+		}
+
+		$sql = "
+			SELECT u.* /* get_friends_you_can_invite_on_event */
+			FROM (
+				SELECT uc1.connectionUserId friend_id, uc1.type
+				FROM user_connections uc1
+				WHERE uc1.userId = ?
+				UNION
+				SELECT uc2.userId friend_id, uc2.type
+				FROM user_connections uc2
+				WHERE uc2.connectionUserId = ?
+			) uc
+			INNER JOIN users u ON uc.friend_id = u.id
+				AND uc.type = 'friend'
+			WHERE NOT EXISTS (SELECT 1 FROM user_events ue WHERE ue.userId = uc.friend_id AND ue.eventId = ?)
+			ORDER BY u.first_name, u.last_name
+		";
+
+		$friends_raw = $this->db->query($sql, array($user_id, $user_id, $options['event_id']))->result();
+
+		$friends = array();
+		foreach ($friends_raw as $friend) {
+			$friend->name = $this->generate_full_name($friend);
+			if (!empty($options['name'])) {
+				if (stripos($friend->name, $options['name']) !== FALSE) {
+					$friends[] = $friend;
+				}
+				continue;
+			}
+			$friends[] = $friend;
+		}
+
+		return $friends;
 	}
 
 }

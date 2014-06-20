@@ -39,18 +39,15 @@
 					</div>
 				</div>
 				<div class="tab-pane" id="attendees">
-					<ol>
-						<li>Attendee</li>
-						<li>Attendee</li>
-						<li>Attendee</li>
-						<li>Attendee</li>
-						<li>Attendee</li>
-						<li>Attendee</li>
-						<li>Attendee</li>
-						<li>Attendee</li>
-						<li>Attendee</li>
-						<li>Attendee</li>
-					</ol>
+					<div class="row">
+						<?php foreach ($friends_you_can_invite_on_event as $friend) { ?>
+							<div class="col-md-6 friend-you-can-invite">
+								<input type="checkbox" id="invite-friend-<?php echo $friend->id ?>">
+								<img src="/assets/img/icons/no-image-100.png">
+								<label for="invite-friend-<?php echo $friend->id ?>"><?php echo html_escape($friend->name) ?></label>
+							</div>
+						<?php } ?>
+					</div>
 				</div>
 			</div>
 		</div>

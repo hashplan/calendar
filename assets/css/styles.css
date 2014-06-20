@@ -108,6 +108,24 @@ h1,h2,h3{font-family:georgia, serif;}
 	width: 85%;
 }
 
+#event_modal .friend-you-can-invite {
+	margin-bottom: 15px;
+}
+
+#event_modal .friend-you-can-invite input {
+	margin-right: 10px;
+}
+
+#event_modal .friend-you-can-invite img {
+	width: 30px;
+	height: 30px;
+	margin-right: 10px;
+}
+
+#event_modal .friend-you-can-invite label {
+	font-weight: normal;
+}
+
 .form_error{
 	color: red;
 	font-style: italic;

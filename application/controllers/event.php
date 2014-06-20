@@ -89,10 +89,12 @@ class Event extends AuthController {
 
 	public function modal_details($event_id) {
 		$this->load->model('events_m');
+		$this->load->model('users_m');
 		$event = $this->events_m->get_event_by_id($event_id);
 		$this->data['event'] = $event;
 		$this->data['google_maps_embed_api_key'] = $this->config->item('google_maps_embed_api_key');
 		$this->data['is_favourite'] = count($this->events_m->get_favourite_events($event->event_id)) === 1;
+		$this->data['friends_you_can_invite_on_event'] = $this->users_m->get_friends_you_can_invite_on_event(array('event_id' => $event_id));
 		$this->load->view('event/index', $this->data);
 	}
 

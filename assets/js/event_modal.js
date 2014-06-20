@@ -43,10 +43,21 @@ $(function() {
 	// add to favourites
 	$('#event_modal').on('click', '.button-add-to-favourites', function(e) {
 		var eventId = $('#event_modal .event-id-hidden').val();
-		$.ajax('/event/add_to_favourites/'+ eventId, {
+		$.ajax(base_url +'event/add_to_favourites/'+ eventId, {
 			type: 'POST',
-//			dataType: 'json',
-			dataType: 'text'
+			success: function() {
+				var ids = [];
+				$('#event_modal input[type="checkbox"]:checked').each(function() {
+					var id = $(this).attr('id').split('-')[2];
+					ids.push(id);
+				});
+				if (ids.length > 0) {
+					$.ajax(base_url +'user/friends/send_multiple_event_invites', {
+						type: 'POST',
+						data: { friend_ids: ids, event_id: $('#event_modal .event-id-hidden').val() }
+					});
+				}
+			}
 		});
 	});
 });

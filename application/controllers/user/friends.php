@@ -263,7 +263,7 @@ class Friends extends AuthController {
 	}
 
 	public function event_invite_accept($inviter_id, $event_id) {
-		$this->users_m->set_connection_between_users($inviter_id, NULL, 'event_invite', 'event_invite_accepted', $event_id);
+		$this->users_m->set_connection_between_users($inviter_id, NULL, 'event_invite', 'event_invite_accept', $event_id);
 		// todo: moar logic
 		redirect('user/friends/invites/events');
 	}
@@ -298,6 +298,18 @@ class Friends extends AuthController {
 		$this->data['data']['users_list'] = $users_list;
 
 		$this->_render_page();
+	}
+
+	public function send_multiple_event_invites() {
+		$post = $this->input->post();
+		$friend_ids = !empty($post['friend_ids']) ? $post['friend_ids'] : NULL;
+		$event_id_is_correct = $post['event_id'] !== NULL && is_numeric($post['event_id']) && $post['event_id'] > 0;
+		if ($friend_ids === NULL || !$event_id_is_correct) {
+			return;
+		}
+		foreach ($friend_ids as $friend_id) {
+			$this->users_m->set_connection_between_users($friend_id, NULL, NULL, 'event_invite', $post['event_id']);
+		}
 	}
 
 }
