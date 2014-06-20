@@ -108,8 +108,13 @@ class Event extends AuthController {
 				$raw_data = substr($raw_data, 0, strlen($raw_data) - 2);
 			}
 			if (($data = json_decode($raw_data, TRUE)) && json_last_error() === JSON_ERROR_NONE) {
-				$business = $data['businesses'][0];
-				echo $this->load->view('event/yelp', array('business' => $business));
+				if (isset($data['businesses'][0])) {
+					$business = $data['businesses'][0];
+					echo $this->load->view('event/yelp', array('business' => $business));
+				}
+				else {
+					echo 'No data from yelp';
+				}
 			}
 		}
 
