@@ -33,7 +33,7 @@ $(function() {
 					data.category = $('#event-categories').val();
 				}
 				var eventsType = 'all';
-				if (['favourite', 'deleted', 'my'].indexOf($('#events-type').val())) {
+				if (['favourite', 'deleted', 'my'].indexOf($('#events-type').val()) !== -1) {
 					eventsType = $('#events-type').val();
 				}
 				data.events_type = eventsType;
@@ -100,7 +100,7 @@ $(function() {
 		}
 
 		var eventsType = 'all';
-		if (['favourite', 'deleted', 'my'].indexOf($('#events-type').val())) {
+		if (['favourite', 'deleted', 'my'].indexOf($('#events-type').val()) !== -1) {
 			eventsType = $('#events-type').val();
 		}
 		data.events_type = eventsType;
