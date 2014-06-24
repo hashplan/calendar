@@ -7,7 +7,7 @@
 			</div>
 			<hr>
 			<!-- Single button -->
-			<?php echo anchor('user/dashboard/user_added_event',"ADD EVENT",'class = "btn btn-primary btn-block" data-toggle = "modal" data-target = "#user_added_event_form"');?>
+			<?php echo anchor('event/add',"ADD EVENT",'class = "btn btn-primary btn-block" data-toggle = "modal" data-target = "#user_added_event_form"');?>
 			<?php echo anchor('user/events/favourite',"<span class='glyphicon glyphicon-thumbs-up'> &nbsp</span>Favourites",'class = "btn btn-default btn-block button-favourites"');?>
 			<?php echo anchor('user/events/trash',"<span class='glyphicon glyphicon-trash'> &nbsp</span>Trash",'class = "btn btn-default btn-block button-trash"');?>
 		</div>

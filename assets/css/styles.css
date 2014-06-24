@@ -10,6 +10,10 @@ h1,h2,h3{font-family:georgia, serif;}
 	color: #3276b1;
 }
 
+.datepicker {
+	z-index: 1051;
+}
+
 .carousel-caption {
     top: 0;
 	left: 0;
@@ -129,6 +133,14 @@ h1,h2,h3{font-family:georgia, serif;}
 .form_error{
 	color: red;
 	font-style: italic;
+}
+
+#user_added_event_form .row {
+	margin-bottom: 15px;
+}
+
+#user_added_event_form .save-button {
+	margin-right: 15px;
 }
 
 /* Event pages - end */

@@ -331,21 +331,38 @@ class Events_m extends MY_Model {
 		}
 	}
 	
-	public function save_user_added_event($data, $id = NULL){
-		//set timestamps
-			$now = date('Y-m-d H:i:s');
-			$data['insertedon']=$now;
-			$data['updatedon']=$now;
-		//insert
-			if($id === NULL){
-				$this->db->insert($this->table_name);
-				$id = $this->db->insert_id();
-			}
-		//update
-			else{
-				$this->db->where('user_added_event.id',$id);
-				$this->db->update($this->table_name);
-			}
-			return $id;
+	public function save($data) {
+		$user_id = $this->ion_auth->user()->row()->id;
+		$is_new = empty($data['id']);
+		if (empty($data['private'])) {
+			$data['private'] = FALSE;
+		}
+		if ($is_new) {
+			$this->db->insert('events', array(
+				'name' => $data['name'],
+				'description' => $data['description'],
+				'typeId' => NULL,
+				'datetime' => $data['date'] .' '. $data['time'],
+				'venueId' => NULL,
+				'stubhub_url' => NULL,
+				'insertedon' => NULL,
+				'insertedby' => NULL,
+				'updatedon' => NULL,
+				'updatedby' => NULL,
+				'is_public' => !((bool) $data['private']),
+				'ownerId' => $user_id,
+			));
+			$event_id = $this->db->insert_id();
+
+			$this->db->insert('user_events', array(
+				'userId' => $user_id,
+				'eventId' => $event_id,
+				'insertedon' => NULL,
+				'insertedby' => NULL,
+				'updatedon' => NULL,
+				'updatedby' => NULL,
+				'ownerId' => NULL,
+			));
+		}
 	}
 }

@@ -47,8 +47,8 @@ class Event extends AuthController {
 	}
 
 	// should rename it later to smth like add_event or add_user_event
-	public function add($id = NULL){
-		//retrieve an event or set a new one
+	public function add(){
+		/*//retrieve an event or set a new one
 		if($id){
 			$this->data['user_added_event'] = $this->events_m->get_event_by_id($id);
             $this->data['errors'][]=!count($this->data['user_added_event'])?'Event could not be found':'';
@@ -84,7 +84,18 @@ class Event extends AuthController {
 
 		//load view
 		$this->data['subview']=$this->get_user_identifier().'/dashboard/user_added_event_form';
-		$this->load->view($this->get_user_identifier().'/_layout_modal',$this->data);
+		$this->load->view($this->get_user_identifier().'/_layout_modal',$this->data);*/
+		$this->load->view('event/add', $this->data);
+	}
+
+	public function save() {
+		$post = $this->input->post();
+		$data = array();
+		foreach ($post['data'] as $item) {
+			$data[$item['name']] = $item['value'];
+		}
+		$this->load->model('events_m');
+		$this->events_m->save($data);
 	}
 
 	public function modal_details($event_id) {
