@@ -5,9 +5,7 @@
 		<div class="modal-header">
 			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 			<div class="modal-title" id="myModalLabel"><?php echo html_escape(date('l, F d', strtotime($event->event_datetime))) ?></div>
-			<?php if ($is_favourite) { ?>
-				<span class="label label-success">In favourites</span>
-			<?php } ?>
+			<span class="label label-success is-favourite is-favourite-<?php echo $is_favourite ? 'shown' : 'hidden'?>">In favourites</span>
 		</div>
 		<div class="modal-body">
 			<input type="hidden" class="google-maps-embed-api-key" value="<?php echo $google_maps_embed_api_key ?>"/>
@@ -53,7 +51,7 @@
 		</div>
 		<div class="modal-footer">
 			<?php if (!$is_favourite) { ?>
-				<button type="button" class="btn btn-success button-add-to-favourites" data-dismiss="modal" aria-hidden="true">Add to favourites</button>
+				<button type="button" class="btn btn-success button-add-to-favourites">Add to favourites</button>
 			<?php } ?>
 			<button type="button" class="btn btn-default button-close" data-dismiss="modal" aria-hidden="true">Close</button>
 		</div>

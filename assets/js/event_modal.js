@@ -57,6 +57,10 @@ $(function() {
 						data: { friend_ids: ids, event_id: $('#event_modal .event-id-hidden').val() }
 					});
 				}
+				if ($('#event_modal .is-favourite').hasClass('is-favourite-hidden')) {
+					$('#event_modal .is-favourite').removeClass('is-favourite-hidden').addClass('is-favourite-shown');
+					$('#event_modal .button-add-to-favourites').remove();
+				}
 			}
 		});
 	});
