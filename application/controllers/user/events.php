@@ -47,8 +47,10 @@ class Events extends AuthController {
 		else {
 			$options['events_type'] = 'all';
 		}
+		$current_date = !empty($post['current_date']) ? $post['current_date'] : NULL;
+
 		$events = $this->events_m->get_all($options);
-		$this->load->view($this->get_user_identifier() . '/dashboard/events', array('events' => $events));
+		$this->load->view($this->get_user_identifier() . '/dashboard/events', array('events' => $events, 'current_date' => $current_date));
 	}
 
 	public function choose_metro() {
@@ -66,6 +68,7 @@ class Events extends AuthController {
 		$events_data = array(
 			'events' => $events,
 			'categories' => $this->categories_m->get_top_level_categories(),
+			'current_date' => NULL,
 		);
 		$this->data['data']['events'] = $this->load->view($this->get_user_identifier() . '/dashboard/events', $events_data, true);
 

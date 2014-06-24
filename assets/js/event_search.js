@@ -40,6 +40,7 @@ $(function() {
 				if ($('#user-id').length > 0) {
 					data.user_id = $('#user-id').val();
 				}
+				data.current_date = $('.date-group:last').val();
 
 				$.ajax(base_url + 'user/events/events_list', {
 					type: 'POST',

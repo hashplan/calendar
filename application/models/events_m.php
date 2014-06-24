@@ -80,7 +80,7 @@ class Events_m extends MY_Model {
 		if (!empty($options['preselects'])) {
 			$date_range = array();
 			if ($options['preselects'] == 'weekend') {
-				$date_range['start'] = date('Y-m-d H:i:s', strtotime('next Saturday'));
+				$date_range['start'] = date('Y-m-d H:i:s', strtotime('next Friday'));
 				$date_range['end'] = date('Y-m-d H:i:s', strtotime('next Sunday'));
 				$date_range['end'] = str_replace('00:00:00', '23:59:59', $date_range['end']);
 			}
