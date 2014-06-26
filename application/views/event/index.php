@@ -26,6 +26,7 @@
 							<h4><?php echo html_escape($event->event_name) ?></h4>
 							<h4><?php echo html_escape($event->venue_name) ?></h4>
 							<h4><?php echo html_escape(date('H:i T', strtotime($event->event_datetime))) ?></h4>
+							<?php echo anchor($event->event_stubhub_url, 'Need tickets?') ?>
 						</div>
 						<div class="col-md-6">
 							<div class="map-holder"></div>
@@ -50,7 +51,10 @@
 			</div>
 		</div>
 		<div class="modal-footer">
-			<?php if (!$is_favourite) { ?>
+			<?php if (!$in_calendar) { ?>
+				<button type="button" class="btn btn-primary button-add-to-calendar">Add to calendar</button>
+			<?php }
+			if (!$is_favourite) { ?>
 				<button type="button" class="btn btn-success button-add-to-favourites">Add to favourites</button>
 			<?php } ?>
 			<button type="button" class="btn btn-default button-close" data-dismiss="modal" aria-hidden="true">Close</button>

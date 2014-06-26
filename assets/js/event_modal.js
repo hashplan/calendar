@@ -51,16 +51,32 @@ $(function() {
 					var id = $(this).attr('id').split('-')[2];
 					ids.push(id);
 				});
+				if ($('#event_modal .is-favourite').hasClass('is-favourite-hidden')) {
+					$('#event_modal .is-favourite').removeClass('is-favourite-hidden').addClass('is-favourite-shown');
+					$('#event_modal .button-add-to-favourites').remove();
+				}
+			}
+		});
+	});
+
+	// add to calendar
+	$('#event_modal').on('click', '.button-add-to-calendar', function(e) {
+		var eventId = $('#event_modal .event-id-hidden').val();
+		$.ajax(base_url +'event/add_to_calendar/'+ eventId, {
+			type: 'POST',
+			success: function() {
+				var ids = [];
+				$('#event_modal input[type="checkbox"]:checked').each(function() {
+					var id = $(this).attr('id').split('-')[2];
+					ids.push(id);
+				});
 				if (ids.length > 0) {
 					$.ajax(base_url +'user/friends/send_multiple_event_invites', {
 						type: 'POST',
 						data: { friend_ids: ids, event_id: $('#event_modal .event-id-hidden').val() }
 					});
 				}
-				if ($('#event_modal .is-favourite').hasClass('is-favourite-hidden')) {
-					$('#event_modal .is-favourite').removeClass('is-favourite-hidden').addClass('is-favourite-shown');
-					$('#event_modal .button-add-to-favourites').remove();
-				}
+				$('#event_modal .button-add-to-calendar').remove();
 			}
 		});
 	});
