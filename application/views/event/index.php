@@ -26,7 +26,9 @@
 							<h4><?php echo html_escape($event->event_name) ?></h4>
 							<h4><?php echo html_escape($event->venue_name) ?></h4>
 							<h4><?php echo html_escape(date('H:i T', strtotime($event->event_datetime))) ?></h4>
-							<?php echo anchor($event->event_stubhub_url, 'Need tickets?') ?>
+							<?php if ($event->event_stubhub_url) { ?>
+								<?php echo anchor('http://www.stubhub.com/'. $event->event_stubhub_url, 'Need tickets?') ?>
+							<?php } ?>
 						</div>
 						<div class="col-md-6">
 							<div class="map-holder"></div>
