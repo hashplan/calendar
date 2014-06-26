@@ -55,7 +55,7 @@ class Events extends AuthController {
 
 	public function choose_metro() {
 		$this->load->model('location_m');
-		$this->load->view('/event/metros',array('metros'=>$this->location_m->get_metro_areas()));
+		$this->load->view('/event/metros',array('metros'=>$this->location_m->get_event_metro_areas(), 'hide_events' => FALSE));
 	}
 	
 	protected function _render_events_list_page($events_type, $user_id = NULL) {

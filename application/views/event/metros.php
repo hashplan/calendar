@@ -6,16 +6,20 @@
 		</div>
 		<div class="modal-body">
 			<div class="row">
-				<div class="col-md-12">
-					<div class="item-city-id" style="display: none">0</div>
-					<a href="#" class="item-city-name" aria-hidden="true">Doesn't matter</a>
-					<span class="badge">all</span>
-				</div>
+				<?php if (!$hide_events) { ?>
+					<div class="col-md-12">
+						<div class="item-city-id" style="display: none">0</div>
+						<a href="#" class="item-city-name" aria-hidden="true">Doesn't matter</a>
+						<span class="badge">all</span>
+					</div>
+				<?php } ?>
 				<?php foreach($metros as $metro) { ?>
 					<div class="col-md-6">
 						<div class="item-city-id" style="display: none"><?php echo html_escape($metro->id) ?></div>
 						<a href="#" class="item-city-name" aria-hidden="true"><?php echo html_escape($metro->city) ?></a>
-						<span class = "badge"><?php echo $metro->count ?></span>
+						<?php if (!$hide_events) { ?>
+							<span class = "badge"><?php echo $metro->count ?></span>
+						<?php } ?>
 					</div>
 				<?php } ?>
 			</div>

@@ -33,6 +33,7 @@
 	<script src="<?php echo site_url('assets/js/people_you_may_know.js');?>"></script>
 	<script src="<?php echo site_url('assets/js/user_added_event_form.js');?>"></script>
 	<script src="<?php echo site_url('assets/js/event_modal.js');?>"></script>
+	<script src="<?php echo site_url('assets/js/account_settings.js');?>"></script>
 	<script src="<?php echo site_url('assets/js/tinymce/tinymce.min.js');?>"></script>
 	<script src="<?php echo site_url('assets/js/tooltip_for_event_to_plan.js');?>"></script>
 	<script type="text/javascript">

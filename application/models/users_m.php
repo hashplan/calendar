@@ -479,4 +479,50 @@ class Users_m extends MY_Model {
 		return $friends;
 	}
 
+	public function save_user($user_data) {
+		$is_new = empty($user_data['id']) && $this->user_id_is_correct($user_data['id']);
+		if ($is_new) {
+
+		}
+		else {
+			$user_id = $user_data['id'];
+			unset($user_data['id']);
+
+			if (empty($user_data['password']) && empty($user_data['password_confirm'])) {
+				unset($user_data['password'], $user_data['password_confirm']);
+			}
+			else {
+				$user = $this->ion_auth->user()->row();
+				$user_data['password'] = $this->ion_auth->hash_password($user_data['password'], $user->salt);
+				unset($user_data['password_confirm']);
+			}
+
+			if (!empty($user_data['metro_id'])) {
+				$this->db
+					->where('userId', $user_id)
+					->update('user_settings', array('metroId' => $user_data['metro_id']));
+			}
+			unset($user_data['metro_id']);
+
+			$this->db
+				->where('id', $user_id)
+				->update('users', $user_data);
+		}
+
+		return $this->db->affected_rows() === 1;
+	}
+
+	public function get_user_metro($user_id = NULL) {
+		if (!$this->user_id_is_correct($user_id)) {
+			return NULL;
+		}
+
+		return $this->db
+			->from('user_settings AS us')
+			->join('metroareas AS ma', 'ma.id = us.metroId')
+			->where('userId', $user_id)
+			->get()
+			->row();
+	}
+
 }
