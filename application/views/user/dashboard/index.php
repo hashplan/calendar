@@ -3,7 +3,7 @@
 
 		<div class="col-md-2">
 			<div class = "thumbnail">
-				<img src="<?php echo site_url('/assets/img/users/Stas.jpg');?>", alt="Stas image" class = "img-responsive img-rounded">
+				<img src="<?php echo site_url('/assets/img/users/'.$user->avatar_path);?>", alt="" class = "img-responsive img-rounded">
 			</div>
 			<hr>
 			<!-- Single button -->

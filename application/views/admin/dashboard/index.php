@@ -2,7 +2,7 @@
       <hr class="featurette-divider">
 <div class = "container">
 		<div class="col-md-2">
-          <img src="<?php echo site_url('/assets/img/users/Stas.jpg');?>", alt="Stas image">
+          <img src="<?php echo site_url('/assets/img/users/'.$user->avatart_path);?>", alt="">
 		<hr>
           <!-- Single button -->
 		<div class="btn-group">

@@ -20,9 +20,7 @@ class Account_settings extends AuthController {
 //		$this->data['subview']='user/account_settings/index';
 //		$this->load->view('user/_layout_main',$this->data);
 
-		$this->load->helper(array('form', 'url'));
 		$this->load->model('users_m');
-		$this->load->library('form_validation');
 
 		$this->form_validation->set_rules('username', 'Username', 'trim|required|xss_clean');
 		$this->form_validation->set_rules('first_name', 'First name', 'trim|required|xss_clean');
@@ -53,13 +51,16 @@ class Account_settings extends AuthController {
 
     public function avatar_upload($user_id){
 
+        $user = $this->ion_auth->user()->row();
         $this->load->library('image_lib');
+        $this->load->helper('file');
         $original_path = FCPATH.'assets/uploads/users';
         $resized_path = FCPATH.'assets/img/users';
+        $old_avatar =  $user->avatar_path;
         //config for original upload
         $config = array(
             'allowed_types'     => 'jpg|jpeg|gif|png',
-            'max_size'          => 204800, //2MB max
+            'max_size'          => 20000, //2MB max
             'upload_path'       => $original_path
         );
 
@@ -94,7 +95,11 @@ class Account_settings extends AuthController {
         );
 
         $this->db->where('id', $user_id);
-        $this->db->update('users', $data);
+        if($this->db->update('users', $data)){
+            unlink($original_path. '/' . $old_avatar);
+            unlink($resized_path . '/'. $old_avatar);
+        }
+        unlink($image_data['full_path']);
         redirect(base_url('user/account_settings'));
 
     }
