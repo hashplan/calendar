@@ -1,7 +1,7 @@
 <div class = "container">
 	<div class="col-md-2">
 		<div class = "thumbnail">
-			<img src="<?php echo site_url('/assets/img/users/Stas.jpg');?>", alt="Stas image">
+			<img src="<?php echo site_url('/assets/img/users/'.$user->avatar_path);?>", alt="Stas image">
 		</div>
 		<hr>
 	</div>
