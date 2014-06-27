@@ -53,6 +53,10 @@ h1,h2,h3{font-family:georgia, serif;}
 	padding: 5px 10px;
 }
 
+#friends-name {
+	margin-bottom: 20px;
+}
+
 .no-events-row.shown {
 	display: block;
 }
@@ -194,4 +198,15 @@ h1,h2,h3{font-family:georgia, serif;}
 	position: absolute;
 	top: 0;
 	right: 20px;
+}
+
+#locations-left-block ul,
+#locations-left-block ul li {
+	margin: 0;
+	padding: 0;
+	list-style-type: none;
+}
+
+#locations-left-block .location-hidden {
+	display: none;
 }

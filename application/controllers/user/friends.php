@@ -17,8 +17,10 @@ class Friends extends AuthController {
 		$page_class = 'friends';
 		$page_title = 'Current friends';
 		$page_type = 'friends';
-		$left_block = '';
+		$this->load->model('location_m');
 		$users = $this->users_m->get_friends();
+		$locations = $this->location_m->get_metro_areas_with_user_filter($users);
+		$left_block = $this->load->view('user/dashboard/locations_left_block', array('locations' => $locations), TRUE);
 		$this->_render_users_page($page_class, $page_title, $page_type, $left_block, $users);
 	}
 
@@ -27,8 +29,11 @@ class Friends extends AuthController {
 		$page_class = 'friends';
 		$page_title = 'Add friends';
 		$page_type = 'add_friends';
-		$left_block = '';
+		$this->load->model('location_m');
 		$users = $this->users_m->get_people_user_may_know();
+		$locations = $this->location_m->get_metro_areas_with_user_filter($users);
+		$left_block = $this->load->view('user/dashboard/locations_left_block', array('locations' => $locations), TRUE);
+
 		$this->_render_users_page($page_class, $page_title, $page_type, $left_block, $users);
 	}
 
@@ -83,6 +88,7 @@ class Friends extends AuthController {
 		$post = $this->input->post();
 		$options = array();
 		if (!empty($post['name']) && strlen(trim($post['name']))) $options['name'] = trim($post['name']);
+		$options['location_ids'] = empty($post['location_ids']) ? array('all') : $post['location_ids'];
 
 		$friends_all = $this->users_m->get_friends();
 		$friends_after_filter = $this->users_m->get_friends($options);
@@ -216,6 +222,7 @@ class Friends extends AuthController {
 		$post = $this->input->post();
 		$options = array();
 		if (!empty($post['name']) && strlen(trim($post['name']))) $options['name'] = trim($post['name']);
+		$options['location_ids'] = empty($post['location_ids']) ? array('all') : $post['location_ids'];
 
 		$friends_all = $this->users_m->get_friends();
 		$people_after_filter = $this->users_m->get_people_user_may_know($options);

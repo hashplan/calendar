@@ -33,8 +33,20 @@ class Users_m extends MY_Model {
 			) uc
 			INNER JOIN users u ON uc.friend_id = u.id
 				AND uc.type = 'friend'
-			ORDER BY u.first_name, u.last_name
 		";
+
+		if (!empty($options['location_ids']) && $options['location_ids'][0] !== 'all') {
+			foreach ($options['location_ids'] as &$location_id) {
+				$location_id = $this->db->escape($location_id);
+			}
+			$sql .= '
+			INNER JOIN user_settings us ON u.id = us.userId AND us.metroId IN ('. join(', ', $options['location_ids']) .')
+			';
+		}
+
+		$sql .= '
+			ORDER BY u.first_name, u.last_name
+		';
 
 		$friends_raw = $this->db->query($sql, array($user_id, $user_id))->result();
 
@@ -150,7 +162,7 @@ class Users_m extends MY_Model {
 		}
 		$placeholders = join(', ', $placeholders);
 
-		$people_raw = $this->db->query('
+		$sql = '
 			SELECT t.user_id, COUNT(t.friend_id) friends_count, u.* /* get_people_user_may_know */
 			FROM
 			(
@@ -167,13 +179,27 @@ class Users_m extends MY_Model {
 				AND uc2.type = "friend"
 			) t
 			INNER JOIN users u ON t.user_id = u.id
+		';
+
+		if (!empty($options['location_ids']) && $options['location_ids'][0] !== 'all') {
+			foreach ($options['location_ids'] as &$location_id) {
+				$location_id = $this->db->escape($location_id);
+			}
+			$sql .= '
+			INNER JOIN user_settings us ON u.id = us.userId AND us.metroId IN ('. join(', ', $options['location_ids']) .')
+			';
+		}
+
+		$sql .= '
 			WHERE NOT EXISTS (SELECT 1 FROM user_connections uc3 WHERE uc3.userId = t.user_id AND uc3.connectionUserId = ? AND uc3.type IN ("removed", "friend_request"))
 			AND NOT EXISTS (SELECT 1 FROM user_connections uc4 WHERE uc4.userId = ? AND uc4.connectionUserId = t.user_id AND uc4.type IN ("removed", "friend_request"))
 			AND u.id != ?
 			GROUP BY t.user_id
 			HAVING COUNT(t.friend_id) >= ?
 			ORDER BY friends_count DESC
-			', array_merge($friends_ids, $friends_ids, $friends_ids, $friends_ids, array($user_id, $user_id, $user_id, $friends_count))
+		';
+
+		$people_raw = $this->db->query($sql, array_merge($friends_ids, $friends_ids, $friends_ids, $friends_ids, array($user_id, $user_id, $user_id, $friends_count))
 		)->result();
 
 		$people = array();

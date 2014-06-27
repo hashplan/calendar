@@ -14,7 +14,6 @@
 				<div class="col-md-12">
 					<input type="hidden" id="friends-page-type" value="<?php echo $page_type ?>"/>
 					<input type="text" placeholder="Search" class="form-control" id="friends-name"/>
-					<a href="#" class="friends-advanced-search">Advanced search</a>
 				</div>
 			</div>
 			<div class="row">
