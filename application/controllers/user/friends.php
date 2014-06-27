@@ -34,43 +34,48 @@ class Friends extends AuthController {
 
 	public function invites($invite_type = NULL) {
 		Menu::setActive('user/invites');
+		$users_which_sent_friend_request = $this->users_m->get_users_which_sent_friend_request();
+		$users_which_sent_event_invite = $this->users_m->get_users_which_sent_event_invite();
+		$users_you_sent_friend_request = $this->users_m->get_users_you_sent_friend_request();
+		$users_you_sent_event_invite = $this->users_m->get_users_you_sent_event_invite();
+		$users_you_sent_invites = array_merge($users_you_sent_friend_request, $users_you_sent_event_invite);
+		$counts = array(
+			'received_friend_requests' => count($users_which_sent_friend_request),
+			'received_event_invites' => count($users_which_sent_event_invite),
+			'sent_invites' => count($users_you_sent_invites),
+		);
 		if ($invite_type === 'sent') {
-			$this->_invites_sent();
+			$this->_invites_sent($users_you_sent_invites, $counts);
 		}
 		else if ($invite_type === 'events') {
-			$this->_invites_events();
+			$this->_invites_events($users_which_sent_event_invite, $counts);
 		}
 		else {
-			$this->_invites_received();
+			$this->_invites_received($users_which_sent_friend_request, $counts);
 		}
 	}
 
-	protected function _invites_received() {
+	protected function _invites_received($users, $counts) {
 		$page_class = 'friends';
 		$page_title = 'Invites to connect with friends';
 		$page_type = 'friends_invites';
-		$left_block = $this->load->view('user/dashboard/invites_left_block', array(), TRUE);
-		$users = $this->users_m->get_users_which_sent_friend_request();
+		$left_block = $this->load->view('user/dashboard/invites_left_block', array('counts' => $counts), TRUE);
 		$this->_render_users_page($page_class, $page_title, $page_type, $left_block, $users);
 	}
 
-	protected function _invites_events() {
+	protected function _invites_events($users, $counts) {
 		$page_class = 'friends';
 		$page_title = 'Invites to visit events';
 		$page_type = 'events_invites';
-		$left_block = $this->load->view('user/dashboard/invites_left_block', array(), TRUE);
-		$users = $this->users_m->get_users_which_sent_event_invite();
+		$left_block = $this->load->view('user/dashboard/invites_left_block', array('counts' => $counts), TRUE);
 		$this->_render_users_page($page_class, $page_title, $page_type, $left_block, $users);
 	}
 
-	protected function _invites_sent() {
+	protected function _invites_sent($users, $counts) {
 		$page_class = 'friends';
 		$page_title = 'Sent invites';
 		$page_type = 'invites_sent';
-		$left_block = $this->load->view('user/dashboard/invites_left_block', array(), TRUE);
-		$users_you_sent_friend_request = $this->users_m->get_users_you_sent_friend_request();
-		$users_you_sent_event_invite = $this->users_m->get_users_you_sent_event_invite();
-		$users = array_merge($users_you_sent_friend_request, $users_you_sent_event_invite);
+		$left_block = $this->load->view('user/dashboard/invites_left_block', array('counts' => $counts), TRUE);
 		$this->_render_users_page($page_class, $page_title, $page_type, $left_block, $users);
 	}
 
