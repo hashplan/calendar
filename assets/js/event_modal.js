@@ -1,8 +1,12 @@
 $(function() {
 	// on show modal - load google map into first tab
 	$('#event_modal').on('shown.bs.modal', function(e) {
+		var eventOwnerId = $('#event_modal .event-owner-id-hidden').val();
 		var intervalId = setInterval(function() {
-			if ($('#event_modal #event .map-holder').length === 1) {
+			if (typeof eventOwnerId !== 'undefined') {
+				$('#event_modal #event .map-holder').hide();
+			}
+			if ($('#event_modal #event .map-holder').length === 1 && typeof eventOwnerId === 'undefined') {
 				var venueName = $('#event_modal .event-venue-hidden').val();
 				var cityName = $('#event_modal .event-city-hidden').val();
 				var googleMapsApiKey = $('#event_modal .google-maps-embed-api-key').val();

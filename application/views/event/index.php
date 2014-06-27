@@ -13,6 +13,7 @@
 			<input type="hidden" class="event-name-hidden" value="<?php echo urlencode($event->event_name) ?>"/>
 			<input type="hidden" class="event-venue-hidden" value="<?php echo urlencode($event->venue_name) ?>"/>
 			<input type="hidden" class="event-city-hidden" value="<?php echo urlencode(($event->city_city ? $event->city_city : $event->venue_city)) ?>"/>
+			<input type="hidden" class="event-owner-id-hidden" value="<?php echo urlencode($event->event_owner_id) ?>"/>
 			<ul class="nav nav-tabs">
 				<li class="active"><a href="#event" data-toggle="tab">Overview</a></li>
 				<li><a href="#venue" data-toggle="tab">Venue</a></li>

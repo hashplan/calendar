@@ -27,9 +27,10 @@ class Events_m extends MY_Model {
 		$this->db
 			->select('e.id, e.name, v.name as venue_name, e.datetime, DATE(e.datetime) AS date_only')
 			->select($is_deleted .' AS is_deleted', FALSE)
-			->select($is_in_calendar .' AS is_in_calendar', FALSE)
+			->select($is_in_calendar .' AS is_in_calendar /* get_all() */', FALSE)
 			->from('events AS e')
-			->join('venues AS v', 'e.venueId = v.id', 'inner')
+			->join('venues AS v', 'e.venueId = v.id', 'left')
+			->where('is_public', 1)
 			->order_by('e.datetime')
 			->limit($options['limit'], $options['offset']);
 
@@ -121,6 +122,7 @@ class Events_m extends MY_Model {
 				e.insertedby AS event_insertedby,
 				e.updatedon AS event_updatedon,
 				e.updatedby AS event_updatedby,
+				e.ownerId AS event_owner_id,
 				v.id AS venue_id,
 				v.name AS venue_name,
 				v.address AS venue_address,
@@ -141,7 +143,7 @@ class Events_m extends MY_Model {
 				ma.stateId AS city_state_id
 			')
 			->from('events AS e')
-			->join('venues AS v', 'e.venueId = v.id', 'inner')
+			->join('venues AS v', 'e.venueId = v.id', 'left')
 			->join('metroareas AS ma', 'v.cityId = ma.id', 'left')
 			->where('e.id', $id)
 			->get()
