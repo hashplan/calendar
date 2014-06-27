@@ -16,7 +16,7 @@
 				<div class="carousel-caption">
 					<div class="homepage_timer">
 						<div class = "col-md-12">
-							<h1>It is <span id = "homepage_timer"></span>, what are you going to do?</h1>
+							<h2>It is <span id = "homepage_timer"></span>, what are you going to do?</h2>
 									<h3>Make plans and share them with friends!</h3>
 						</div>
 					</div>
@@ -41,11 +41,11 @@
 			</div>
 		</div>
 		<div class="item">
-			<img src="<?php echo site_url('/assets/img/homepage/Beer Garden with Boat2.jpg');?>" alt="Beer garden outside!">
+			<img src="<?php echo site_url('/assets/img/homepage/band.jpg');?>" alt="Band stage!">
 			<div class="container">
 				<div class="carousel-caption">
 				<div class = "col-md-12">
-					<h4>Only a few hours from Happy Hour!</h4>
+					<h3>Only a few hours from Rock Hour!</h3>
 					<p></p>
 				</div>
 					<div class = "col-md-12">
@@ -69,7 +69,7 @@
 	<div class = "col-md-6">
 		<h2 class = "text-muted">How it works?</h2>
 	</div>
-	<div class = "col-md-12">
+	<div class = "col-md-8 col-md-offset-2">
 		<img class = "featurette-image img-responsive" src="<?php echo site_url('/assets/img/howitworks/how it works on homepage.jpg');?>" alt="How it works!">
 	</div>
 </div>
@@ -79,7 +79,7 @@
 	<div class = "col-md-6">
 		<h2 class = "text-muted">Cool integration!</h2>
 	</div>
-	<div class = "col-md-12" style = "margin-left:150px">
+	<div class = "col-md-8 col-md-offset-2">
 		<img class = "featurette-image img-responsive" src="<?php echo site_url('/assets/img/homepage/integration.png');?>" alt="Google maps and Yelp integration!">
 	</div>
 	<!--<div class = "col-md-6">
@@ -99,7 +99,7 @@
 	<div class = "col-md-6">
 		<h2 class = "text-muted">Go Mobile</h2>
 	</div>
-	<div class = "col-md-12" style = "margin-left:150px">
+	<div class = "col-md-8 col-md-offset-2">
 		<img class = "featurette-image img-responsive img-rounded" src="<?php echo site_url('/assets/img/homepage/gomobile.png');?>" alt="Mobile app">
 	</div>
 </div>

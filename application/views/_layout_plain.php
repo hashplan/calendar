@@ -18,12 +18,8 @@
 		</div>
 	</div>
 </div>
-<div class = "container">
-<a class="navbar-brand"><img src="<?php echo site_url('/assets/img/homepage/NYC Skyline.jpg');?>" alt="NYC skyline"></a>
+<div class="row" style = "background-image: url('../assets/img/homepage/Beer Garden with Boat.jpg'); height: 660px; width: 800px; margin-top: 50px; margin-left: 350px; padding-right: 225px; background-repeat: no-repeat">	
 	<div class = "row">
-	<!--Main column-->
-		<div class = "col-md-12">
 				<?php $this->load->view($subview);?>
-		</div>	
 	</div>
 </div>
