@@ -23,7 +23,7 @@ foreach ($events as $i => $event) {
             <!--add to events for user id a specific event id-->
             <div class="btn-group btn-group-xs event-buttons-wrapper">
                 <?php if($event->event_owner_id != $user_id) {
-                    echo anchor('event/delete_from_calendar/'. $event->id, '<i class="glyphicon glyphicon-trash"></i>', array('title' => 'Delete Event', 'class' => 'btn btn-default'));
+                    echo anchor('event/delete_from_calendar/'. $event->id, '<i class="glyphicon glyphicon-trash"></i>', array('title' => 'Delete Event From Plan', 'class' => 'btn btn-default'));
                 } ?>
             </div>
         </div>

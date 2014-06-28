@@ -69,11 +69,13 @@ h1,h2,h3{font-family:georgia, serif;}
 	width: 100%;
 }
 
-#event_modal .is-favourite-shown {
+#event_modal .is-favourite-shown,
+#event_modal .is-my-shown{
 	display: inline;
 }
 
-#event_modal .is-favourite-hidden {
+#event_modal .is-favourite-hidden,
+#event_modal .is-my-hidden {
 	display: none;
 }
 

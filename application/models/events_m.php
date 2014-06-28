@@ -30,9 +30,7 @@ class Events_m extends MY_Model {
 			->select($is_in_calendar .' AS is_in_calendar /* get_all() */', FALSE)
 			->from('events AS e')
 			->join('venues AS v', 'e.venueId = v.id', 'left')
-			->where('e.ownerId IS NULL')
-            ->or_where('e.ownerId', $user_id)
-            ->or_where('(e.ownerId IS NOT NULL AND e.is_public = 1)')
+            ->where('(e.ownerId IS NULL OR e.ownerId = "'.$this->db->escape($user_id).'" OR (e.ownerId IS NOT NULL AND e.is_public = 1))')
 			->order_by('e.datetime')
 			->limit($options['limit'], $options['offset']);
 
@@ -58,14 +56,14 @@ class Events_m extends MY_Model {
 				$this->db->join('events_favourited AS ef', 'e.id = ef.eventId AND ef.userId = '. $this->db->escape($user_id), 'inner');
 				$this->db->where('NOT EXISTS (SELECT 1 FROM events_deleted ed WHERE e.id = ed.eventId AND ed.userId = '. $this->db->escape($user_id) .')', '', FALSE);
 			}
-			else if ($options['events_type'] === 'my' &&
-					($is_admin_or_owner || $is_friend_of))
+			else if ($options['events_type'] === 'my' && ($is_admin_or_owner || $is_friend_of))
 			{
 				$this->db->join('user_events AS ue', 'e.id = ue.eventId AND ue.userId = '. $this->db->escape($user_id), 'inner');
 				$this->db->where('NOT EXISTS (SELECT 1 FROM events_deleted ed WHERE e.id = ed.eventId AND ed.userId = '. $this->db->escape($user_id) .')', '', FALSE);
 			}
 			else if ($options['events_type'] === 'all' && $is_admin_or_owner) {
 				$this->db->where('NOT EXISTS (SELECT 1 FROM events_deleted ed WHERE e.id = ed.eventId AND ed.userId = '. $this->db->escape($user_id) .')', '', FALSE);
+                $this->db->where('NOT EXISTS (SELECT 1 FROM user_events ue WHERE e.id = ue.eventId AND ue.userId = '. $this->db->escape($user_id) .')', '', FALSE);
 			}
 			else {
 				// 403
@@ -151,9 +149,7 @@ class Events_m extends MY_Model {
 			->join('venues AS v', 'e.venueId = v.id', 'left')
 			->join('metroareas AS ma', 'v.cityId = ma.id', 'left')
 			->where('e.id', $id)
-            ->where('e.ownerId IS NULL')
-            ->or_where('e.ownerId', $user_id)
-            ->or_where('(e.ownerId IS NOT NULL AND e.is_public = 1)')
+            ->where('(e.ownerId IS NULL OR e.ownerId = "'.$this->db->escape($user_id).'" OR (e.ownerId IS NOT NULL AND e.is_public = 1))')
 			->get()
 			->row();
 	}
