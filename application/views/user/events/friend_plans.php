@@ -5,7 +5,7 @@
 			<div class = "thumbnail user-avatar">
                 <?php if($user->avatar_path){?>
 				    <img src="<?php echo site_url('/assets/img/users/'.$user->avatar_path);?>", alt="" class = "img-responsive img-rounded">
-			    <? }else{ ?>
+			    <?php }else{ ?>
                     <img src="<?php echo site_url('/assets/img/icons/no-image-100.png');?>", alt="" class = "img-responsive img-rounded">
                 <?php } ?>
             </div>
