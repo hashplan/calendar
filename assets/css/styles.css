@@ -212,3 +212,10 @@ h1,h2,h3{font-family:georgia, serif;}
 #locations-left-block .location-hidden {
 	display: none;
 }
+
+.user-avatar{
+    margin-top: 20px;
+}
+.profile-options-btn{
+    margin-bottom: 20px;
+}

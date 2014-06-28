@@ -56,7 +56,7 @@ class Events_m extends MY_Model {
 				$this->db->join('events_favourited AS ef', 'e.id = ef.eventId AND ef.userId = '. $this->db->escape($user_id), 'inner');
 				$this->db->where('NOT EXISTS (SELECT 1 FROM events_deleted ed WHERE e.id = ed.eventId AND ed.userId = '. $this->db->escape($user_id) .')', '', FALSE);
 			}
-			else if ($options['events_type'] === 'my' && ($is_admin_or_owner || $is_friend_of))
+			else if (($options['events_type'] === 'my' || $options['events_type'] === 'friends') && ($is_admin_or_owner || $is_friend_of))
 			{
 				$this->db->join('user_events AS ue', 'e.id = ue.eventId AND ue.userId = '. $this->db->escape($user_id), 'inner');
 				$this->db->where('NOT EXISTS (SELECT 1 FROM events_deleted ed WHERE e.id = ed.eventId AND ed.userId = '. $this->db->escape($user_id) .')', '', FALSE);

@@ -4,22 +4,17 @@
 		<div class="col-md-2">
 			<div class = "thumbnail user-avatar">
                 <?php if($user->avatar_path){?>
-                    <img src="<?php echo site_url('/assets/img/users/'.$user->avatar_path);?>", alt="" class = "img-responsive img-rounded">
+				    <img src="<?php echo site_url('/assets/img/users/'.$user->avatar_path);?>", alt="" class = "img-responsive img-rounded">
 			    <? }else{ ?>
                     <img src="<?php echo site_url('/assets/img/icons/no-image-100.png');?>", alt="" class = "img-responsive img-rounded">
                 <?php } ?>
-			</div>
+            </div>
 			<hr>
-			<!-- Single button -->
-            <?php echo anchor('user/account_settings',"PROFILE OPTIONS",'class = "btn btn-default btn-block profile-options-btn"');?>
-			<?php echo anchor('event/add',"ADD EVENT",'class = "btn btn-primary btn-block" data-toggle = "modal" data-target = "#user_added_event_form"');?>
-			<?php echo anchor('user/events/favourite',"<span class='glyphicon glyphicon-thumbs-up'> &nbsp</span>Favourites",'class = "btn btn-default btn-block button-favourites '.Menu::isActive('user/events/favourite').'"');?>
-			<?php echo anchor('user/events/trash',"<span class='glyphicon glyphicon-trash'> &nbsp</span>Trash",'class = "btn btn-default btn-block button-trash '.Menu::isActive('user/events/trash').'"');?>
 		</div>
 
 		<div class="col-md-8">
 
-			<h2>Welcome <span class="text-muted"><?php echo (string)$user->first_name." " .(string)$user->last_name;?></span></h2>
+			<h2><?php echo (string)$user->first_name." " .(string)$user->last_name;?></h2>
 			<br>
 			<div class="city-id" style="display:none">0</div>
 			<h5 class="city-name">Location: Any</h5>

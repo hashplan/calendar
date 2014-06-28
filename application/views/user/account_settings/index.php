@@ -1,12 +1,16 @@
 <div class = "container">
 	<div class="col-md-2">
-		<div class = "thumbnail">
-			<img src="<?php echo site_url('/assets/img/users/'.$user->avatar_path);?>", alt="">
-		</div>
+        <div class = "thumbnail user-avatar">
+            <?php if($user->avatar_path){?>
+                <img src="<?php echo site_url('/assets/img/users/'.$user->avatar_path);?>", alt="" class = "img-responsive img-rounded">
+			    <? }else{ ?>
+                <img src="<?php echo site_url('/assets/img/icons/no-image-100.png');?>", alt="" class = "img-responsive img-rounded">
+                <?php } ?>
+        </div>
 		<hr>
 	</div>
 	<div class = "col-md-8">
-		<h4>Welcome <span class="text-muted"><?php echo (string)$user->first_name." " .(string)$user->last_name;?></span></h4>
+		<h2>Welcome <span class="text-muted"><?php echo (string)$user->first_name." " .(string)$user->last_name;?></span></h2>
 		<h5>Here are your profile details:</h5>
 		<div class = "row">
 			<div class = "col-md-3">

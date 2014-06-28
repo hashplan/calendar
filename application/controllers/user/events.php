@@ -6,6 +6,16 @@ class Events extends AuthController {
 		'sub_layout' => 'layouts/user_page',
 	);
 	public $user = NULL;
+    protected $allowTypes = array('deleted', 'favourite', 'my', 'friends', 'all', 'trash');
+    protected $typesView = array(
+        'my' => 'index',
+        'favourite' => 'index',
+        'my' => 'index',
+        'all' => 'index',
+        'deleted' => 'index',
+        'trash' => 'index',
+        'friends' => 'friend_plans',
+    );
 
 	public	function __construct(){
 		parent::__construct();
@@ -14,9 +24,25 @@ class Events extends AuthController {
 		$this->load->model('users_m');
 	}
 
-	public function index($user_id = NULL) {
-		$this->_render_events_list_page('my', $user_id);
+	public function index() {
+		$this->my();
 	}
+
+    public function my(){
+        $this->_render_events_list_page('my');
+    }
+
+    public function friends($user_id)
+    {
+        if(!$this->users_m->is_friend_of($user_id))
+        {
+            redirect(base_url('user/events'));
+        }
+        $friend = $this->db->where('id', $user_id)->get('users')->result();
+        $this->data['user'] = $friend[0];
+
+        $this->_render_events_list_page('friends', $user_id);
+    }
 
 	public function all() {
         Menu::setActive('user/events_all');
@@ -41,7 +67,7 @@ class Events extends AuthController {
 		if (!empty($post['name']) && strlen(trim($post['name']))) $options['name'] = trim($post['name']);
 		if (!empty($post['specific_date'])) $options['specific_date'] = $post['specific_date'];
 		if (!empty($post['user_id'])) $options['user_id'] = $post['user_id'];
-		if (!empty($post['events_type']) && in_array($post['events_type'], array('deleted', 'favourite', 'my'))) {
+		if (!empty($post['events_type']) && in_array($post['events_type'], $this->allowTypes )) {
 			$options['events_type'] = $post['events_type'];
 		}
 		else {
@@ -50,7 +76,7 @@ class Events extends AuthController {
 		$current_date = !empty($post['current_date']) ? $post['current_date'] : NULL;
 
 		$events = $this->events_m->get_all($options);
-		$this->load->view($this->get_user_identifier() . '/events/events_all', array('events' => $events, 'current_date' => $current_date));
+		$this->load->view($this->get_user_identifier() . '/events/events_'.$options['events_type'], array('events' => $events, 'current_date' => $current_date));
 	}
 
 	public function choose_metro() {
@@ -60,7 +86,7 @@ class Events extends AuthController {
 	
 	protected function _render_events_list_page($events_type, $user_id = NULL) {
 		$this->data['page_class'] = 'user-events';
-		$this->data['view'] = $this->get_user_identifier().'/events/index';
+		$this->data['view'] = $this->get_user_identifier().'/events/'.$this->typesView[$events_type];
 		$this->data['user_id'] = $this->users_m->user_id_is_correct($user_id) ? $user_id : $this->user->id;
 
 		$this->load->model('categories_m');

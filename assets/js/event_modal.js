@@ -24,7 +24,7 @@ $(function() {
 
 	// on hide modal - remove all data (this will force twbs to reload modal from remote url)
 	$('#event_modal').on('hidden.bs.modal', function() {
-		$(this).removeData('bs.modal');
+		$(this).removeData('bs.modal').empty();
 	})
 
 	// on open venue tab - fetch info from yelp

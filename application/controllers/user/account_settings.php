@@ -53,7 +53,6 @@ class Account_settings extends AuthController {
 
         $user = $this->ion_auth->user()->row();
         $this->load->library('image_lib');
-        $this->load->helper('file');
         $original_path = FCPATH.'assets/uploads/users';
         $resized_path = FCPATH.'assets/img/users';
         $old_avatar =  $user->avatar_path;
