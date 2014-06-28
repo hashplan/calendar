@@ -14,16 +14,27 @@ class Event extends AuthController {
 		}
 		$this->load->model('events_m');
 		$this->events_m->add_to_favourites($event_id);
+        redirect(base_url('user/events/favourite'));
 	}
 
-	public function delete_from_user_list($event_id = NULL) {
+    public function delete_from_favourites($event_id){
+        $event_id_is_correct = $event_id !== NULL && is_numeric($event_id) && $event_id;
+        if (!$event_id_is_correct) {
+            return;
+        }
+        $this->load->model('events_m');
+        $this->events_m->delete_from_favourites($event_id);
+        redirect(base_url('user/events/favourite'));
+    }
+
+    public function delete_from_user_list($event_id = NULL) {
 		$event_id_is_correct = $event_id !== NULL && is_numeric($event_id) && $event_id;
 		if (!$event_id_is_correct) {
 			return;
 		}
 		$this->load->model('events_m');
 		$this->events_m->delete($event_id);
-		redirect(base_url('user/events'));
+		redirect(base_url('user/events/all'));
 	}
 
 	public function restore_from_trash($event_id = NULL) {
@@ -45,6 +56,16 @@ class Event extends AuthController {
 		$this->events_m->add_to_calendar($event_id);
 		redirect(base_url('user/events'));
 	}
+
+    public function delete_from_calendar($event_id){
+        $event_id_is_correct = $event_id !== NULL && is_numeric($event_id) && $event_id;
+        if (!$event_id_is_correct) {
+            return;
+        }
+        $this->load->model('events_m');
+        $this->events_m->delete_from_calendar($event_id);
+        redirect(base_url('user/events'));
+    }
 
 	// should rename it later to smth like add_event or add_user_event
 	public function add(){
@@ -102,8 +123,13 @@ class Event extends AuthController {
 		$this->load->model('events_m');
 		$this->load->model('users_m');
 		$event = $this->events_m->get_event_by_id($event_id);
+        if(empty($event)){
+            show_404();
+        }
+
 		$this->data['event'] = $event;
 		$this->data['google_maps_embed_api_key'] = $this->config->item('google_maps_embed_api_key');
+        $this->data['is_my'] = $event->event_owner_id == $this->ion_auth->user()->row()->id;
 		$this->data['is_favourite'] = count($this->events_m->get_favourite_events($event->event_id)) === 1;
 		$this->data['in_calendar'] = count($this->events_m->get_calendar_events($event->event_id)) === 1;
 		$this->data['friends_you_can_invite_on_event'] = $this->users_m->get_friends_you_can_invite_on_event(array('event_id' => $event_id));

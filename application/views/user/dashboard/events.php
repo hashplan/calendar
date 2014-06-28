@@ -26,7 +26,6 @@ foreach ($events as $i => $event) {
 					echo anchor('event/restore_from_trash/'. $event->id, '<i class="glyphicon glyphicon-new-window"></i>', array('title' => 'Restore', 'class' => 'btn btn-default'));
 				}
 				else {
-					echo anchor('event/add_to_calendar/'. $event->id, '<i class="glyphicon glyphicon-plus"></i>', array('title' => 'Add to my Events', 'class' => 'btn btn-default'));
 					echo anchor('event/delete_from_user_list/'. $event->id, '<i class="glyphicon glyphicon-trash"></i>', array('title' => 'Delete Event', 'class' => 'btn btn-default'));
 				} ?>
 			</div>

@@ -8,8 +8,8 @@
 			<hr>
 			<!-- Single button -->
 			<?php echo anchor('event/add',"ADD EVENT",'class = "btn btn-primary btn-block" data-toggle = "modal" data-target = "#user_added_event_form"');?>
-			<?php echo anchor('user/events/favourite',"<span class='glyphicon glyphicon-thumbs-up'> &nbsp</span>Favourites",'class = "btn btn-default btn-block button-favourites"');?>
-			<?php echo anchor('user/events/trash',"<span class='glyphicon glyphicon-trash'> &nbsp</span>Trash",'class = "btn btn-default btn-block button-trash"');?>
+			<?php echo anchor('user/events/favourite',"<span class='glyphicon glyphicon-thumbs-up'> &nbsp</span>Favourites",'class = "btn btn-default btn-block button-favourites '.Menu::isActive('user/events/favourite').'"');?>
+			<?php echo anchor('user/events/trash',"<span class='glyphicon glyphicon-trash'> &nbsp</span>Trash",'class = "btn btn-default btn-block button-trash '.Menu::isActive('user/events/trash').'"');?>
 		</div>
 
 		<div class="col-md-8">

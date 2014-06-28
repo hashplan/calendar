@@ -15,7 +15,7 @@ class Events extends AuthController {
 	}
 
 	public function index($user_id = NULL) {
-		$this->_render_events_list_page('my', $user_id);
+		$this->_render_events_list_page('my', $user_id, 'events_my');
 	}
 
 	public function all() {
@@ -28,7 +28,7 @@ class Events extends AuthController {
 	}
 
 	public function favourite() {
-		$this->_render_events_list_page('favourite');
+		$this->_render_events_list_page('favourite', NULL, 'events_favorite');
 	}
 
 	public function events_list() {
@@ -58,7 +58,7 @@ class Events extends AuthController {
 		$this->load->view('/event/metros',array('metros'=>$this->location_m->get_event_metro_areas(), 'hide_events' => FALSE));
 	}
 	
-	protected function _render_events_list_page($events_type, $user_id = NULL) {
+	protected function _render_events_list_page($events_type, $user_id = NULL, $view = 'events') {
 		$this->data['page_class'] = 'user-events';
 		$this->data['view'] = $this->get_user_identifier().'/dashboard/index';
 		$this->data['user_id'] = $this->users_m->user_id_is_correct($user_id) ? $user_id : $this->user->id;
@@ -69,8 +69,9 @@ class Events extends AuthController {
 			'events' => $events,
 			'categories' => $this->categories_m->get_top_level_categories(),
 			'current_date' => NULL,
+            'user_id' => $this->data['user_id']
 		);
-		$this->data['data']['events'] = $this->load->view($this->get_user_identifier() . '/dashboard/events', $events_data, true);
+		$this->data['data']['events'] = $this->load->view($this->get_user_identifier() . '/dashboard/' . $view, $events_data, true);
 
 		$this->data['data']['has_events'] = count($events) > 0;
 		$this->data['data']['events_type'] = $events_type;
