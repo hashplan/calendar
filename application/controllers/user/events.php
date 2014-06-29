@@ -29,7 +29,8 @@ class Events extends AuthController {
 	}
 
     public function my(){
-        $this->_render_events_list_page('my');
+        $user_id = $this->ion_auth->user()->row()->id;
+        $this->_render_events_list_page('my', $user_id);
     }
 
     public function friends($user_id)
@@ -75,8 +76,12 @@ class Events extends AuthController {
 		}
 		$current_date = !empty($post['current_date']) ? $post['current_date'] : NULL;
 
-		$events = $this->events_m->get_all($options);
-		$this->load->view($this->get_user_identifier() . '/events/events_'.$options['events_type'], array('events' => $events, 'current_date' => $current_date));
+        $events_data= array(
+            'events' => $this->events_m->get_all($options),
+            'current_date' => $current_date,
+            'user_id' => $options['user_id']?$options['user_id']:$this->ion_auth->user()->row()->id
+        );
+		$this->load->view($this->get_user_identifier() . '/events/events_'.$options['events_type'], $events_data);
 	}
 
 	public function choose_metro() {
