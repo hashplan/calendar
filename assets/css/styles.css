@@ -14,24 +14,37 @@ h1,h2,h3{font-family:georgia, serif;}
 	z-index: 1051;
 }
 
-.carousel-caption {
-    top: 0;
-	left: 0;
-	text-align: left;
-    bottom: auto;
+/*Start carousel */
+/* Declare heights because of positioning of img element */
+.carousel .item {
+  height: 600px;
+  background-color: #777;
+}
+.carousel-inner > .item > img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
 }
 
+.carousel-caption {
+	text-align: auto;
+    bottom: auto;
+}  
+  /*end carousel*/
+  
+  
 .navbar-fixed-top {
 	position: static;
 	margin-bottom: 0px;
 }
 
 .jumbotron-about {
-    opacity: .7;
-	margin-top: 25px;
+    opacity: .80;
+	margin-top: 20px;
 	padding-top: 20px;
 	padding-bottom: 10px;
-
 }
 
 .event-buttons-wrapper {

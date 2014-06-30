@@ -28,7 +28,9 @@ class Auth extends MY_Controller {
 		if (!$this->ion_auth->logged_in())
 		{
 			//redirect them to the login page
-			redirect('auth/login', 'refresh');
+			$this->data['subview']='auth/login';
+			$this->_render_page('_layout_modal', $this->data);
+			
 		}
 		elseif (!$this->ion_auth->is_admin()) //remove this elseif if you want to enable this for non-admins
 		{
@@ -104,7 +106,8 @@ class Auth extends MY_Controller {
 				//if the login was un-successful
 				//redirect them back to the login page
 				$this->session->set_flashdata('message', $this->ion_auth->errors());
-				redirect('auth/login', 'refresh'); //use redirects instead of loading views for compatibility with MY_Controller libraries
+				$this->data['subview']='auth/login';
+			$this->_render_page('_layout_modal', $this->data);
 			}
 		}
 		else
@@ -229,7 +232,8 @@ class Auth extends MY_Controller {
 
 			//set any errors and display the form
 			$this->data['message'] = (validation_errors()) ? validation_errors() : $this->session->flashdata('message');
-			$this->_render_page('auth/forgot_password', $this->data);
+			$this->data['subview']='auth/forgot_password';
+			$this->_render_page('_layout_modal', $this->data);
 		}
 		else
 		{
@@ -238,7 +242,8 @@ class Auth extends MY_Controller {
             if(empty($identity)) {
                 $this->ion_auth->set_message('forgot_password_email_not_found');
                 $this->session->set_flashdata('message', $this->ion_auth->messages());
-                redirect("auth/forgot_password", 'refresh');
+                $this->data['subview']='auth/forgot_password';
+				$this->_render_page('_layout_modal', $this->data);
             }
             
 			//run the forgotten password method to email an activation code to the user
@@ -248,12 +253,15 @@ class Auth extends MY_Controller {
 			{
 				//if there were no errors
 				$this->session->set_flashdata('message', $this->ion_auth->messages());
-				redirect("auth/login", 'refresh'); //we should display a confirmation page here instead of the login page
+				$this->data['subview']='auth/login';
+				$this->_render_page('_layout_modal', $this->data);
+				 //we should display a confirmation page here instead of the login page
 			}
 			else
 			{
 				$this->session->set_flashdata('message', $this->ion_auth->errors());
-				redirect("auth/forgot_password", 'refresh');
+				$this->data['subview']='auth/forgot_password';
+				$this->_render_page('_layout_modal', $this->data);
 			}
 		}
 	}
@@ -778,5 +786,9 @@ class Auth extends MY_Controller {
 
 		if (!$render) return $view_html;
 	}
-
+	
+	function loginfacebook()
+	{
+      $this->facebook_ion_auth->login();
+	}
 }

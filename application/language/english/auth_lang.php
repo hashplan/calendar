@@ -54,7 +54,7 @@ $lang['deactivate_validation_user_id_label'] = 'user ID';
 
 // Create User
 $lang['create_user_heading']                           = 'Create User';
-$lang['create_user_subheading']                        = 'Please enter the user\'s information below.';
+$lang['create_user_subheading']                        = 'Join Hashplan today, it\'s FREE!';
 $lang['create_user_fname_label']                       = 'First Name:';
 $lang['create_user_lname_label']                       = 'Last Name:';
 $lang['create_user_company_label']                     = 'Company Name:';

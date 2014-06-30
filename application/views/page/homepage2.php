@@ -14,15 +14,9 @@
 			<img src="<?php echo site_url('/assets/img/homepage/crowd for homepage.jpg');?>" alt="Hashplan crowd!">
 			<div class="container">
 				<div class="carousel-caption">
-					<div class="homepage_timer">
-						<div class = "col-md-12">
-							<h2>It is <span id = "homepage_timer"></span>, what are you going to do?</h2>
-									<h3>Make plans and share them with friends!</h3>
-						</div>
-					</div>
-					<div class = "col-md-12">
-						<?php echo anchor('auth/create_user','Signup! <span class="glyphicon glyphicon-pencil">&nbsp </span>', 'class="btn btn-md btn-success"');?>
-					</div>
+							<h3>CONCERTS, SPORTING EVENTS, FESTIVALS & MORE</h3>
+									<h4>Hashplan connects you and your friends through local events</h4>
+						<p><?php echo anchor('auth/create_user','Sign Up Today <span class="glyphicon glyphicon-pencil"></span>', 'class="btn btn-md btn-primary"');?></p>
 				</div>
 			</div>
 		</div>
@@ -30,13 +24,9 @@
 			<img src="<?php echo site_url('/assets/img/homepage/baseball game2.jpg');?>" alt="Baseball game!">
 			<div class="container">
 				<div class="carousel-caption">
-				<div class = "col-md-12">
-					<h3>Plan It!  Track your plans and share with friends!</h3>
-					<p></p>
-				</div>
-					<div class = "col-md-12">
-						<?php echo anchor('auth/create_user','Signup! <span class="glyphicon glyphicon-pencil">&nbsp </span>', 'class="btn btn-md btn-success"');?>
-					</div>
+					<h2><span id = "homepage_timer"></span></h2>
+					<h4>Time to start making plans!</h4>
+						<p><?php echo anchor('auth/create_user','Sign Up Today <span class="glyphicon glyphicon-pencil"></span>', 'class="btn btn-md btn-primary"');?></p>
 				</div>
 			</div>
 		</div>
@@ -45,11 +35,11 @@
 			<div class="container">
 				<div class="carousel-caption">
 				<div class = "col-md-12">
-					<h3>Only a few hours from Rock Hour!</h3>
-					<p></p>
+					<h3>HASHPLAN...WHERE GREAT PLANS START</h3>
+					<h4>Thousands of events at your fingertips</h4>
 				</div>
 					<div class = "col-md-12">
-						<?php echo anchor('auth/create_user','Signup! <span class="glyphicon glyphicon-pencil">&nbsp </span>', 'class="btn btn-md btn-success"');?>
+						<?php echo anchor('auth/create_user','Sign Up Today <span class="glyphicon glyphicon-pencil"></span>', 'class="btn btn-md btn-primary"');?>
 					</div>
 				</div>
 			</div>
@@ -76,11 +66,22 @@
 
 <hr class="featurette-divider">
 <div class="row featurette">
-	<div class = "col-md-6">
+	<div class = "col-md-12">
 		<h2 class = "text-muted">Cool integration!</h2>
 	</div>
-	<div class = "col-md-8 col-md-offset-2">
-		<img class = "featurette-image img-responsive" src="<?php echo site_url('/assets/img/homepage/integration.png');?>" alt="Google maps and Yelp integration!">
+	<div class = "col-md-11 col-md-offset-1">
+		<div class = "col-md-2">
+			<img class = "featurette-image img-responsive" src="<?php echo site_url('/assets/img/homepage/googlemapsicon.png');?>" alt="Google maps integration!">
+		</div>
+		<div class = "col-md-2">
+			<img class = "featurette-image img-responsive" src="<?php echo site_url('/assets/img/homepage/Yelplogo1.jpg');?>" alt="Yelp integration!">
+		</div>
+		<div class = "col-md-6 col-md-offset-1" style= "color: #3276b1;">
+			<h4>
+				<strong>We've integrated our event data with Google Maps and Yelp! Find out everyting about an event or venue before you go!
+				</strong>
+			</h4>
+		</div>
 	</div>
 	<!--<div class = "col-md-6">
 		<h2 class = "featurette-heading">Integration!<span class = "text-muted"> Check it out!</span></h2>
@@ -99,8 +100,17 @@
 	<div class = "col-md-6">
 		<h2 class = "text-muted">Go Mobile</h2>
 	</div>
-	<div class = "col-md-8 col-md-offset-2">
-		<img class = "featurette-image img-responsive img-rounded" src="<?php echo site_url('/assets/img/homepage/gomobile.png');?>" alt="Mobile app">
+
+
+	<div class = "col-md-11 col-md-offset-1">
+		<div class = "col-md-5 col-md-offset-1" style= "color: #3276b1;">
+			<h3>
+				Coming Soon...Hashplan Mobile App for iPhone and Android
+			</h3>
+		</div>
+		<div class = "col-md-2 col-md-offset-2">
+			<img class = "featurette-image img-responsive" src="<?php echo site_url('/assets/img/homepage/hmobileapp.png');?>" alt="Hashplan Mobile app">
+		</div>
 	</div>
 </div>
 <hr>
