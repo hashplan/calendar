@@ -181,10 +181,14 @@ h1,h2,h3{font-family:georgia, serif;}
 	height: 60px;
 }
 
-.page-friends .panel .friend-view-plans-button {
+.page-friends .panel .button-wrapper {
 	position: absolute;
 	right: 10px;
 	bottom: 10px;
+}
+
+.page-friends .panel .button-wrapper .btn-danger {
+	margin-right: 5px;
 }
 
 .page-friends #people-you-may-know-block .dude-pic img {

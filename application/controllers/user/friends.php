@@ -256,11 +256,13 @@ class Friends extends AuthController {
 		$this->load->view('user/dashboard/people_you_may_know_block', array('people_you_may_know' => $people_you_may_know));
 	}
 
-	public function remove_from_lists() {
-		$post = $this->input->post();
-		if (!empty($post['user_id'])) {
-			$this->users_m->delete_connection_between_users($post['user_id'], NULL);
-			$this->users_m->set_connection_between_users($post['user_id'], NULL, NULL, 'removed');
+	public function remove_from_lists($user_id) {
+		if ($this->users_m->user_id_is_correct($user_id)) {
+			$this->users_m->delete_connection_between_users($user_id, NULL);
+			$this->users_m->set_connection_between_users($user_id, NULL, NULL, 'removed');
+			if (!$this->input->is_ajax_request()) {
+				redirect(base_url() .'user/friends');
+			}
 		}
 	}
 
