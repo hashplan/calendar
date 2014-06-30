@@ -80,7 +80,10 @@ $(function() {
 						data: { friend_ids: ids, event_id: $('#event_modal .event-id-hidden').val() }
 					});
 				}
-				$('#event_modal .button-add-to-calendar').remove();
+				if ($('#event_modal .in-calendar').hasClass('in-calendar-hidden')) {
+					$('#event_modal .in-calendar').removeClass('in-calendar-hidden').addClass('in-calendar-shown');
+					$('#event_modal .button-add-to-calendar').remove();
+				}
 			}
 		});
 	});

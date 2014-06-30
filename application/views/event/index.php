@@ -6,6 +6,7 @@
 			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 			<div class="modal-title" id="myModalLabel"><?php echo html_escape(date('l, F d', strtotime($event->event_datetime))) ?></div>
             <span class="label label-success is-my is-my-<?php echo $is_my ? 'shown' : 'hidden'?>">My event</span>
+            <span class="label label-primary in-calendar in-calendar-<?php echo $is_favourite ? 'shown' : 'hidden'?>">In calendar</span>
             <span class="label label-success is-favourite is-favourite-<?php echo $is_favourite ? 'shown' : 'hidden'?>">In favourites</span>
 		</div>
 		<div class="modal-body">
