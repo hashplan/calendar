@@ -110,13 +110,27 @@ class Event extends AuthController {
 	}
 
 	public function save() {
-		$post = $this->input->post();
-		$data = array();
-		foreach ($post['data'] as $item) {
-			$data[$item['name']] = $item['value'];
+		$this->load->helper(array('form', 'url'));
+		$this->load->library('form_validation');
+		$this->form_validation->set_rules('name', 'Name', 'required');
+		$this->form_validation->set_rules('location', 'Location', 'required');
+		$this->form_validation->set_rules('date', 'Date', 'required');
+		$this->form_validation->set_rules('time', 'Time', 'required');
+		$this->form_validation->set_rules('description', 'Description', 'required');
+
+		if ($this->form_validation->run() == FALSE) {
+			header('Content-Type: application/json');
+			$response = array(
+				'errors' => validation_errors()
+			);
+			echo json_encode($response);
+			die();
 		}
-		$this->load->model('events_m');
-		$this->events_m->save($data);
+		else {
+			$post = $this->input->post();
+			$this->load->model('events_m');
+			$this->events_m->save($post);
+		}
 	}
 
 	public function modal_details($event_id) {

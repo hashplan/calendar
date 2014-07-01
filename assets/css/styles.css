@@ -151,6 +151,10 @@ h1,h2,h3{font-family:georgia, serif;}
 	font-style: italic;
 }
 
+#user_added_event_form .errors {
+	display: none;
+}
+
 #user_added_event_form .row {
 	margin-bottom: 15px;
 }
@@ -225,3 +229,4 @@ h1,h2,h3{font-family:georgia, serif;}
 .profile-options-btn{
     margin-bottom: 20px;
 }
+
