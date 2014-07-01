@@ -15,10 +15,18 @@ class Location_m extends MY_Model {
 	}
 
 	public function get_all_metro_areas() {
-		return $this->db
+		$post = $this->input->post();
+		$options['name'] = (!empty($post['name'])) ? $post['name'] : NULL;
+		if ($options['name'] !== NULL) {
+			$this->db->like('city', $options['name']);
+		}
+
+		$this->db
 			->select('ma.* /* get_all_metro_areas() */', FALSE)
 			->from('metroareas as ma')
-			->order_by('ma.city')
+			->order_by('ma.city');
+
+		return $this->db
 			->get()
 			->result();
 	}

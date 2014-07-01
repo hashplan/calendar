@@ -26,6 +26,49 @@ $(function() {
 		}
 	});
 
+	$('#locations-enter-name-field').autocomplete({
+		source: function(query, responseCallback) {
+			$.ajax(base_url +'user/friends/locations_autocomplete', {
+				type: 'POST',
+				data: { name: query.term },
+				dataType: 'json',
+				success: function(response) {
+					var visibleMetroIds = [];
+					$('.page-friends #locations-left-block .left-block-location:visible').each(function() {
+						visibleMetroIds.push($(this).attr('id').split('-')[3]);
+					});
+					var locations = [];
+					for (var i in response) {
+						var id = response[i].id;
+						var name = response[i].city;
+						if (visibleMetroIds.indexOf(id) !== -1) {
+							continue;
+						}
+						locations.push({ value: id, label: name });
+					}
+					responseCallback(locations);
+				}
+			});
+		},
+		select: function(event, ui) {
+			event.preventDefault();
+			var item = ui.item;
+			if ($('.page-friends #locations-left-block #left-block-location-'+ item.value).length === 1) {
+				$('.page-friends #locations-left-block #left-block-location-'+ item.value).parent().remove();
+			}
+			if ($('.page-friends #locations-left-block .location-hidden').length === 0) {
+				$('#locations-left-block .locations-show-more-link').slideUp();
+			}
+			$('.page-friends #locations-left-block li:visible:last').after('\
+				<li>\
+					<input type="checkbox" class="left-block-location" id="left-block-location-'+ item.value +'" value="'+ item.value +'">\
+					<label for="left-block-location-'+ item.value +'">'+ item.label +'</label>\
+				</li>\
+			');
+			event.target.value = '';
+		}
+	});
+
 	function fetchFriends() {
 		var url = null;
 		if ($('#friends-page-type').val() === 'friends') {

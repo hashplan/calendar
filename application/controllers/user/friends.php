@@ -282,6 +282,18 @@ class Friends extends AuthController {
 		redirect('user/friends/invites/events');
 	}
 
+	public function locations_autocomplete() {
+		$this->load->model('location_m');
+		$locations_raw = $this->location_m->get_all_metro_areas();
+		$locations = array();
+		foreach ($locations_raw as $location) {
+			$locations[] = array('id' => $location->id, 'city' => $location->city);
+		}
+		header('Content-Type: application/json');
+		echo json_encode($locations);
+		die();
+	}
+
 	protected function _render_users_page($page_class, $page_title, $page_type, $left_block, $users) {
 		$this->data['page_class'] = $page_class;
 		$this->data['view'] = $this->get_user_identifier().'/dashboard/users';

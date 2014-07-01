@@ -15,7 +15,7 @@
 	<link href="<?php echo site_url('assets/css/bootstrap.min.css');?>" rel="stylesheet">
 	<link href="<?php echo site_url('assets/css/datepicker.css');?>" rel="stylesheet">
 	<link href="<?php echo site_url('assets/css/styles.css');?>" rel="stylesheet">
-	<!--	<link href="--><?php //echo site_url('assets/css/css/smoothness/jquery-ui-1.10.4.custom.min.css');?><!--" rel="stylesheet">-->
+	<link href="<?php echo site_url('assets/css/css/smoothness/jquery-ui-1.10.4.custom.min.css');?>" rel="stylesheet">
 
 	<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries
     WARNING: Respond.js doesn't work if you view the page via file://
@@ -25,7 +25,7 @@
 
 
 	<script src="<?php echo site_url('assets/js/jquery-1.11.0.js');?>"></script>
-	<!--	<script src="--><?php //echo site_url('assets/js/jquery-ui-1.10.4.custom.min.js');?><!--"></script>-->
+	<script src="<?php echo site_url('assets/js/jquery-ui-1.10.4.custom.min.js');?>"></script>
 	<script src="<?php echo site_url('assets/js/bootstrap.min.js');?>"></script>
 	<script src="<?php echo site_url('assets/js/bootstrap-datepicker.js');?>"></script>
 	<script src="<?php echo site_url('assets/js/event_search.js');?>"></script>
