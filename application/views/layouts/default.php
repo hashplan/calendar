@@ -14,6 +14,7 @@
 	<!-- Bootstrap -->
 	<link href="<?php echo site_url('assets/css/bootstrap.min.css');?>" rel="stylesheet">
 	<link href="<?php echo site_url('assets/css/datepicker.css');?>" rel="stylesheet">
+	<link href="<?php echo site_url('assets/css/bootstrap-formhelpers.min.css');?>" rel="stylesheet">
 	<link href="<?php echo site_url('assets/css/styles.css');?>" rel="stylesheet">
 	<link href="<?php echo site_url('assets/css/css/smoothness/jquery-ui-1.10.4.custom.min.css');?>" rel="stylesheet">
 
@@ -28,6 +29,7 @@
 	<script src="<?php echo site_url('assets/js/jquery-ui-1.10.4.custom.min.js');?>"></script>
 	<script src="<?php echo site_url('assets/js/bootstrap.min.js');?>"></script>
 	<script src="<?php echo site_url('assets/js/bootstrap-datepicker.js');?>"></script>
+	<script src="<?php echo site_url('assets/js/bootstrap-formhelpers.min.js');?>"></script>
 	<script src="<?php echo site_url('assets/js/event_search.js');?>"></script>
 	<script src="<?php echo site_url('assets/js/friends_search.js');?>"></script>
 	<script src="<?php echo site_url('assets/js/people_you_may_know.js');?>"></script>

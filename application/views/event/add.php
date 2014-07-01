@@ -26,12 +26,7 @@
 						</div>
 					</div>
 					<div class="col-md-6">
-						<div class="input-group">
-							<input type="text" class="form-control event-time" name="time" placeholder="Choose Time"/>
-							<span class="input-group-btn">
-								<button class="btn btn-default" type="button"><i class="glyphicon glyphicon-time"></i></button>
-							</span>
-						</div>
+						<div class="bfh-timepicker"></div>
 					</div>
 				</div>
 				<div class="row">
@@ -58,6 +53,10 @@
 <script type="text/javascript">
 	$('#user_added_event_form .event-date').datepicker({
 		format:'yyyy-mm-dd'
+	});
+	$('#user_added_event_form .bfh-timepicker').bfhtimepicker({
+		time: null,
+		align: 'right'
 	});
 
 	$('#user_added_event_form .save-button').on('click', function() {
