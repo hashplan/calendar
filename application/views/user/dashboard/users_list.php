@@ -6,8 +6,9 @@
 			</div>
 			<div class="right-section">
 				<div class="friend-name"><?php echo anchor('user/events/'. $dude->id, $dude->name) ?></div>
-				<?php if ($page_type === 'invites_sent') { ?>
-					<div class="connection-type-full"><?php echo $dude->connection_type_full ?></div>
+				<?php if ($page_type === 'invites_sent') {
+					$label_class = $dude->connection_type_full === 'Friend Request' ? 'label-success' : 'label-primary'?>
+					<div class="connection-type-full"><span class="label <?php echo $label_class ?>"><?php echo $dude->connection_type_full ?></span></div>
 				<?php } ?>
 				<?php if ($page_type === 'invites_sent' && $dude->type === 'event_invite') { ?>
 					<div class="event-link">

@@ -38,6 +38,7 @@
 	<script src="<?php echo site_url('assets/js/account_settings.js');?>"></script>
 	<script src="<?php echo site_url('assets/js/tinymce/tinymce.min.js');?>"></script>
 	<script src="<?php echo site_url('assets/js/tooltip_for_event_to_plan.js');?>"></script>
+	<script src="<?php echo site_url('assets/js/invites_left_block.js');?>"></script>
 	<script type="text/javascript">
 		tinymce.init({
 			selector: "input_variable_here",
