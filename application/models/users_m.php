@@ -485,10 +485,29 @@ class Users_m extends MY_Model {
 			INNER JOIN users u ON uc.friend_id = u.id
 				AND uc.type = 'friend'
 			WHERE NOT EXISTS (SELECT 1 FROM user_events ue WHERE ue.userId = uc.friend_id AND ue.eventId = ?)
+		";
+
+		if (!empty($options['exclude_ids'])) {
+			foreach($options['exclude_ids'] as &$exclude_id) {
+				$exclude_id = $this->db->escape($exclude_id);
+			}
+			$sql .= " AND u.id NOT IN (". join(', ', $options['exclude_ids']) .") ";
+		}
+
+		$sql .= "
+			AND NOT EXISTS (SELECT 1 FROM user_connections uc3 WHERE uc.friend_id = uc3.connectionUserId AND uc3.userId = ? AND uc3.type = 'event_invite' AND uc3.eventId = ?)
+			AND NOT EXISTS (SELECT 1 FROM user_connections uc4 WHERE uc.friend_id = uc4.userId AND uc4.connectionUserId = ? AND uc4.type = 'event_invite' AND uc4.eventId = ?)
 			ORDER BY u.first_name, u.last_name
 		";
 
-		$friends_raw = $this->db->query($sql, array($user_id, $user_id, $options['event_id']))->result();
+		$params = array($user_id, $user_id, $options['event_id'], $user_id, $options['event_id'], $user_id, $options['event_id']);
+
+		if (!empty($options['limit'])) {
+			$sql .= " LIMIT ? ";
+			$params[] = $options['limit'];
+		}
+
+		$friends_raw = $this->db->query($sql, $params)->result();
 
 		$friends = array();
 		foreach ($friends_raw as $friend) {

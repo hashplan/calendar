@@ -230,3 +230,6 @@ h1,h2,h3{font-family:georgia, serif;}
     margin-bottom: 20px;
 }
 
+.page-user-events .ui-autocomplete {
+	z-index: 10001;
+}

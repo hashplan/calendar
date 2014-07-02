@@ -87,4 +87,49 @@ $(function() {
 			}
 		});
 	});
+
+	// friends autocomplete
+	$('#event_modal').delegate('#invite-more-friends-field', 'focus', function() {
+		if ($(this).hasClass('ui-autocomplete-input')) {
+			return;
+		}
+		var excludeIds = [];
+		$('#event_modal #attendees input[type="checkbox"]').each(function() {
+			excludeIds.push($(this).attr('id').split('-')[2]);
+		});
+		$(this).autocomplete({
+			source: function(query, responseCallback) {
+				$.ajax(base_url +'event/invite_friends_autocomplete', {
+					type: 'POST',
+					data: {
+						name: query.term,
+						event_id: $('#event_modal .event-id-hidden').val(),
+						exclude_ids: excludeIds
+					},
+					dataType: 'json',
+					success: function(response) {
+						var friends = [];
+						for (var i in response) {
+							var id = response[i].id;
+							var name = response[i].name;
+							friends.push({ value: id, label: name })
+						}
+						responseCallback(friends);
+					}
+				});
+			},
+			select: function(event, ui) {
+				event.preventDefault();
+				var item = ui.item;
+				$('#event_modal #attendees .friend-you-can-invite:last').after('\
+					<div class="col-md-6 friend-you-can-invite">\
+					<input type="checkbox" id="invite-friend-'+ item.value +'">\
+					<img src="/assets/img/icons/no-image-100.png">\
+						<label for="invite-friend-'+ item.value +'">'+ item.label +'</label>\
+					</div>\
+				');
+				event.target.value = '';
+			}
+		});
+	});
 });

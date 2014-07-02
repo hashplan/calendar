@@ -52,6 +52,13 @@
 							</div>
 						<?php } ?>
 					</div>
+					<div class="row">
+						<div class="col-md-6">
+							<div class="input-group">
+								<input type="text" placeholder="Invite more friends" class="form-control" id="invite-more-friends-field" autocomplete="off">
+							</div>
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>
