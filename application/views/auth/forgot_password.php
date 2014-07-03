@@ -1,8 +1,12 @@
-<h1><?php echo lang('forgot_password_heading');?></h1>
+<div class="modal-dialog modal-md">
+    <div class="modal-content">
+      <div class="modal-header">
+		  <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+		  <h1><?php echo lang('forgot_password_heading');?></h1>
 <p><?php echo sprintf(lang('forgot_password_subheading'), $identity_label);?></p>
 
 <div id="infoMessage"><?php echo $message;?></div>
-
+<div class = "modal-body">
 <?php echo form_open("auth/forgot_password");?>
 
       <p>

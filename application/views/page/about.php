@@ -1,9 +1,7 @@
-<div class="jumbotron" style = "background-image: url('../assets/img/homepage/NYC Skyline.jpg')">	
-	<div class = "row">
-		<img src="<?php echo site_url('/assets/img/logo/hashplan.jpg');?>" class = "img-responsive" style = "height:30px" alt="Hashplan logo">
-	</div>
+<div class="jumbotron" style = "background-image: url('../assets/img/homepage/NYC Skyline.jpg');">	
 	<div class="row">
-		<div class = "col-md-12 jumbotron-about" style="background-color:#f5f5f5; margin-bottom: 250px">
+		<div class = "col-md-12 jumbotron-about" style="background-color:#f5f5f5; margin-bottom: 150px;">
+		<img src="<?php echo site_url('/assets/img/logo/hashplan.jpg');?>" class = "img-responsive" style = "height:30px" alt="Hashplan logo">
 			<h3>Hashplan, a New York City-based technology startup, is innovating the way that people search, schedule, and share events with friends.
 				Our goal is to make tracking events as simple as possible.
 				Whether you&#39re discovering new events or keeping track of your favorites, Hashplan connects you and your friends with events in your neighborhood.

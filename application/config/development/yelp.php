@@ -1,4 +1,4 @@
-<?php
+<?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
 $config['yelp_consumer_key'] = 'TFtNvJrSw2T3OqI3h64ExQ';
 $config['yelp_consumer_secret'] = 'ZXEUB5dPrmx1-yV3koFhjCihvmY';
