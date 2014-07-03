@@ -62,6 +62,7 @@ $(function() {
 		$('.city-id').text(cityId);
 		$('#event_cities').modal('hide');
 		fetchEvents();
+		changePageTitle(cityName);
 	});
 
 	// filter events by date presets (next 3 days, next 7 days)
@@ -123,5 +124,33 @@ $(function() {
 				}
 			}
 		});
+	}
+
+	function changePageTitle(cityName) {
+		var eventsType = null;
+		if (['favourite', 'deleted', 'my', 'all'].indexOf($('#events-type').val()) !== -1) {
+			eventsType = $('#events-type').val();
+		}
+		else {
+			return;
+		}
+		var text = ''
+		switch (eventsType) {
+			case 'all':
+				text = cityName === "Doesn't matter" ? 'All events' : 'Events in '+ cityName;
+				break;
+			case 'my':
+				text = cityName === "Doesn't matter" ? 'All my events' : 'My events in '+ cityName;
+				break;
+			case 'favourite':
+				text = cityName === "Doesn't matter" ? 'All favourite events' : 'Favourite events in '+ cityName;
+				break;
+			case 'deleted':
+				text = cityName === "Doesn't matter" ? 'All deleted events' : 'Deleted events in '+ cityName;
+				break;
+		}
+		if (eventsType !== null) {
+			$('h2.page-title').text(text);
+		}
 	}
 });
