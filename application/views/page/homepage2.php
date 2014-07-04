@@ -74,7 +74,7 @@
 			<img class = "featurette-image img-responsive" src="<?php echo site_url('/assets/img/homepage/googlemapsicon.png');?>" alt="Google maps integration!">
 		</div>
 		<div class = "col-md-2">
-			<img class = "featurette-image img-responsive" src="<?php echo site_url('/assets/img/homepage/Yelplogo1.jpg');?>" alt="Yelp integration!">
+			<img class = "featurette-image img-responsive" src="<?php echo site_url('/assets/img/homepage/YelpLogo1.jpg');?>" alt="Yelp integration!">
 		</div>
 		<div class = "col-md-6 col-md-offset-1" style= "color: #3276b1;">
 			<h4>
