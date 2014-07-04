@@ -198,7 +198,6 @@ class Users_m extends MY_Model {
 
 		if (!empty($options['location_name'])) {
 			$sql .= '
-			INNER JOIN user_settings us ON u.id = us.userId
 			INNER JOIN metroareas ma ON us.metroId = ma.id AND ma.city LIKE "%'. $this->db->escape_like_str($options['location_name']) .'%"
 			';
 		}
