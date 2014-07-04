@@ -37,6 +37,10 @@ $(function() {
 		},
 		open: function() {
 			fetchFriends();
+		},
+		focus: function(event, ui) {
+			event.preventDefault();
+			$('#locations-enter-name-field').val(ui.item.label);
 		}
 	});
 

@@ -129,6 +129,10 @@ $(function() {
 					</div>\
 				');
 				event.target.value = '';
+			},
+			focus: function(event, ui) {
+				event.preventDefault();
+				$('#invite-more-friends-field').val(ui.item.label);
 			}
 		});
 	});
