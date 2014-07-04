@@ -23,11 +23,12 @@ class Events_m extends MY_Model {
 
 		$is_deleted = !empty($options['events_type']) && $options['events_type'] === 'deleted' ? 1 : 0;
 		$is_in_calendar = !empty($options['events_type']) && $options['events_type'] === 'my' ? 1 : 0;
+		$is_favorite = !empty($options['events_type']) && $options['events_type'] === 'favourite' ? 1 : 0;
 
 		$this->db
 			->select('e.id, e.name, v.name as venue_name, e.datetime, DATE(e.datetime) AS date_only, e.ownerId AS event_owner_id')
 			->select($is_deleted .' AS is_deleted', FALSE)
-			->select($is_in_calendar .' AS is_in_calendar /* get_all() */', FALSE)
+			->select($is_in_calendar .' AS is_in_calendar /* get_all() - '. $this->db->escape($options['events_type']) .' */', FALSE)
 			->from('events AS e')
 			->join('venues AS v', 'e.venueId = v.id', 'left')
             ->where('(e.ownerId IS NULL OR e.ownerId = "'.$this->db->escape($user_id).'" OR (e.ownerId IS NOT NULL AND e.is_public = 1))')
@@ -62,8 +63,11 @@ class Events_m extends MY_Model {
 				$this->db->where('NOT EXISTS (SELECT 1 FROM events_deleted ed WHERE e.id = ed.eventId AND ed.userId = '. $this->db->escape($user_id) .')', '', FALSE);
 			}
 			else if ($options['events_type'] === 'all' && $is_admin_or_owner) {
+				$this->db->select('IF(ue.eventId IS NOT NULL, 1, 0) AS is_in_calendar_all', FALSE);
+				$this->db->select('IF(ef.eventId IS NOT NULL, 1, 0) AS is_favourite_all', FALSE);
 				$this->db->where('NOT EXISTS (SELECT 1 FROM events_deleted ed WHERE e.id = ed.eventId AND ed.userId = '. $this->db->escape($user_id) .')', '', FALSE);
-                $this->db->where('NOT EXISTS (SELECT 1 FROM user_events ue WHERE e.id = ue.eventId AND ue.userId = '. $this->db->escape($user_id) .')', '', FALSE);
+				$this->db->join('user_events ue', 'e.id = ue.eventId', 'left');
+				$this->db->join('events_favourited AS ef', 'e.id = ef.eventId AND ef.userId = '. $this->db->escape($user_id), 'left');
 			}
 			else {
 				// 403

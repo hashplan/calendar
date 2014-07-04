@@ -110,13 +110,27 @@ class Event extends AuthController {
 	}
 
 	public function save() {
-		$post = $this->input->post();
-		$data = array();
-		foreach ($post['data'] as $item) {
-			$data[$item['name']] = $item['value'];
+		$this->load->helper(array('form', 'url'));
+		$this->load->library('form_validation');
+		$this->form_validation->set_rules('name', 'Name', 'required');
+		$this->form_validation->set_rules('location', 'Location', 'required');
+		$this->form_validation->set_rules('date', 'Date', 'required');
+		$this->form_validation->set_rules('time', 'Time', 'required');
+		$this->form_validation->set_rules('description', 'Description', 'required');
+
+		if ($this->form_validation->run() == FALSE) {
+			header('Content-Type: application/json');
+			$response = array(
+				'errors' => validation_errors()
+			);
+			echo json_encode($response);
+			die();
 		}
-		$this->load->model('events_m');
-		$this->events_m->save($data);
+		else {
+			$post = $this->input->post();
+			$this->load->model('events_m');
+			$this->events_m->save($post);
+		}
 	}
 
 	public function modal_details($event_id) {
@@ -132,7 +146,7 @@ class Event extends AuthController {
         $this->data['is_my'] = $event->event_owner_id == $this->ion_auth->user()->row()->id;
 		$this->data['is_favourite'] = count($this->events_m->get_favourite_events($event->event_id)) === 1;
 		$this->data['in_calendar'] = count($this->events_m->get_calendar_events($event->event_id)) === 1;
-		$this->data['friends_you_can_invite_on_event'] = $this->users_m->get_friends_you_can_invite_on_event(array('event_id' => $event_id));
+		$this->data['friends_you_can_invite_on_event'] = $this->users_m->get_friends_you_can_invite_on_event(array('event_id' => $event_id, 'limit' => 6));
 		$this->load->view('event/index', $this->data);
 	}
 
@@ -157,5 +171,27 @@ class Event extends AuthController {
 		}
 
 		echo '';
+	}
+
+	public function invite_friends_autocomplete() {
+		$post = $this->input->post();
+		if (empty($post['name'])) {
+			header('Content-Type: application/json');
+			echo json_encode(array());
+			die();
+		}
+
+		$exclude_ids = empty($post['exclude_ids']) ? array() : $post['exclude_ids'];
+
+		$this->load->model('users_m');
+		$options = array(
+			'name' => $post['name'],
+			'event_id' => $post['event_id'],
+			'exclude_ids' => $exclude_ids,
+		);
+		$friends = $this->users_m->get_friends_you_can_invite_on_event($options);
+		header('Content-Type: application/json');
+		echo json_encode($friends);
+		die();
 	}
 }

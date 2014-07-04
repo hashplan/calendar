@@ -3,38 +3,38 @@
 
 class Menu {
 
-    protected static $activeUrl = null;
+	protected static $activeUrl = null;
 
-    public static function isActive($path, $ifTrueClass = 'active', $ifFalseClass = '') {
+	public static function isActive($path, $ifTrueClass = 'active', $ifFalseClass = '') {
 
-        $result = $ifTrueClass;
+		$result = $ifTrueClass;
 
-        if ($path != '/'){
-            $menuUrl = explode('/', base_url($path));
-            if (is_null(self::$activeUrl)) {
-                $current_url = explode('/', current_url());
-                foreach ($menuUrl as $key => $value) {
-                    if(!isset($current_url[$key]) OR $value != $current_url[$key]){
-                        $result =  $ifFalseClass;
-                        break;
-                    }
-                }
-            }
-            else {
-                $current_url = explode('/', base_url(self::$activeUrl));
-                foreach ($menuUrl as $key => $value){
-                    if(!isset($current_url[$key]) OR $value != $current_url[$key]){
-                        $result = $ifFalseClass;
-                        break;
-                    }
-                }
-            }
-        }
-        return $result;
-    }
+		if ($path != '/'){
+			$menuUrl = explode('/', base_url($path));
+			if (is_null(self::$activeUrl)) {
+				$current_url = explode('/', current_url());
+				foreach ($current_url as $key => $value){
+					if(!isset($menuUrl[$key]) OR $value != $menuUrl[$key]){
+						$result = $ifFalseClass;
+						break;
+					}
+				}
+			}
+			else {
+				$current_url = explode('/', base_url(self::$activeUrl));
+				foreach ($current_url as $key => $value){
+					if(!isset($menuUrl[$key]) OR $value != $menuUrl[$key]){
+						$result = $ifFalseClass;
+						break;
+					}
+				}
+			}
+		}
+		return $result;
+	}
 
-    public static function setActive($path) {
-        self::$activeUrl = $path;
-    }
+	public static function setActive($path) {
+		self::$activeUrl = $path;
+	}
 
 }

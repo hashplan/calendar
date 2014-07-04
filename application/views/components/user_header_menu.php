@@ -7,12 +7,12 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="<?php echo site_url('user/events'); ?>"><img src="<?php echo site_url('/assets/img/logo/hashplan_150-28.png');?>" alt="Hashplan logo"></a>
+            <a class="navbar-brand" href="<?php echo site_url('user/events/all'); ?>"><img src="<?php echo site_url('/assets/img/logo/hashplan_150-28.png');?>" alt="Hashplan logo"></a>
         </div>
         <div class="navbar-collapse collapse">
             <ul class="nav navbar-nav">
-                <li class="<?php echo Menu::isActive('user/events');?>"><?php echo anchor('user/events', "Profile");?></li>
-                <li class="<?php echo Menu::isActive('user/events_all');?>"><?php echo anchor('user/events/all', 'Events'); ?></li>
+                <li class="<?php echo Menu::isActive('user/events/my');?>"><?php echo anchor('user/events/my', "Profile");?></li>
+                <li class="<?php echo Menu::isActive('user/events/all');?>"><?php echo anchor('user/events/all', 'Events'); ?></li>
                 <li class="dropdown <?php echo Menu::isActive('user/friends');?>">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">Friends <i class="caret"></i></a>
                     <ul class="dropdown-menu">

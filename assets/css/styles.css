@@ -82,11 +82,13 @@ h1,h2,h3{font-family:georgia, serif;}
 	width: 100%;
 }
 
+#event_modal .is-calendar-shown,
 #event_modal .is-favourite-shown,
 #event_modal .is-my-shown{
 	display: inline;
 }
 
+#event_modal .in-calendar-hidden,
 #event_modal .is-favourite-hidden,
 #event_modal .is-my-hidden {
 	display: none;
@@ -162,6 +164,10 @@ h1,h2,h3{font-family:georgia, serif;}
 	font-style: italic;
 }
 
+#user_added_event_form .errors {
+	display: none;
+}
+
 #user_added_event_form .row {
 	margin-bottom: 15px;
 }
@@ -192,10 +198,14 @@ h1,h2,h3{font-family:georgia, serif;}
 	height: 60px;
 }
 
-.page-friends .panel .friend-view-plans-button {
+.page-friends .panel .button-wrapper {
 	position: absolute;
 	right: 10px;
 	bottom: 10px;
+}
+
+.page-friends .panel .button-wrapper .btn-danger {
+	margin-right: 5px;
 }
 
 .page-friends #people-you-may-know-block .dude-pic img {
@@ -231,4 +241,8 @@ h1,h2,h3{font-family:georgia, serif;}
 }
 .profile-options-btn{
     margin-bottom: 20px;
+}
+
+.page-user-events .ui-autocomplete {
+	z-index: 10001;
 }

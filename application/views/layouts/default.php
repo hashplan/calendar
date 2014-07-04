@@ -14,8 +14,9 @@
 	<!-- Bootstrap -->
 	<link href="<?php echo site_url('assets/css/bootstrap.min.css');?>" rel="stylesheet">
 	<link href="<?php echo site_url('assets/css/datepicker.css');?>" rel="stylesheet">
+	<link href="<?php echo site_url('assets/css/bootstrap-formhelpers.min.css');?>" rel="stylesheet">
 	<link href="<?php echo site_url('assets/css/styles.css');?>" rel="stylesheet">
-	<!--	<link href="--><?php //echo site_url('assets/css/css/smoothness/jquery-ui-1.10.4.custom.min.css');?><!--" rel="stylesheet">-->
+	<link href="<?php echo site_url('assets/css/css/smoothness/jquery-ui-1.10.4.custom.min.css');?>" rel="stylesheet">
 
 	<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries
     WARNING: Respond.js doesn't work if you view the page via file://
@@ -25,9 +26,10 @@
 
 
 	<script src="<?php echo site_url('assets/js/jquery-1.11.0.js');?>"></script>
-	<!--	<script src="--><?php //echo site_url('assets/js/jquery-ui-1.10.4.custom.min.js');?><!--"></script>-->
+	<script src="<?php echo site_url('assets/js/jquery-ui-1.10.4.custom.min.js');?>"></script>
 	<script src="<?php echo site_url('assets/js/bootstrap.min.js');?>"></script>
 	<script src="<?php echo site_url('assets/js/bootstrap-datepicker.js');?>"></script>
+	<script src="<?php echo site_url('assets/js/bootstrap-formhelpers.min.js');?>"></script>
 	<script src="<?php echo site_url('assets/js/event_search.js');?>"></script>
 	<script src="<?php echo site_url('assets/js/friends_search.js');?>"></script>
 	<script src="<?php echo site_url('assets/js/people_you_may_know.js');?>"></script>
@@ -36,6 +38,7 @@
 	<script src="<?php echo site_url('assets/js/account_settings.js');?>"></script>
 	<script src="<?php echo site_url('assets/js/tinymce/tinymce.min.js');?>"></script>
 	<script src="<?php echo site_url('assets/js/tooltip_for_event_to_plan.js');?>"></script>
+	<script src="<?php echo site_url('assets/js/invites_left_block.js');?>"></script>
 	<script type="text/javascript">
 		tinymce.init({
 			selector: "input_variable_here",

@@ -6,56 +6,58 @@ class Events extends AuthController {
 		'sub_layout' => 'layouts/user_page',
 	);
 	public $user = NULL;
-    protected $allowTypes = array('deleted', 'favourite', 'my', 'friends', 'all', 'trash');
-    protected $typesView = array(
-        'my' => 'index',
-        'favourite' => 'index',
-        'my' => 'index',
-        'all' => 'index',
-        'deleted' => 'index',
-        'trash' => 'index',
-        'friends' => 'friend_plans',
-    );
+	protected $allowTypes = array('deleted', 'favourite', 'my', 'friends', 'all', 'trash');
+	protected $typesView = array(
+		'my' => 'index',
+		'favourite' => 'index',
+		'all' => 'index',
+		'deleted' => 'index',
+		'trash' => 'index',
+		'friends' => 'friend_plans',
+	);
 
 	public	function __construct(){
 		parent::__construct();
-		$this->data['user'] = $this->user;
 		$this->load->model('events_m');
 		$this->load->model('users_m');
+		$this->data['user'] = $this->user;
+		$this->data['user']->metro = $this->users_m->get_user_metro($this->data['user']->id);
 	}
 
 	public function index() {
-		$this->my();
+		$this->all();
 	}
 
-    public function my(){
-        $user_id = $this->ion_auth->user()->row()->id;
-        $this->_render_events_list_page('my', $user_id);
-    }
+	public function my(){
+		Menu::setActive('user/events/my');
+		$user_id = $this->ion_auth->user()->row()->id;
+		$this->_render_events_list_page('my', 'All my events', $user_id);
+	}
 
-    public function friends($user_id)
-    {
-        if(!$this->users_m->is_friend_of($user_id))
-        {
-            redirect(base_url('user/events'));
-        }
-        $friend = $this->db->where('id', $user_id)->get('users')->result();
-        $this->data['user'] = $friend[0];
+	public function friends($user_id)
+	{
+		if(!$this->users_m->is_friend_of($user_id))
+		{
+			redirect(base_url('user/events'));
+		}
+		$friend = $this->db->where('id', $user_id)->get('users')->result();
+		$this->data['user'] = $friend[0];
 
-        $this->_render_events_list_page('friends', $user_id);
-    }
+		$this->_render_events_list_page('friends', $user_id);
+	}
 
 	public function all() {
-        Menu::setActive('user/events_all');
-		$this->_render_events_list_page('all');
+		Menu::setActive('user/events/all');
+		$default_location = $this->data['user']->metro;
+		$this->_render_events_list_page('all', 'Events in '. $default_location->city, NULL, $default_location);
 	}
 
 	public function trash() {
-		$this->_render_events_list_page('deleted');
+		$this->_render_events_list_page('deleted', 'All deleted events');
 	}
 
 	public function favourite() {
-		$this->_render_events_list_page('favourite', NULL);
+		$this->_render_events_list_page('favourite', 'All favourite events');
 	}
 
 	public function events_list() {
@@ -76,11 +78,11 @@ class Events extends AuthController {
 		}
 		$current_date = !empty($post['current_date']) ? $post['current_date'] : NULL;
 
-        $events_data= array(
-            'events' => $this->events_m->get_all($options),
-            'current_date' => $current_date,
-            'user_id' => $options['user_id']?$options['user_id']:$this->ion_auth->user()->row()->id
-        );
+		$events_data= array(
+			'events' => $this->events_m->get_all($options),
+			'current_date' => $current_date,
+			'user_id' => $options['user_id']?$options['user_id']:$this->ion_auth->user()->row()->id
+		);
 		$this->load->view($this->get_user_identifier() . '/events/events_'.$options['events_type'], $events_data);
 	}
 
@@ -88,24 +90,32 @@ class Events extends AuthController {
 		$this->load->model('location_m');
 		$this->load->view('/event/metros',array('metros'=>$this->location_m->get_event_metro_areas(), 'hide_events' => FALSE));
 	}
-	
-	protected function _render_events_list_page($events_type, $user_id = NULL) {
+
+	protected function _render_events_list_page($events_type, $page_title, $user_id = NULL, $default_location = NULL) {
+		$this->load->model('categories_m');
+
 		$this->data['page_class'] = 'user-events';
 		$this->data['view'] = $this->get_user_identifier().'/events/'.$this->typesView[$events_type];
 		$this->data['user_id'] = $this->users_m->user_id_is_correct($user_id) ? $user_id : $this->user->id;
 
-		$this->load->model('categories_m');
-		$events = $this->events_m->get_all(array('events_type' => $events_type, 'user_id' => $user_id));
+		$events_search_params = array('events_type' => $events_type, 'user_id' => $user_id);
+		if ($default_location !== NULL) {
+			$events_search_params['city_id'] = $default_location->metroId;
+			$this->data['city_id'] = $default_location->metroId;
+			$this->data['city_name'] = $default_location->city;
+		}
+		$events = $this->events_m->get_all($events_search_params);
 		$events_data = array(
 			'events' => $events,
 			'categories' => $this->categories_m->get_top_level_categories(),
 			'current_date' => NULL,
-            'user_id' => $this->data['user_id']
+			'user_id' => $this->data['user_id']
 		);
 		$this->data['data']['events'] = $this->load->view($this->get_user_identifier() . '/events/events_' . $events_type, $events_data, true);
 
 		$this->data['data']['has_events'] = count($events) > 0;
 		$this->data['data']['events_type'] = $events_type;
+		$this->data['data']['page_title'] = $page_title;
 
 		$this->_render_page();
 	}

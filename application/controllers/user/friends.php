@@ -256,11 +256,13 @@ class Friends extends AuthController {
 		$this->load->view('user/dashboard/people_you_may_know_block', array('people_you_may_know' => $people_you_may_know));
 	}
 
-	public function remove_from_lists() {
-		$post = $this->input->post();
-		if (!empty($post['user_id'])) {
-			$this->users_m->delete_connection_between_users($post['user_id'], NULL);
-			$this->users_m->set_connection_between_users($post['user_id'], NULL, NULL, 'removed');
+	public function remove_from_lists($user_id) {
+		if ($this->users_m->user_id_is_correct($user_id)) {
+			$this->users_m->delete_connection_between_users($user_id, NULL);
+			$this->users_m->set_connection_between_users($user_id, NULL, NULL, 'removed');
+			if (!$this->input->is_ajax_request()) {
+				redirect(base_url() .'user/friends');
+			}
 		}
 	}
 
@@ -278,6 +280,18 @@ class Friends extends AuthController {
 		$this->users_m->set_connection_between_users($inviter_id, NULL, 'event_invite', 'event_invite_accept', $event_id);
 		// todo: moar logic
 		redirect('user/friends/invites/events');
+	}
+
+	public function locations_autocomplete() {
+		$this->load->model('location_m');
+		$locations_raw = $this->location_m->get_all_metro_areas();
+		$locations = array();
+		foreach ($locations_raw as $location) {
+			$locations[] = array('id' => $location->id, 'city' => $location->city);
+		}
+		header('Content-Type: application/json');
+		echo json_encode($locations);
+		die();
 	}
 
 	protected function _render_users_page($page_class, $page_title, $page_type, $left_block, $users) {

@@ -2,9 +2,8 @@ $(function() {
 	$('.page-friends #people-you-may-know-block').on('click', '.remove-from-lists-link', function(e) {
 		e.preventDefault();
 		var userId = $(this).siblings('.dude-id').val();
-		$.ajax(base_url + 'user/friends/remove_from_lists', {
+		$.ajax(base_url + 'user/friends/remove_from_lists/'+userId, {
 			type: 'POST',
-			data: { user_id: userId },
 			success: function(response) {
 				fetchPeopleYouMayKnow();
 			}

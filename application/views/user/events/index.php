@@ -11,7 +11,6 @@
 			</div>
 			<hr>
 			<!-- Single button -->
-            <?php echo anchor('user/account_settings',"PROFILE OPTIONS",'class = "btn btn-default btn-block profile-options-btn"');?>
 			<?php echo anchor('event/add',"ADD EVENT",'class = "btn btn-primary btn-block" data-toggle = "modal" data-target = "#user_added_event_form"');?>
 			<?php echo anchor('user/events/favourite',"<span class='glyphicon glyphicon-thumbs-up'> &nbsp</span>Favourites",'class = "btn btn-default btn-block button-favourites '.Menu::isActive('user/events/favourite').'"');?>
 			<?php echo anchor('user/events/trash',"<span class='glyphicon glyphicon-trash'> &nbsp</span>Trash",'class = "btn btn-default btn-block button-trash '.Menu::isActive('user/events/trash').'"');?>
@@ -19,10 +18,10 @@
 
 		<div class="col-md-8">
 
-			<h2>Welcome <span class="text-muted"><?php echo (string)$user->first_name." " .(string)$user->last_name;?></span></h2>
+			<h2 class="page-title"><?php echo $page_title ?></h2>
 			<br>
-			<div class="city-id" style="display:none">0</div>
-			<h5 class="city-name">Location: Any</h5>
+			<div class="city-id" style="display:none"><?php echo (!empty($city_id) ? $city_id : '0') ?></div>
+			<h5 class="city-name">Location: <?php echo (!empty($city_name) ? $city_name : 'Any') ?></h5>
 			<p><?php echo anchor('user/events/choose_metro','Change Location<span class="caret"></span>', 'data-toggle="modal" data-target="#event_cities"');?></p>
 			<h5>Upcoming Events:</h5>
 			<input type="hidden" id="user-id" value="<?php echo $user_id ?>">
@@ -32,7 +31,7 @@
 					<input type="text" id = "event_list" class="form-control" placeholder="Search for events...">
 				</div>
 				<div class="col-md-4">
-					<button type="button" class="btn btn-info" id="event-reset">Reset search</button>
+					<button type="button" class="btn btn-primary" id="event-reset">Reset search</button>
 				</div>
 			</div>
 			<br>
