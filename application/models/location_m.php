@@ -51,4 +51,23 @@ class Location_m extends MY_Model {
 			->get()
 			->result();
 	}
+
+	public function get_left_block_metro_areas() {
+		$cities = array(
+			'Atlanta',
+			'San Diego',
+			'San Francisco Bay Area',
+			'Charlotte',
+			'Las Vegas',
+			'Atlantic City',
+			'Charlotte',
+			'New York Metro',
+		);
+		return $this->db
+			->select('ma.* /* get_left_block_metro_areas() */', FALSE)
+			->from('metroareas as ma')
+			->where_in('ma.city', $cities)
+			->get()
+			->result();
+	}
 } 

@@ -35,12 +35,19 @@ class Users_m extends MY_Model {
 				AND uc.type = 'friend'
 		";
 
-		if (!empty($options['location_ids']) && $options['location_ids'][0] !== 'all') {
+		if (!empty($options['location_ids']) && $options['location_ids'][0] !== 'all' && empty($options['location_name'])) {
 			foreach ($options['location_ids'] as &$location_id) {
 				$location_id = $this->db->escape($location_id);
 			}
 			$sql .= '
 			INNER JOIN user_settings us ON u.id = us.userId AND us.metroId IN ('. join(', ', $options['location_ids']) .')
+			';
+		}
+
+		if (!empty($options['location_name'])) {
+			$sql .= '
+			INNER JOIN user_settings us ON u.id = us.userId
+			INNER JOIN metroareas ma ON us.metroId = ma.id AND ma.city LIKE "%'. $this->db->escape_like_str($options['location_name']) .'%"
 			';
 		}
 
@@ -181,12 +188,19 @@ class Users_m extends MY_Model {
 			INNER JOIN users u ON t.user_id = u.id
 		';
 
-		if (!empty($options['location_ids']) && $options['location_ids'][0] !== 'all') {
+		if (!empty($options['location_ids']) && $options['location_ids'][0] !== 'all' && empty($options['location_name'])) {
 			foreach ($options['location_ids'] as &$location_id) {
 				$location_id = $this->db->escape($location_id);
 			}
 			$sql .= '
 			INNER JOIN user_settings us ON u.id = us.userId AND us.metroId IN ('. join(', ', $options['location_ids']) .')
+			';
+		}
+
+		if (!empty($options['location_name'])) {
+			$sql .= '
+			INNER JOIN user_settings us ON u.id = us.userId
+			INNER JOIN metroareas ma ON us.metroId = ma.id AND ma.city LIKE "%'. $this->db->escape_like_str($options['location_name']) .'%"
 			';
 		}
 
