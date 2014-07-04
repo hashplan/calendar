@@ -498,6 +498,9 @@ class Users_m extends MY_Model {
 
 		$sql = "
 			SELECT u.* /* get_friends_you_can_invite_on_event */
+				,ue.eventId IS NOT NULL will_visit
+				,ue.eventId IS NULL AND uc3.userId IS NOT NULL is_inviter
+				,ue.eventId IS NULL AND uc4.connectionUserId IS NOT NULL is_invitee
 			FROM (
 				SELECT uc1.connectionUserId friend_id, uc1.type
 				FROM user_connections uc1
@@ -509,7 +512,6 @@ class Users_m extends MY_Model {
 			) uc
 			INNER JOIN users u ON uc.friend_id = u.id
 				AND uc.type = 'friend'
-			WHERE NOT EXISTS (SELECT 1 FROM user_events ue WHERE ue.userId = uc.friend_id AND ue.eventId = ?)
 		";
 
 		if (!empty($options['exclude_ids'])) {
@@ -520,8 +522,16 @@ class Users_m extends MY_Model {
 		}
 
 		$sql .= "
-			AND NOT EXISTS (SELECT 1 FROM user_connections uc3 WHERE uc.friend_id = uc3.connectionUserId AND uc3.userId = ? AND uc3.type = 'event_invite' AND uc3.eventId = ?)
-			AND NOT EXISTS (SELECT 1 FROM user_connections uc4 WHERE uc.friend_id = uc4.userId AND uc4.connectionUserId = ? AND uc4.type = 'event_invite' AND uc4.eventId = ?)
+			LEFT JOIN user_events ue ON u.id = ue.userId
+				AND ue.eventId = ?
+			LEFT JOIN user_connections uc3 ON u.id = uc3.userId
+					AND uc3.type = 'event_invite'
+					AND uc3.connectionUserId = ?
+					AND uc3.eventId = ?
+			LEFT JOIN user_connections uc4 ON u.id = uc4.connectionUserId
+					AND uc4.type = 'event_invite'
+					AND uc4.userId = ?
+					AND uc4.eventId = ?
 			ORDER BY u.first_name, u.last_name
 		";
 

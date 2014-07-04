@@ -44,21 +44,45 @@
 				</div>
 				<div class="tab-pane" id="attendees">
 					<div class="row">
-						<?php foreach ($friends_you_can_invite_on_event as $friend) { ?>
-							<div class="col-md-6 friend-you-can-invite">
-								<input type="checkbox" id="invite-friend-<?php echo $friend->id ?>">
-								<img src="/assets/img/icons/no-image-100.png">
-								<label for="invite-friend-<?php echo $friend->id ?>"><?php echo html_escape($friend->name) ?></label>
-							</div>
+						<?php foreach ($friends_you_can_invite_on_event as $friend) {
+							if ($friend->will_visit || $friend->is_inviter || $friend->is_invitee) {
+								if ($friend->will_visit) {
+									$icon = 'glyphicon-ok';
+									$tooltip = 'Will visit!';
+								}
+								else if ($friend->is_invitee) {
+									$icon = 'glyphicon-arrow-up';
+									$tooltip = 'You invited user';
+								}
+								else if ($friend->is_inviter) {
+									$icon = 'glyphicon-arrow-down';
+									$tooltip = 'User invited you';
+								}
+								?>
+								<div class="col-md-6 friend-you-can-invite">
+									<i style="color: #5cb85c; margin-right: 9px;" title="<?php echo $tooltip ?>" class="glyphicon <?php echo $icon ?>"></i>
+									<img src="/assets/img/icons/no-image-100.png">
+									<span><?php echo html_escape($friend->name) ?></span>
+								</div>
+							<?php }
+							else { ?>
+								<div class="col-md-6 friend-you-can-invite">
+									<input type="checkbox" id="invite-friend-<?php echo $friend->id ?>">
+									<img src="/assets/img/icons/no-image-100.png">
+									<label for="invite-friend-<?php echo $friend->id ?>"><?php echo html_escape($friend->name) ?></label>
+								</div>
+							<?php } ?>
 						<?php } ?>
 					</div>
-					<div class="row">
+					<?php /*
+ 					<div class="row">
 						<div class="col-md-6">
 							<div class="input-group">
 								<input type="text" placeholder="Invite more friends" class="form-control" id="invite-more-friends-field" autocomplete="off">
 							</div>
 						</div>
 					</div>
+					<?php */ ?>
 				</div>
 			</div>
 		</div>
