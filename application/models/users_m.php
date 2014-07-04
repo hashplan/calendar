@@ -169,8 +169,15 @@ class Users_m extends MY_Model {
 		}
 		$placeholders = join(', ', $placeholders);
 
+		$user_metro = $this->db->from('user_settings')->where('userId', $user_id)->get();
+		if ($user_metro->num_rows === 1) {}
+		$user_metro_id = $user_metro->num_rows === 1 ? $user_metro->row()->metroId : 'NULL';
+		if ($user_metro_id !== 'NULL') {
+			$user_metro_id = $this->db->escape($user_metro_id);
+		}
+
 		$sql = '
-			SELECT t.user_id, COUNT(t.friend_id) friends_count, u.* /* get_people_user_may_know */
+			SELECT t.user_id, COUNT(t.friend_id) friends_count, u.*, IF( '. $user_metro_id .' IS NOT NULL AND '. $user_metro_id .' = us.metroId, 1, 2 ) metro_preference /* get_people_user_may_know */
 			FROM
 			(
 				SELECT uc1.userId user_id, uc1.connectionUserId friend_id
@@ -186,16 +193,8 @@ class Users_m extends MY_Model {
 				AND uc2.type = "friend"
 			) t
 			INNER JOIN users u ON t.user_id = u.id
+			INNER JOIN user_settings us ON u.id = us.userId
 		';
-
-		if (!empty($options['location_ids']) && $options['location_ids'][0] !== 'all' && empty($options['location_name'])) {
-			foreach ($options['location_ids'] as &$location_id) {
-				$location_id = $this->db->escape($location_id);
-			}
-			$sql .= '
-			INNER JOIN user_settings us ON u.id = us.userId AND us.metroId IN ('. join(', ', $options['location_ids']) .')
-			';
-		}
 
 		if (!empty($options['location_name'])) {
 			$sql .= '
@@ -207,10 +206,22 @@ class Users_m extends MY_Model {
 		$sql .= '
 			WHERE NOT EXISTS (SELECT 1 FROM user_connections uc3 WHERE uc3.userId = t.user_id AND uc3.connectionUserId = ? AND uc3.type IN ("removed", "friend_request"))
 			AND NOT EXISTS (SELECT 1 FROM user_connections uc4 WHERE uc4.userId = ? AND uc4.connectionUserId = t.user_id AND uc4.type IN ("removed", "friend_request"))
+		';
+
+		if (!empty($options['location_ids']) && $options['location_ids'][0] !== 'all' && empty($options['location_name'])) {
+			foreach ($options['location_ids'] as &$location_id) {
+				$location_id = $this->db->escape($location_id);
+			}
+			$sql .= '
+			AND us.metroId IN ('. join(', ', $options['location_ids']) .')
+			';
+		}
+
+		$sql .= '
 			AND u.id != ?
 			GROUP BY t.user_id
 			HAVING COUNT(t.friend_id) >= ?
-			ORDER BY friends_count DESC
+			ORDER BY metro_preference, friends_count DESC
 		';
 
 		$people_raw = $this->db->query($sql, array_merge($friends_ids, $friends_ids, $friends_ids, $friends_ids, array($user_id, $user_id, $user_id, $friends_count))
