@@ -20,8 +20,8 @@
 
 			<h2 class="page-title"><?php echo $page_title ?></h2>
 			<br>
-			<div class="city-id" style="display:none"><?php echo (!empty($city_id) ? $city_id : '0') ?></div>
-			<h5 class="city-name">Location: <?php echo (!empty($city_name) ? $city_name : 'Any') ?></h5>
+			<div class="metro-id" style="display:none"><?php echo (!empty($metro_id) ? $metro_id : '0') ?></div>
+			<h5 class="metro-name">Location: <?php echo (!empty($metro_name) ? $metro_name : 'Any') ?></h5>
 			<p><?php echo anchor('user/events/choose_metro','Change Location<span class="caret"></span>', 'data-toggle="modal" data-target="#event_cities"');?></p>
 			<h5>Upcoming Events:</h5>
 			<input type="hidden" id="user-id" value="<?php echo $user_id ?>">

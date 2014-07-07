@@ -3,7 +3,6 @@
 class Events_m extends MY_Model {
 
 	public function get_all($options = array()){
-		// $offset = 0, $limit = 5, $name = NULL, $city_id = NULL, $user_id = NULL
 		$current_user_id = $this->ion_auth->user()->row()->id;
 		$this->load->model('users_m');
 		$user_id = !empty($options['user_id']) && $this->users_m->user_id_is_correct($options['user_id'])
@@ -31,7 +30,9 @@ class Events_m extends MY_Model {
 			->select($is_in_calendar .' AS is_in_calendar /* get_all() - '. $this->db->escape($options['events_type']) .' */', FALSE)
 			->from('events AS e')
 			->join('venues AS v', 'e.venueId = v.id', 'left')
-            ->where('(e.ownerId IS NULL OR e.ownerId = "'.$this->db->escape($user_id).'" OR (e.ownerId IS NOT NULL AND e.is_public = 1))')
+			->join('cities AS ci', 'v.cityId = ci.id', 'left')
+			->join('metroareas AS ma', 'ci.metroId = ma.id', 'left')
+			->where('(e.ownerId IS NULL OR e.ownerId = "'.$this->db->escape($user_id).'" OR (e.ownerId IS NOT NULL AND e.is_public = 1))')
 			->order_by('e.datetime')
 			->limit($options['limit'], $options['offset']);
 
@@ -78,8 +79,8 @@ class Events_m extends MY_Model {
 			$this->db->like('e.name', $options['name']);
 		}
 
-		if (!empty($options['city_id'])) {
-			$this->db->where('v.cityId', $options['city_id']);
+		if (!empty($options['metro_id'])) {
+			$this->db->where('ma.id', $options['metro_id']);
 		}
 
 		if (!empty($options['preselects'])) {

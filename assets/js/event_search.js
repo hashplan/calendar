@@ -20,8 +20,8 @@ $(function() {
 					name: $('#event_list').val(),
 					offset: $('#search_result .event-row').length
 				};
-				if ($('.city-id').text() > 0) {
-					data.city_id = $('.city-id').text();
+				if ($('.metro-id').text() > 0) {
+					data.metro_id = $('.metro-id').text();
 				}
 				if ($('#event-preselects').val() != 0) {
 					data.preselects = $('#event-preselects').val();
@@ -54,15 +54,15 @@ $(function() {
 	}
 
 	// fetch events on location selection
-	$('.page-user-events #event_cities').on('click', '.item-city-name', function(e) {
+	$('.page-user-events #event_cities').on('click', '.item-metro-name', function(e) {
 		e.preventDefault();
-		var cityName = $(this).text();
-		var cityId = $(this).siblings('.item-city-id').text();
-		$('h5.city-name').text('Location: '+ cityName);
-		$('.city-id').text(cityId);
+		var metroName = $(this).text();
+		var metroId = $(this).siblings('.item-metro-id').text();
+		$('h5.metro-name').text('Location: '+ metroName);
+		$('.metro-id').text(metroId);
 		$('#event_cities').modal('hide');
 		fetchEvents();
-		changePageTitle(cityName);
+		changePageTitle(metroName);
 	});
 
 	// filter events by date presets (next 3 days, next 7 days)
@@ -76,8 +76,8 @@ $(function() {
 
 	// reset events
 	$('.page-user-events #event-reset').on('click', function() {
-		$('.city-id').text('0');
-		$('h5.city-name').text("Location: Doesn't matter");
+		$('.metro-id').text('0');
+		$('h5.metro-name').text("Location: Doesn't matter");
 		$('#event-preselects').val(0);
 		$('#event-date').val('');
 		$('#event-categories').val(0);
@@ -87,8 +87,8 @@ $(function() {
 
 	function fetchEvents() {
 		var data = { name: $('#event_list').val() };
-		if ($('.city-id').text() > 0) {
-			data.city_id = $('.city-id').text();
+		if ($('.metro-id').text() > 0) {
+			data.metro_id = $('.metro-id').text();
 		}
 		if ($('#event-preselects').val() != 0) {
 			data.preselects = $('#event-preselects').val();
@@ -126,7 +126,7 @@ $(function() {
 		});
 	}
 
-	function changePageTitle(cityName) {
+	function changePageTitle(metroName) {
 		var eventsType = null;
 		if (['favourite', 'deleted', 'my', 'all'].indexOf($('#events-type').val()) !== -1) {
 			eventsType = $('#events-type').val();
@@ -137,16 +137,16 @@ $(function() {
 		var text = ''
 		switch (eventsType) {
 			case 'all':
-				text = cityName === "Doesn't matter" ? 'All events' : 'Events in '+ cityName;
+				text = metroName === "Doesn't matter" ? 'All events' : 'Events in '+ metroName;
 				break;
 			case 'my':
-				text = cityName === "Doesn't matter" ? 'All my events' : 'My events in '+ cityName;
+				text = metroName === "Doesn't matter" ? 'All my events' : 'My events in '+ metroName;
 				break;
 			case 'favourite':
-				text = cityName === "Doesn't matter" ? 'All favourite events' : 'Favourite events in '+ cityName;
+				text = metroName === "Doesn't matter" ? 'All favourite events' : 'Favourite events in '+ metroName;
 				break;
 			case 'deleted':
-				text = cityName === "Doesn't matter" ? 'All deleted events' : 'Deleted events in '+ cityName;
+				text = metroName === "Doesn't matter" ? 'All deleted events' : 'Deleted events in '+ metroName;
 				break;
 		}
 		if (eventsType !== null) {

@@ -66,7 +66,7 @@ class Events extends AuthController {
 		if (!empty($post['category']) && $post['category'] != 0) $options['category'] = $post['category'];
 		if (!empty($post['preselects']) && ($post['preselects'] === 'weekend' || $post['preselects'] != 0)) $options['preselects'] = $post['preselects'];
 		if (!empty($post['offset'])) $options['offset'] = $post['offset'];
-		if (!empty($post['city_id'])) $options['city_id'] = $post['city_id'];
+		if (!empty($post['metro_id'])) $options['metro_id'] = $post['metro_id'];
 		if (!empty($post['name']) && strlen(trim($post['name']))) $options['name'] = trim($post['name']);
 		if (!empty($post['specific_date'])) $options['specific_date'] = $post['specific_date'];
 		if (!empty($post['user_id'])) $options['user_id'] = $post['user_id'];
@@ -100,9 +100,9 @@ class Events extends AuthController {
 
 		$events_search_params = array('events_type' => $events_type, 'user_id' => $user_id);
 		if ($default_location !== NULL) {
-			$events_search_params['city_id'] = $default_location->metroId;
-			$this->data['city_id'] = $default_location->metroId;
-			$this->data['city_name'] = $default_location->city;
+			$events_search_params['metro_id'] = $default_location->metroId;
+			$this->data['metro_id'] = $default_location->metroId;
+			$this->data['metro_name'] = $default_location->city;
 		}
 		$events = $this->events_m->get_all($events_search_params);
 		$events_data = array(

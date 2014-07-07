@@ -6,7 +6,8 @@ class Location_m extends MY_Model {
 		return $this->db
 			->select('ma.id, ma.city, count(v.Id) as count /* get_event_metro_areas() */', FALSE)
 			->from('metroareas as ma')
-			->join('venues as v', 'v.cityId  = ma.id', 'inner')
+			->join('cities as c', 'ma.id = c.metroId')
+			->join('venues as v', 'v.cityId  = c.id', 'inner')
 			->join('events as e', 'e.venueId = v.id AND e.datetime > CURDATE() + INTERVAL 1 DAY', 'inner')
 			->group_by('ma.id')
 			->order_by('ma.city')
