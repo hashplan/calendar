@@ -6,6 +6,13 @@ class Friends extends AuthController {
 		'sub_layout' => 'layouts/user_page',
 	);
 	public $user = NULL;
+    protected $typesView = array(
+		'friends' => 'friends_list',
+		'friends_invites' => 'friends_list',
+		'events_invites' => 'friends_list',
+		'invites_sent' => 'friends_list',
+		'add_friends' => 'users_list',
+	);
 
 	public function __construct() {
 		parent::__construct();
@@ -30,16 +37,49 @@ class Friends extends AuthController {
 	public function add() {
         $user_id = $this->ion_auth->user()->row()->id;
 		Menu::setActive('user/friends/friends_add');
-		$page_class = 'friends';
+		$page_class = 'add-friend';
 		$page_title = 'Add friends';
 		$page_type = 'add_friends';
 		$this->load->model('location_m');
-		$users = $this->users_m->get_people_user_may_know();
+		$users = $this->users_m->get_unknown_users();
 		$locations = $this->location_m->get_left_block_metro_areas();
 		$left_block = $this->load->view('user/friends/locations_left_block', array('locations' => $locations, 'user_id' => $user_id), TRUE);
 
 		$this->_render_users_page($page_class, $page_title, $page_type, $left_block, $users);
 	}
+
+    public function users_list() {
+        $post = $this->input->post();
+        $options = array();
+        if (!empty($post['offset'])) {
+            $options['offset'] = (int)$post['offset'];
+        }
+        if (!empty($post['name']) && strlen(trim($post['name']))) $options['name'] = trim($post['name']);
+        $options['location_ids'] = empty($post['location_ids']) ? array('all') : $post['location_ids'];
+        if (!empty($post['location_name'])) {
+            $options['location_name'] = $post['location_name'];
+        }
+        $friends_all = $this->users_m->get_friends(array(),true);
+        $users = $this->users_m->get_unknown_users($options);
+        $friends_all_ids = array();
+        foreach ($friends_all as $friend) {
+            $friends_all_ids[] = $friend->id;
+        }
+        $users_ids = array();
+        foreach ($users as $user) {
+            $users_ids[] = $user->id;
+        }
+
+
+        $mutual_friends_count = $this->users_m->get_mutual_friends_count($users_ids, $friends_all_ids);
+        foreach ($users as $user) {
+            $user->mutual_friends_count = !empty($mutual_friends_count[$user->id])
+                ? $mutual_friends_count[$user->id]
+                : 0;
+        }
+
+        $this->load->view('user/friends/users_list', array('people' => $users, 'page_type' => 'add_friends'));
+    }
 
 	public function invites($invite_type = NULL) {
 		Menu::setActive('user/invites');
@@ -96,11 +136,14 @@ class Friends extends AuthController {
 		if (!empty($post['location_name'])) {
 			$options['location_name'] = $post['location_name'];
 		}
+        if (!empty($post['offset'])) {
+            $options['offset'] = (int)$post['offset'];
+        }
         if(!is_null($user_id)){
             $options['user_id'] = $user_id;
         }
 
-		$friends_all = $this->users_m->get_friends(array('user_id' => $user_id));
+		$friends_all = $this->users_m->get_friends(array('user_id' => $user_id),true);
 		$friends_after_filter = $this->users_m->get_friends($options);
 
 		$friends_all_ids = array();
@@ -121,7 +164,7 @@ class Friends extends AuthController {
 				: 0;
 		}
 
-		$this->load->view('user/friends/users_list', array('people' => $friends_after_filter, 'page_type' => 'friends'));
+		$this->load->view('user/friends/friends_list', array('people' => $friends_after_filter, 'page_type' => 'friends'));
 	}
 
 	public function inviters_list() {
@@ -129,7 +172,7 @@ class Friends extends AuthController {
 		$options = array();
 		if (!empty($post['name']) && strlen(trim($post['name']))) $options['name'] = trim($post['name']);
 
-		$friends_all = $this->users_m->get_friends();
+		$friends_all = $this->users_m->get_friends(array(),true);
 		$friends_after_filter = $this->users_m->get_users_which_sent_friend_request($options);
 
 		$friends_all_ids = array();
@@ -150,7 +193,7 @@ class Friends extends AuthController {
 				: 0;
 		}
 
-		$this->load->view('user/friends/users_list', array('people' => $friends_after_filter, 'page_type' => 'friends_invites'));
+		$this->load->view('user/friends/friends_list', array('people' => $friends_after_filter, 'page_type' => 'friends_invites'));
 	}
 
 	public function inviters_events_list() {
@@ -158,7 +201,7 @@ class Friends extends AuthController {
 		$options = array();
 		if (!empty($post['name']) && strlen(trim($post['name']))) $options['name'] = trim($post['name']);
 
-		$friends_all = $this->users_m->get_friends();
+		$friends_all = $this->users_m->get_friends(array(),true);
 		$inviters_after_filter = $this->users_m->get_users_which_sent_event_invite($options);
 
 		$friends_all_ids = array();
@@ -179,7 +222,7 @@ class Friends extends AuthController {
 				: 0;
 		}
 
-		$this->load->view('user/friends/users_list', array('people' => $inviters_after_filter, 'page_type' => 'events_invites'));
+		$this->load->view('user/friends/friends_list', array('people' => $inviters_after_filter, 'page_type' => 'events_invites'));
 	}
 
 	public function invited_list() {
@@ -187,7 +230,7 @@ class Friends extends AuthController {
 		$options = array();
 		if (!empty($post['name']) && strlen(trim($post['name']))) $options['name'] = trim($post['name']);
 
-		$friends_all = $this->users_m->get_friends();
+		$friends_all = $this->users_m->get_friends(array(),true);
 		$friend_request_receivers = $this->users_m->get_users_you_sent_friend_request($options);
 
 		$friends_all_ids = array();
@@ -225,7 +268,7 @@ class Friends extends AuthController {
 
 		$people = array_merge($friend_request_receivers, $event_invite_receivers);
 
-		$this->load->view('user/friends/users_list', array('people' => $people, 'page_type' => 'invites_sent'));
+		$this->load->view('user/friends/friends_list', array('people' => $people, 'page_type' => 'invites_sent'));
 	}
 
 	public function people_you_may_know_list() {
@@ -237,7 +280,7 @@ class Friends extends AuthController {
 			$options['location_name'] = $post['location_name'];
 		}
 
-		$friends_all = $this->users_m->get_friends();
+		$friends_all = $this->users_m->get_friends(array(),true);
 		$people_after_filter = $this->users_m->get_people_user_may_know($options);
 
 		$friends_all_ids = array();
@@ -258,7 +301,7 @@ class Friends extends AuthController {
 				: 0;
 		}
 
-		$this->load->view('user/friends/users_list', array('people' => $people_after_filter, 'page_type' => 'add_friends'));
+		$this->load->view('user/friends/friends_list', array('people' => $people_after_filter, 'page_type' => 'add_friends'));
 	}
 
 	public function people_you_may_know_block() {
@@ -278,6 +321,15 @@ class Friends extends AuthController {
 			}
 		}
 	}
+
+    public function remove_from_contact($user_id) {
+        if ($this->users_m->user_id_is_correct($user_id)) {
+            $this->users_m->delete_connection_between_users($user_id, NULL);
+            if (!$this->input->is_ajax_request()) {
+                redirect(base_url() .'user/friends');
+            }
+        }
+    }
 
 	public function friend_request($friend_id = NULL) {
 		$this->users_m->set_connection_between_users($friend_id, NULL, NULL, 'friend_request');
@@ -319,22 +371,26 @@ class Friends extends AuthController {
 		foreach ($users as $user) {
 			$users_ids[] = $user->id;
 		}
+        $friends_ids = array();
+        $all_friends = $this->users_m->get_friends(array(),true);
+        foreach ($all_friends as $user) {
+            $friends_ids[] = $user->id;
+        }
 
-		$mutual_friends_count = $this->users_m->get_mutual_friends_count($users_ids, $users_ids);
-		foreach ($users as $user) {
-			$user->mutual_friends_count = !empty($mutual_friends_count[$user->id])
-				? $mutual_friends_count[$user->id]
-				: 0;
-		}
+        $mutual_friends_count = $this->users_m->get_mutual_friends_count($users_ids, $friends_ids);
+        foreach ($users as $user) {
+            $user->mutual_friends_count = !empty($mutual_friends_count[$user->id])
+                ? $mutual_friends_count[$user->id]
+                : 0;
+        }
 
 		$people_you_may_know = $this->users_m->get_people_user_may_know();
 		foreach ($people_you_may_know as $dude) {
 			$dude->name = $this->users_m->generate_full_name($dude);
 		}
 		$this->data['data']['people_you_may_know_block'] = $this->load->view('user/friends/people_you_may_know_block', array('people_you_may_know' => $people_you_may_know), TRUE);
-
-		$users_list = $this->load->view('user/friends/users_list', array('people' => $users, 'page_type' => $page_type), TRUE);
-		$this->data['data']['users_list'] = $users_list;
+		$users_list = $this->load->view('user/friends/'.$this->typesView[$page_type], array('people' => $users, 'page_type' => $page_type), TRUE);
+        $this->data['data']['users_list'] = $users_list;
 
 		$this->_render_page();
 	}

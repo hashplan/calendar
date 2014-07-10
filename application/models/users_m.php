@@ -13,7 +13,16 @@ class Users_m extends MY_Model {
 		return $is_admin || $is_owner;
 	}
 
-	public function get_friends($options = array()) {
+	public function get_friends($options = array(), $get_all = false) {
+
+        if (empty($options['limit'])) {
+            $options['limit'] = 5;
+        }
+
+        if (empty($options['offset'])) {
+            $options['offset'] = 0;
+        }
+
 		$user_id = !empty($options['user_id']) && $this->user_id_is_correct($options['user_id'])
 			? $options['user_id']
 			: $this->ion_auth->user()->row()->id;
@@ -53,8 +62,14 @@ class Users_m extends MY_Model {
 		$sql .= '
 			ORDER BY u.first_name, u.last_name
 		';
+        if(!$get_all){
+            $sql .= '
+                LIMIT ?, ?
+            ';
+        }
 
-		$friends_raw = $this->db->query($sql, array($user_id, $user_id))->result();
+
+		$friends_raw = $this->db->query($sql, array($user_id,$user_id,$options['offset'],$options['limit']))->result();
 
 		$friends = array();
 		foreach ($friends_raw as $friend) {
@@ -160,7 +175,7 @@ class Users_m extends MY_Model {
 			: $this->ion_auth->user()->row()->id;
 		$friends_count = empty($options['friends_count']) ? 2 : $options['friends_count'];
 
-		$friends = $this->get_friends(array('user_id' => $user_id));
+		$friends = $this->get_friends(array('user_id' => $user_id), true);
 		$friends_ids = $placeholders = array();
 		foreach ($friends as $friend) {
 			$friends_ids[] = $friend->id;
@@ -222,8 +237,7 @@ class Users_m extends MY_Model {
 			ORDER BY metro_preference, friends_count DESC
 		';
 
-		$people_raw = $this->db->query($sql, array_merge($friends_ids, $friends_ids, $friends_ids, $friends_ids, array($user_id, $user_id, $user_id, $friends_count))
-		)->result();
+		$people_raw = $this->db->query($sql, array_merge($friends_ids, $friends_ids, $friends_ids, $friends_ids, array($user_id, $user_id, $user_id, $friends_count)))->result();
 
 		$people = array();
 		foreach ($people_raw as $dude) {
@@ -602,5 +616,56 @@ class Users_m extends MY_Model {
 			->get()
 			->row();
 	}
+
+    public function get_unknown_users($options = array(), $get_all = false){
+
+        $result = array();
+
+        if (!isset($options['limit']) || empty($options['limit'])) {
+            $options['limit'] = 5;
+        }
+
+        if (!isset($options['offset']) || empty($options['offset'])) {
+            $options['offset'] = 0;
+        }
+
+        $user_id = $this->ion_auth->user()->row()->id;
+
+        if (isset($options['location_ids']) && !empty($options['location_ids']) && $options['location_ids'][0] !== 'all' && empty($options['location_name'])) {
+            $location_ids = array();
+            foreach ($options['location_ids'] as &$location_id) {
+                $location_ids[] = (int)$location_id;
+            }
+            $this->db->join('user_settings us', 'u.id = us.userId', 'INNER');
+            $this->db->where_in('us.metroId', $location_ids);
+
+        }
+
+        if (isset($options['location_name']) && !empty($options['location_name'])) {
+            $this->db->join('user_settings us', 'u.id = us.userId', 'INNER');
+            $this->db->join('metroareas ma', 'us.metroId = ma.id', 'INNER');
+            $this->db->like('ma.city', $options['location_name']);
+        }
+
+        $this->db
+            ->select('u.id, u.username, u.first_name, u.last_name')
+            ->from('users AS u')
+            ->where('NOT EXISTS (SELECT 1 FROM user_connections uc WHERE (u.id = uc.userId AND uc.connectionUserId = '.$user_id.') OR (u.id=uc.connectionUserId AND uc.userId = '.$user_id.'))', '', FALSE)
+            ->where(array('u.id !='=>$user_id,'u.active'=>1))
+            ->order_by('u.first_name ASC, u.last_name ASC');
+        if(!$get_all){
+            $this->db->limit($options['limit'], $options['offset']);
+        }
+        $query =  $this->db->get();
+
+        if($query->num_rows > 0){
+            foreach ($query->result() as $row) {
+                $row->name = $this->generate_full_name($row);
+                $result[] = $row;
+            }
+        }
+
+        return $result;
+    }
 
 }

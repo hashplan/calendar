@@ -24,7 +24,7 @@
 
                 </div>
 				<div class="button-wrapper">
-					<?php echo anchor('user/friends/remove_from_lists/'. $dude->id, 'Ignore', array('class' => 'btn btn-danger')) ?>
+					<?php echo anchor('user/friends/remove_from_contact/'. $dude->id, 'Remove', array('class' => 'btn btn-danger')) ?>
 					<?php if ($page_type === 'friends') {
 						echo anchor('user/events/'. $dude->id, 'View plans', array('class' => 'btn btn-primary friend-view-plans-button'));
 					} else if ($page_type === 'add_friends') {

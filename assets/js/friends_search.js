@@ -1,13 +1,20 @@
 $(function() {
-	// filter friends by text input
-	$('.page-friends #friends-name').on('keyup', fetchFriends);
+    var page_class = 'page-friends';
+    var controller = 'friends_list';
+    if (!$('.'+page_class).length) {
+        page_class = 'page-add-friend';
+        controller = 'users_list';
+    }
 
-	$('.page-friends #locations-left-block').on('change', '.left-block-location', function() {
+	// filter friends by text input
+	$('.'+page_class+' #friends-name').on('keyup', fetchFriends);
+
+	$('.'+page_class+' #locations-left-block').on('change', '.left-block-location', function() {
 		if ($(this).val() === 'all') {
-			$('.page-friends #locations-left-block .left-block-location:checked').not($(this)).prop('checked', false);
+			$('.'+page_class+' #locations-left-block .left-block-location:checked').not($(this)).prop('checked', false);
 		}
 		else {
-			$('.page-friends #locations-left-block #left-block-location-all').prop('checked', false);
+			$('.'+page_class+' #locations-left-block #left-block-location-all').prop('checked', false);
 		}
 		$('#locations-enter-name-field').val('');
 		fetchFriends();
@@ -51,7 +58,7 @@ $(function() {
 			url = base_url + 'user/friends/friends_list/' + user_id;
 		}
 		else if ($('#friends-page-type').val() === 'add_friends') {
-			url = base_url + 'user/friends/people_you_may_know_list';
+			url = base_url + 'user/friends/users_list';
 		}
 		else if ($('#friends-page-type').val() === 'friends_invites') {
 			url = base_url + 'user/friends/inviters_list';
@@ -64,7 +71,7 @@ $(function() {
 		}
 
 		var locationIds = [];
-		$('.page-friends #locations-left-block .left-block-location:checked').each(function() {
+		$('.'+page_class+' #locations-left-block .left-block-location:checked').each(function() {
 			locationIds.push($(this).val());
 		});
 
@@ -80,8 +87,40 @@ $(function() {
 				data: data,
 				success: function(response) {
 					$('#friends-list').html(response);
+                    $(window).trigger('scroll');
 				}
 			});
 		}
 	}
+
+    // scrolldown handler
+    if ($('.'+page_class).length > 0) {
+        $(window).scroll(function() {
+            if($(window).scrollTop() + $(window).height() > $(document).height() - 1) {
+                var locationIds = [];
+                var user_id = $('#locations-left-block').data('user_id');
+                $('.'+page_class+' #locations-left-block .left-block-location:checked').each(function() {
+                    locationIds.push($(this).val());
+                });
+                var data = {
+                    name: $('#friends-name').val(),
+                    offset: $('#friends-list .friend-row').length,
+                    location_ids: locationIds,
+                    location_name: $('#locations-enter-name-field').val()
+                };
+                if ($('.metro-id').text() > 0) {
+                    data.metro_id = $('.metro-id').text();
+                }
+                $.ajax(base_url + 'user/friends/'+controller +'/'+user_id, {
+                    type: 'POST',
+                    data: data,
+                    success: function(response) {
+                        $(response).appendTo('#friends-list');
+                    }
+                });
+            }
+        });
+        $(window).trigger('scroll');
+    }
+
 });
