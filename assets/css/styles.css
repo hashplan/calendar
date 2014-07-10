@@ -224,7 +224,10 @@ h1,h2,h3{font-family:georgia, serif;}
 	top: 0;
 	right: 20px;
 }
-
+.page-friends .friend-mutual-count .glyphicon {
+    top: 0px;
+    font-size: 10px;
+}
 #locations-left-block ul,
 #locations-left-block ul li {
 	margin: 0;

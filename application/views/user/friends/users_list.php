@@ -14,7 +14,15 @@
 					<div class="event-link">
 					</div>
 				<?php } ?>
-				<div class="friend-mutual-count"><?php echo html_escape($dude->mutual_friends_count) ?> shared connections</div>
+				<div class="friend-mutual-count">
+                    <?php if($dude->mutual_friends_count > 0){
+                        echo anchor('user/friends/'. $dude->id, "<span class='glyphicon glyphicon-play'></span> ". html_escape($dude->mutual_friends_count). " shared connections");
+                    }
+                    else{
+                        echo html_escape($dude->mutual_friends_count) ." shared connections";
+                    }?>
+
+                </div>
 				<div class="button-wrapper">
 					<?php echo anchor('user/friends/remove_from_lists/'. $dude->id, 'Remove', array('class' => 'btn btn-danger')) ?>
 					<?php if ($page_type === 'friends') {

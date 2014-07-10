@@ -46,8 +46,9 @@ $(function() {
 
 	function fetchFriends() {
 		var url = null;
+        var user_id = $('#locations-left-block').data('user_id');
 		if ($('#friends-page-type').val() === 'friends') {
-			url = base_url + 'user/friends/friends_list';
+			url = base_url + 'user/friends/friends_list/' + user_id;
 		}
 		else if ($('#friends-page-type').val() === 'add_friends') {
 			url = base_url + 'user/friends/people_you_may_know_list';

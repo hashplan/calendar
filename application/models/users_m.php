@@ -14,7 +14,7 @@ class Users_m extends MY_Model {
 	}
 
 	public function get_friends($options = array()) {
-		$user_id = !empty($options['user_id']) && !$this->user_id_is_correct($options['user_id'])
+		$user_id = !empty($options['user_id']) && $this->user_id_is_correct($options['user_id'])
 			? $options['user_id']
 			: $this->ion_auth->user()->row()->id;
 
@@ -31,8 +31,7 @@ class Users_m extends MY_Model {
 				FROM user_connections uc2
 				WHERE uc2.connectionUserId = ?
 			) uc
-			INNER JOIN users u ON uc.friend_id = u.id
-				AND uc.type = 'friend'
+			INNER JOIN users u ON uc.friend_id = u.id AND uc.type = 'friend'
 		";
 
 		if (!empty($options['location_ids']) && $options['location_ids'][0] !== 'all' && empty($options['location_name'])) {

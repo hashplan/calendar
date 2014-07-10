@@ -1,4 +1,4 @@
-<div id="locations-left-block">
+<div id="locations-left-block" data-user_id="<?php echo $user_id;?>">
 	<div class="panel panel-default">
 		<div class="panel-heading">
 			<div class="panel-title">Location</div>
