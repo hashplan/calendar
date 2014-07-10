@@ -94,7 +94,7 @@ class Users_m extends MY_Model {
 		}
 
 		$is_friend = FALSE;
-		foreach ($this->get_friends() as $friend) {
+		foreach ($this->get_friends(array(),true) as $friend) {
 			if ($friend_id === $friend->id) {
 				$is_friend = TRUE;
 				break;

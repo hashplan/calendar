@@ -24,16 +24,26 @@
 
                 </div>
 				<div class="button-wrapper">
-					<?php echo anchor('user/friends/remove_from_contact/'. $dude->id, 'Remove', array('class' => 'btn btn-danger')) ?>
-					<?php if ($page_type === 'friends') {
-						echo anchor('user/events/'. $dude->id, 'View plans', array('class' => 'btn btn-primary friend-view-plans-button'));
-					} else if ($page_type === 'add_friends') {
-						echo anchor('user/friends/friend_request/'. $dude->id, 'Connect', array('class' => 'btn btn-primary friend-view-plans-button'));
-					} else if ($page_type === 'friends_invites') {
-						echo anchor('user/friends/friend_accept/'. $dude->id, 'Connect', array('class' => 'btn btn-primary friend-view-plans-button'));
-					} else if ($page_type === 'events_invites') {
-						echo anchor('user/friends/event_invite_accept/'. $dude->id .'/'. $dude->eventId, 'Connect', array('class' => 'btn btn-primary friend-view-plans-button'));
-					} ?>
+                    <?php if(isset($friend_user_id)){
+                       if(in_array($dude->id, $my_friends)){
+                            echo anchor('user/friends/remove_from_contact/'. $dude->id, 'Remove', array('class' => 'btn btn-danger'));
+                            echo anchor('user/events/'. $dude->id, 'View plans', array('class' => 'btn btn-primary friend-view-plans-button'));
+                        }else{
+                            echo anchor('user/friends/friend_request/'. $dude->id, 'Connect', array('class' => 'btn btn-primary friend-view-plans-button'));
+                        }
+                    }
+                    else{
+                        echo anchor('user/friends/remove_from_contact/'. $dude->id, 'Remove', array('class' => 'btn btn-danger')) ?>
+                        <?php if ($page_type === 'friends') {
+                            echo anchor('user/events/'. $dude->id, 'View plans', array('class' => 'btn btn-primary friend-view-plans-button'));
+                        } else if ($page_type === 'add_friends') {
+                            echo anchor('user/friends/friend_request/'. $dude->id, 'Connect', array('class' => 'btn btn-primary friend-view-plans-button'));
+                        } else if ($page_type === 'friends_invites') {
+                            echo anchor('user/friends/friend_accept/'. $dude->id, 'Connect', array('class' => 'btn btn-primary friend-view-plans-button'));
+                        } else if ($page_type === 'events_invites') {
+                            echo anchor('user/friends/event_invite_accept/'. $dude->id .'/'. $dude->eventId, 'Connect', array('class' => 'btn btn-primary friend-view-plans-button'));
+                        }
+                    }?>
 				</div>
 			</div>
 		</div>

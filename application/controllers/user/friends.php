@@ -6,12 +6,14 @@ class Friends extends AuthController {
 		'sub_layout' => 'layouts/user_page',
 	);
 	public $user = NULL;
+    public $my_friends_ids = array();
     protected $typesView = array(
 		'friends' => 'friends_list',
 		'friends_invites' => 'friends_list',
 		'events_invites' => 'friends_list',
 		'invites_sent' => 'friends_list',
 		'add_friends' => 'users_list',
+		'user_friends' => 'users_friends_list',
 	);
 
 	public function __construct() {
@@ -39,9 +41,13 @@ class Friends extends AuthController {
         Menu::setActive('user/friends/friends_current');
         $page_class = 'friends';
         $page_title = 'Current friends';
-        $page_type = 'add_friends';
+        $page_type = 'user_friends';
         $this->load->model('location_m');
         $users = $this->users_m->get_friends(array('user_id' => $user_id));
+        $my_friends = $this->users_m->get_friends(array(),true);
+        foreach ($my_friends as $user) {
+            $this->my_friends_ids[] = $user->id;
+        }
         $locations = $this->location_m->get_left_block_metro_areas();
         $left_block = $this->load->view('user/friends/locations_left_block', array('locations' => $locations, 'user_id' => $user_id), TRUE);
         $this->_render_users_page($page_class, $page_title, $page_type, $left_block, $users);
@@ -77,6 +83,7 @@ class Friends extends AuthController {
         $friends_all_ids = array();
         foreach ($friends_all as $friend) {
             $friends_all_ids[] = $friend->id;
+            $this->my_friends_ids[] = $friend->id;
         }
         $users_ids = array();
         foreach ($users as $user) {
@@ -156,6 +163,11 @@ class Friends extends AuthController {
             $options['user_id'] = $user_id;
         }
 
+        $my_friends = $this->users_m->get_friends(array(),true);
+        foreach ($my_friends as $user) {
+            $this->my_friends_ids[] = $user->id;
+        }
+
 		$friends_all = $this->users_m->get_friends(array('user_id' => $user_id),true);
 		$friends_after_filter = $this->users_m->get_friends($options);
 
@@ -177,7 +189,7 @@ class Friends extends AuthController {
 				: 0;
 		}
 
-		$this->load->view('user/friends/friends_list', array('people' => $friends_after_filter, 'page_type' => 'friends'));
+		$this->load->view('user/friends/friends_list', array('people' => $friends_after_filter, 'page_type' => 'friends', 'friend_user_id' => $user_id, 'my_friends' => $this->my_friends_ids));
 	}
 
 	public function inviters_list() {
@@ -402,7 +414,7 @@ class Friends extends AuthController {
 			$dude->name = $this->users_m->generate_full_name($dude);
 		}
 		$this->data['data']['people_you_may_know_block'] = $this->load->view('user/friends/people_you_may_know_block', array('people_you_may_know' => $people_you_may_know), TRUE);
-		$users_list = $this->load->view('user/friends/'.$this->typesView[$page_type], array('people' => $users, 'page_type' => $page_type), TRUE);
+		$users_list = $this->load->view('user/friends/'.$this->typesView[$page_type], array('people' => $users, 'page_type' => $page_type, 'my_friends' => $this->my_friends_ids), TRUE);
         $this->data['data']['users_list'] = $users_list;
 
 		$this->_render_page();
