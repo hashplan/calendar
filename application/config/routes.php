@@ -43,7 +43,7 @@ $route['404_override'] = '';
 
 $route['user/events/(:num)'] = 'user/events/friends/$1';
 
-$route['user/friends/(:num)'] = 'user/friends/index/$1';
+$route['user/friends/(:num)'] = 'user/friends/friend/$1';
 
 /* End of file routes.php */
 /* Location: ./application/config/routes.php */

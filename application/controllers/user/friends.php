@@ -19,20 +19,33 @@ class Friends extends AuthController {
 		$this->load->model('users_m');
 	}
 
-	public function index($user_id = null) {
-        if($user_id == $this->ion_auth->user()->row()->id){
-            redirect('user/friends');
-        }
+	public function index() {
+        $user_id = $this->ion_auth->user()->row()->id;
 		Menu::setActive('user/friends/friends_current');
 		$page_class = 'friends';
 		$page_title = 'Current friends';
 		$page_type = 'friends';
 		$this->load->model('location_m');
-		$users = $this->users_m->get_friends(array('user_id' => $user_id));
+		$users = $this->users_m->get_friends();
 		$locations = $this->location_m->get_left_block_metro_areas();
 		$left_block = $this->load->view('user/friends/locations_left_block', array('locations' => $locations, 'user_id' => $user_id), TRUE);
 		$this->_render_users_page($page_class, $page_title, $page_type, $left_block, $users);
 	}
+
+    public function friend($user_id = null) {
+        if($user_id == $this->ion_auth->user()->row()->id){
+            redirect('user/friends');
+        }
+        Menu::setActive('user/friends/friends_current');
+        $page_class = 'friends';
+        $page_title = 'Current friends';
+        $page_type = 'add_friends';
+        $this->load->model('location_m');
+        $users = $this->users_m->get_friends(array('user_id' => $user_id));
+        $locations = $this->location_m->get_left_block_metro_areas();
+        $left_block = $this->load->view('user/friends/locations_left_block', array('locations' => $locations, 'user_id' => $user_id), TRUE);
+        $this->_render_users_page($page_class, $page_title, $page_type, $left_block, $users);
+    }
 
 	public function add() {
         $user_id = $this->ion_auth->user()->row()->id;

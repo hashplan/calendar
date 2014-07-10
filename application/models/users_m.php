@@ -27,6 +27,8 @@ class Users_m extends MY_Model {
 			? $options['user_id']
 			: $this->ion_auth->user()->row()->id;
 
+        $current_user = $this->ion_auth->user()->row()->id;
+
 		// CI active record doesnt support UNION
 		// UNION is used to avoid full table scan
 		$sql = "
@@ -60,7 +62,7 @@ class Users_m extends MY_Model {
 		}
 
 		$sql .= '
-			ORDER BY u.first_name, u.last_name
+			WHERE u.id != ? ORDER BY u.first_name, u.last_name
 		';
         if(!$get_all){
             $sql .= '
@@ -69,7 +71,7 @@ class Users_m extends MY_Model {
         }
 
 
-		$friends_raw = $this->db->query($sql, array($user_id,$user_id,$options['offset'],$options['limit']))->result();
+		$friends_raw = $this->db->query($sql, array($user_id,$user_id,$current_user,$options['offset'],$options['limit']))->result();
 
 		$friends = array();
 		foreach ($friends_raw as $friend) {
