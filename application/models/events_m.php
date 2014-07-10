@@ -92,7 +92,7 @@ class Events_m extends MY_Model {
 			}
 			else if (is_numeric($options['preselects'])) {
 				$date_range['start'] = date('Y-m-d H:i:s', strtotime('today'));
-				$date_range['end'] = date('Y-m-d H:i:s', strtotime('+'. ($options['preselects']) .' days midnight'));
+				$date_range['end'] = date('Y-m-d H:i:s', strtotime('+'. ($options['preselects'] - 1) .' days midnight'));
 				$date_range['end'] = str_replace('00:00:00', '23:59:59', $date_range['end']);
 			}
 		}
