@@ -28,6 +28,7 @@ class Friends extends AuthController {
 	}
 
 	public function add() {
+        $user_id = $this->ion_auth->user()->row()->id;
 		Menu::setActive('user/friends/friends_add');
 		$page_class = 'friends';
 		$page_title = 'Add friends';
@@ -35,7 +36,7 @@ class Friends extends AuthController {
 		$this->load->model('location_m');
 		$users = $this->users_m->get_people_user_may_know();
 		$locations = $this->location_m->get_left_block_metro_areas();
-		$left_block = $this->load->view('user/friends/locations_left_block', array('locations' => $locations), TRUE);
+		$left_block = $this->load->view('user/friends/locations_left_block', array('locations' => $locations, 'user_id' => $user_id), TRUE);
 
 		$this->_render_users_page($page_class, $page_title, $page_type, $left_block, $users);
 	}
