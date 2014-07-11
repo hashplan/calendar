@@ -41,9 +41,16 @@
 $route['default_controller'] = "page";
 $route['404_override'] = '';
 
-$route['user/events/(:num)'] = 'user/events/friends/$1';
 
+$route['user/events/(:num)'] = 'user/events/friends/$1';
 $route['user/friends/(:num)'] = 'user/friends/friend/$1';
+
+$route['user'] = 'user/events';
+
+$route['forgot_password'] = 'auth/forgot_password';
+$route['login/fb'] = 'auth/facebook_login';
+$route['login'] = 'auth/login';
+
 
 /* End of file routes.php */
 /* Location: ./application/config/routes.php */

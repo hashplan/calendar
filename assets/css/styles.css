@@ -10,6 +10,10 @@ h1,h2,h3{font-family:georgia, serif;}
 	color: #3276b1;
 }
 
+.signin-form {
+    margin: 0 auto;
+}
+
 .datepicker {
 	z-index: 1051;
 }

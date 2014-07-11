@@ -76,26 +76,6 @@ class MY_Controller extends CI_Controller {
     protected function _render_page() {
         $this->load->view($this->layout, $this->data);
     }
-
-    public function calendar(){
-        $prefs = array (
-            'show_next_prev'  => TRUE,
-            'next_prev_url'   => 'http://localhost/calendar/user/events'
-        );
-
-        $this->load->library('calendar');
-
-        //hard-coded for now
-        $data = array(
-            3  => 'http://localhost/calendar/event/modal_details/1',
-            7  => 'http://localhost/calendar/event/modal_details/2',
-            13 => 'http://localhost/calendar/event/modal_details/3',
-            26 => 'http://localhost/calendar/event/modal_details/4'
-        );
-
-        $this->data['cal'] =  $this->calendar->generate(2014,4,$data);
-        return $this->data['cal'];
-    }
 }
 
 
@@ -110,7 +90,7 @@ class AuthController extends MY_Controller{
 
         $this->lang->load('auth');
 
-        if(!$this->ion_auth->in_group("members")){
+        if(!$this->ion_auth->in_group("members")&&!$this->ion_auth->in_group("admin")){
             redirect('auth/login','refresh');
         }
 

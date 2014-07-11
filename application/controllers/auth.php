@@ -28,8 +28,7 @@ class Auth extends MY_Controller {
 		if (!$this->ion_auth->logged_in())
 		{
 			//redirect them to the login page
-			$this->data['subview']='auth/login';
-			$this->_render_page('_layout_modal', $this->data);
+            redirect('login');
 			
 		}
 		elseif (!$this->ion_auth->is_admin()) //remove this elseif if you want to enable this for non-admins
@@ -57,6 +56,12 @@ class Auth extends MY_Controller {
 	function login()
 	{
 		$this->data['title'] = "Login";
+        $layout = '_layout_main';
+        $this->data['subview']='auth/login';
+        if($this->input->is_ajax_request()){
+            $layout = '_layout_modal';
+            $this->data['subview']='auth/modal_login';
+        }
 
 		//validate form input
 		$this->form_validation->set_rules('identity', 'Identity', 'required');
@@ -64,56 +69,33 @@ class Auth extends MY_Controller {
 
 		if ($this->form_validation->run() == true)
 		{
-			//check to see if the user is logging in
-			//check for "remember me"
 			$remember = (bool) $this->input->post('remember');
 
 			if ($this->ion_auth->login($this->input->post('identity'), $this->input->post('password'), $remember))
 			{
-				//if the login is successful
-							if ($this->ion_auth->is_admin())
-							{
-								echo "Admin User";
-								// if an admin, go to admin area
-
-								//set the flash data error message if there is one
-								$this->session->set_flashdata('message', $this->ion_auth->messages());
-								$this->data['message'] = (validation_errors()) ? validation_errors() : $this->session->flashdata('message');
-
-								//list the users
-								$this->data['users'] = $this->ion_auth->users()->result();
-								redirect('admin/dashboard', $this->data);                
-							}
-							//if user is part of the master data team
-							elseif ($this->ion_auth->in_group("members"))
-							{        
-								//redirect them to the master controller
-							  redirect('user/events','refresh');
-
-							}
-							else
-							{
-						//redirect them to the generic controller
-						redirect('page','refresh');
-
-							}
-				//redirect them back to the home page
-				//$this->session->set_flashdata('message', $this->ion_auth->messages());
-				//redirect('/', 'refresh');
+                if ($this->ion_auth->is_admin())
+                {
+                    $this->session->set_flashdata('message', $this->ion_auth->messages());
+                    $this->data['message'] = (validation_errors()) ? validation_errors() : $this->session->flashdata('message');
+                    redirect('admin', $this->data);
+                }
+                elseif ($this->ion_auth->in_group("members"))
+                {
+                    redirect('user','refresh');
+                }
+                else
+                {
+                    redirect('page','refresh');
+                }
 			}
 			else
 			{
-				//if the login was un-successful
-				//redirect them back to the login page
 				$this->session->set_flashdata('message', $this->ion_auth->errors());
-				$this->data['subview']='auth/login';
-			$this->_render_page('_layout_modal', $this->data);
+			    $this->_render_page($layout, $this->data);
 			}
 		}
 		else
 		{
-			//the user is not logging in so display the login page
-			//set the flash data error message if there is one
 			$this->data['message'] = (validation_errors()) ? validation_errors() : $this->session->flashdata('message');
 			$this->data['identity'] = array('name' => 'identity',
 				'id' => 'identity',
@@ -125,8 +107,8 @@ class Auth extends MY_Controller {
 				'type' => 'password',
 			);
 
-			$this->data['subview']='auth/login';
-			$this->_render_page('_layout_modal', $this->data);
+
+			$this->_render_page($layout, $this->data);
 		}
 	}
 
@@ -787,7 +769,7 @@ class Auth extends MY_Controller {
 		if (!$render) return $view_html;
 	}
 	
-	function loginfacebook()
+	function facebook_login()
 	{
       $this->facebook_ion_auth->login();
 	}

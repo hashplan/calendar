@@ -1,54 +1,38 @@
-<div class="modal-dialog modal-md">
-    <div class="modal-content">
-      <div class="modal-header">
-		  <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-			<h3><?php echo lang('login_heading');?></h3>
-			<!--<p><?php echo lang('login_subheading');?></p>
-			<p>Please login using your email and password.</p>-->
+<div class="col-md-offset-4 col-md-4 col-sm-12 well">
+    <form action="<?= site_url('login') ?>" method="POST" class="signin-form form-horizontal" role="form">
+        <div class="form-group">
+            <label for="identity" class="sr-only control-label">Email</label>
 
-			<div id="infoMessage"><?php echo $message;?></div>
-	</div>
-<div class = "modal-body">
-		<?php echo form_open("auth/login");?>
+            <div class="col-sm-12">
+                <input type="email" class="form-control" id="identity" name="identity" value="<?= set_value('identity') ?>"
+                       placeholder="Email">
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="password" class="sr-only control-label">Password</label>
 
-			<div class = "row">
-				<div class = "col-md-3">
-					<p><strong>Email:</strong></p><!--<?php echo lang('login_identity_label', 'identity');?>-->
-				</div>
-				<div class = "col-md-6">
-					<?php echo form_input($identity);?>
-				</div>
-			</div>
-		  <br>
-		  <div class = "row">
-			<div class = "col-md-3">
-				<?php echo lang('login_password_label', 'password');?>
-			</div>
-			<div class = "col-md-6">
-				<?php echo form_input($password);?>
-			</div>
-		  </div>
-			<hr>
-			<div class = "row">
-				<div class = "col-md-6">
-				<a href="auth/forgot_password"><?php echo lang('login_forgot_password');?></a>
-				</div>
-				<div class = "col-md-6">
-				<?php echo lang('login_remember_label', 'remember');?>
-				<?php echo form_checkbox('remember', '1', FALSE, 'id="remember"');?>
-			  </div>
-		  </div>
-		<div class = "row">
-			<div class = "col-md-6">
-				<a href="<?php echo site_url('Facebook_ion_auth/login'); ?>"><img class = "img-responsive" src="<?php echo site_url('/assets/img/logo/facebooklogin.png');?>" alt="Facebook login"></a>
-			</div>
-		</div>
-		<div class = "row">
-			<div class = "col-md-8">
-			</div>
-			<div class = "col-md-4">
-			  <?php echo form_submit('submit', 'Login','class = "btn btn-primary btn-sm"');?>
-			  <?php echo anchor(site_url(),"Cancel",'class = "btn btn-default btn-sm"');?>
-			</div>
-		</div>
-		<?php echo form_close();?>
+            <div class="col-sm-12">
+                <input type="password" class="form-control" name="password" id="inputPassword3" placeholder="Password">
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-6">
+                <?= anchor('forgot_password', lang('login_forgot_password')); ?>
+            </div>
+            <div class="col-md-6 text-right">
+                <?php echo lang('login_remember_label', 'remember'); ?>
+                <?php echo form_checkbox('remember', '1', FALSE, 'id="remember"'); ?>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-6">
+                <a href="<?php echo site_url('/login/fb'); ?>"><img class="img-responsive"
+                                                                    src="<?php echo site_url('/assets/img/logo/facebooklogin.png'); ?>"
+                                                                    alt="Facebook login"></a>
+            </div>
+            <div class="col-md-offset-2 col-md-4 text-right">
+                <button type="submit" class="btn btn-default">Login</button>
+            </div>
+        </div>
+    </form>
+</div>
