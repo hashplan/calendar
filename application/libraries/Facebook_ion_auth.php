@@ -1,82 +1,83 @@
-<?php if ( ! defined('BASEPATH')) exit('No direct script access allowed'); 
+<?php if (!defined('BASEPATH')) exit('No direct script access allowed');
 
-class Facebook_ion_auth {
+/*
+Library for login with facebook and create a ion_auth compatibility session.
 
-	/*
-		Library for login with facebook and create a ion_auth compatibility session. 
+author: Daniel Georgiev
+website: http://dgeorgiev.biz
+*/
 
-		author: Daniel Georgiev
-		website: http://dgeorgiev.biz
-	*/
+class Facebook_ion_auth
+{
+    protected $CI = null;
 
-	public function __construct() {
+    public function __construct()
+    {
+        $this->CI =& get_instance();
+        $this->CI->config->load('facebook', TRUE);
+        // config
+        $this->app_id = $this->CI->config->item('appId', 'facebook'); // your app id
+        $this->app_secret = $this->CI->config->item('secret', 'facebook'); // your app secret key
+        $this->my_url = $this->CI->config->item('back_url', 'facebook'); // url to redirect back from facebook
+        $this->scope = $this->CI->config->item('scope', 'facebook'); // custom permissions check - http://developers.facebook.com/docs/reference/login/#permissions
+    }
 
-		// get Codeigniter instance
-	    $this->CI =& get_instance();
+    public function login()
+    {
 
-		// config 
-		$this->app_id = '728286710528006';//$this->config->item('appId'); // your app id
-		$this->app_secret = '631937ec761a3feab48995b48da2faba';//$this->config->item('secret'); // your app secret key
-		$this->my_url = site_url(''); // url to redirect back from facebook
-		$this->scope = 'email'; // custom permissions check - http://developers.facebook.com/docs/reference/login/#permissions
-	}
+        // null at first
+        $code = $this->CI->input->get('code');
 
-    public function login() {
+        // if is not set go make a facebook connection
+        if (!$code) {
 
-    	// null at first
-		$code = $this->CI->input->get('code');
+            // create a unique state
+            $this->CI->session->set_userdata('state', md5(uniqid(rand(), TRUE)));
 
-		// if is not set go make a facebook connection
-		if(!$code) {
+            // redirect to facebook oauth page
+            $url_to_redirect = "https://www.facebook.com/dialog/oauth?client_id="
+                . $this->app_id
+                . "&redirect_uri=" . urlencode($this->my_url)
+                . "&state=" . $this->CI->session->userdata('state') . '&scope=' . $this->scope;
 
-			// create a unique state
-	   		$this->CI->session->set_userdata('state', md5(uniqid(rand(), TRUE)));
+            redirect($url_to_redirect);
 
-	   		// redirect to facebook oauth page
-	   		$url_to_redirect =  "https://www.facebook.com/dialog/oauth?client_id=" 
-	       						.$this->app_id
-	       						."&redirect_uri=".urlencode($this->my_url)
-	       						."&state=".$this->CI->session->userdata('state').'&scope='.$this->scope;
+        } else {
 
-	       	redirect($url_to_redirect);
+            // check if session state is equal to the returned state
 
-	   	} else {
-
-	   		// check if session state is equal to the returned state
-
-			if($this->CI->session->userdata('state') && ($this->CI->session->userdata('state') === $this->CI->input->get('state'))) {
+            if ($this->CI->session->userdata('state') && ($this->CI->session->userdata('state') === $this->CI->input->get('state'))) {
 
 
-				$token_url = "https://graph.facebook.com/oauth/access_token?"
-			       . "client_id=" . $this->app_id . "&redirect_uri=" . urlencode($this->my_url)
-			       . "&client_secret=" . $this->app_secret . "&code=" . $code;
+                $token_url = "https://graph.facebook.com/oauth/access_token?"
+                    . "client_id=" . $this->app_id . "&redirect_uri=" . urlencode($this->my_url)
+                    . "&client_secret=" . $this->app_secret . "&code=" . $code;
 
-				$response = file_get_contents($token_url);
+                $response = file_get_contents($token_url);
 
-				$params = null;
+                $params = null;
 
-				parse_str($response, $params);
+                parse_str($response, $params);
 
-				$this->CI->session->set_userdata('access_token', $params['access_token']);
+                $this->CI->session->set_userdata('access_token', $params['access_token']);
 
-				$graph_url = "https://graph.facebook.com/me?access_token=".$params['access_token'];
+                $graph_url = "https://graph.facebook.com/me?access_token=" . $params['access_token'];
 
-				$user = json_decode(file_get_contents($graph_url));
+                $user = json_decode(file_get_contents($graph_url));
 
-				// check if this user is already registered
-				if(!$this->CI->ion_auth_model->identity_check($user->email)){
-					$name = explode(" ", $user->name);
-					$register = $this->CI->ion_auth->register($user->username, 'facebookdoesnothavepass123^&*%', $user->email, array('first_name' => $name[0], 'last_name' => $name[1]));
-				} else {
-					$login = $this->CI->ion_auth->login($user->email, 'facebookdoesnothavepass123^&*%', 1);
-				}
+                // check if this user is already registered
+                if (!$this->CI->ion_auth_model->identity_check($user->email)) {
+                    $name = explode(" ", $user->name);
+                    $register = $this->CI->ion_auth->register($user->username, 'facebookdoesnothavepass123^&*%', $user->email, array('first_name' => $name[0], 'last_name' => $name[1]));
+                } else {
+                    $login = $this->CI->ion_auth->login($user->email, 'facebookdoesnothavepass123^&*%', 1);
+                }
 
-				return true;
-		    }
-		    else {
-		   		return false;
-		    }
-	    }
+                return true;
+            } else {
+                return false;
+            }
+        }
     }
 }
 

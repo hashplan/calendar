@@ -5,18 +5,8 @@ class Auth extends MY_Controller {
 	function __construct()
 	{
 		parent::__construct();
-		$this->load->library('ion_auth');
-		$this->load->library('form_validation');
-		$this->load->helper('url');
-
-		// Load MongoDB library instead of native db driver if required
-		$this->config->item('use_mongodb', 'ion_auth') ?
-		$this->load->library('mongo_db') :
-
-		$this->load->database();
 
 		$this->form_validation->set_error_delimiters($this->config->item('error_start_delimiter', 'ion_auth'), $this->config->item('error_end_delimiter', 'ion_auth'));
-
 		$this->lang->load('auth');
 		$this->load->helper('language');
 	}
@@ -24,37 +14,24 @@ class Auth extends MY_Controller {
 	//redirect if needed, otherwise display the user list
 	function index()
 	{
-
-		if (!$this->ion_auth->logged_in())
-		{
-			//redirect them to the login page
-            redirect('login');
-			
-		}
-		elseif (!$this->ion_auth->is_admin()) //remove this elseif if you want to enable this for non-admins
-		{
-			//redirect them to the home page because they must be an administrator to view this
-			return show_error('You must be an administrator to view this page.');
-		}
-		else
-		{
-			//set the flash data error message if there is one
-			$this->data['message'] = (validation_errors()) ? validation_errors() : $this->session->flashdata('message');
-
-			//list the users
-			$this->data['users'] = $this->ion_auth->users()->result();
-			foreach ($this->data['users'] as $k => $user)
-			{
-				$this->data['users'][$k]->groups = $this->ion_auth->get_users_groups($user->id)->result();
-			}	
-			$this->data['subview']='auth/index';
-			$this->_render_page('_layout_main', $this->data);
-		}
+		$this->login();
 	}
 
 	//log the user in
 	function login()
 	{
+        if ($this->ion_auth->logged_in())
+        {
+            if($this->ion_auth->in_group("admin")){
+                redirect('admin');
+            }
+            elseif($this->ion_auth->in_group("members")){
+                redirect('user');
+            }
+            else{
+                redirect('/');
+            }
+        }
 		$this->data['title'] = "Login";
         $layout = '_layout_main';
         $this->data['subview']='auth/login';
@@ -771,6 +748,6 @@ class Auth extends MY_Controller {
 	
 	function facebook_login()
 	{
-      $this->facebook_ion_auth->login();
+        $this->facebook_ion_auth->login();
 	}
 }

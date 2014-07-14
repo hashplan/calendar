@@ -3,7 +3,7 @@
 <div class="navbar navbar-default navbar-fixed-top" role="navigation">
 	<div class = "container-fluid">
 	  <div class="navbar-header">
-			<a class="navbar-brand" href="<?php echo site_url('user/dashboard'); ?>"><img src="<?php echo site_url('/assets/img/logo/logo.png');?>" alt="Hashplan logo"></a>
+			<a class="navbar-brand" href="<?php echo site_url(''); ?>"><img src="<?php echo site_url('/assets/img/logo/logo.png');?>" alt="Hashplan logo"></a>
 			<ul class="nav navbar-nav">
 				  <li><?php echo anchor('admin/dashboard','User List'); ?></li>	
 				  <li><?php echo anchor('admin/dashboard/events','All Events'); ?></li>
@@ -22,7 +22,7 @@
 				<li><?php echo anchor('user/profile','<span class="glyphicon glyphicon-tasks">&nbsp </span>Profile');?></li>
 				<li><?php echo anchor('user/dashboard','<span class="glyphicon glyphicon-link">&nbsp </span>Some other link');?></li>
 				<li class="divider"></li>
-				<li><?php echo anchor('auth/logout','<span class="glyphicon glyphicon-log-out">&nbsp </span>Logout');?></li>
+				<li><?php echo anchor('logout','<span class="glyphicon glyphicon-log-out">&nbsp </span>Logout');?></li>
 			</ul> 
 		  </li>
 			 <li><a href="#">Another action</a></li>

@@ -40,7 +40,7 @@
 		  </div>
 		<div class = "row">
 			<div class = "col-md-6">
-				<a href="<?php echo site_url('/login/fb'); ?>"><img class = "img-responsive" src="<?php echo site_url('/assets/img/logo/facebooklogin.png');?>" alt="Facebook login"></a>
+				<a href="<?php echo site_url('fb_login'); ?>"><img class = "img-responsive" src="<?php echo site_url('/assets/img/logo/facebooklogin.png');?>" alt="Facebook login"></a>
 			</div>
 		</div>
 		<div class = "row">

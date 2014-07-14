@@ -7,7 +7,7 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="<?php echo site_url('user/events/all'); ?>"><img src="<?php echo site_url('/assets/img/logo/hashplan_150-28.png');?>" alt="Hashplan logo"></a>
+            <a class="navbar-brand" href="<?php echo site_url(''); ?>"><img src="<?php echo site_url('/assets/img/logo/hashplan_150-28.png');?>" alt="Hashplan logo"></a>
         </div>
         <div class="navbar-collapse collapse">
             <ul class="nav navbar-nav">
@@ -29,9 +29,10 @@
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-user">&nbsp </span><?php echo (string)isset($user->first_name)?$user->first_name:'Member';?><b class="caret"></b></a>
                     <ul class="dropdown-menu">
-                        <li><?php echo anchor('user/account_settings','<span class="glyphicon glyphicon-tasks">&nbsp </span>Account');?></li>
+                        <li><?php echo anchor('user','<span class="glyphicon glyphicon-tasks">&nbsp </span>Account');?></li>
+                        <li><?php echo anchor('user/account_settings','<span class="glyphicon glyphicon-cog">&nbsp </span>Settings');?></li>
                         <li class="divider"></li>
-                        <li><?php echo anchor('auth/logout','<span class="glyphicon glyphicon-log-out">&nbsp </span>Logout');?></li>
+                        <li><?php echo anchor('logout','<span class="glyphicon glyphicon-log-out">&nbsp </span>Logout');?></li>
                     </ul>
                 </li>
             </ul>

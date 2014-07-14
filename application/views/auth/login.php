@@ -26,7 +26,7 @@
         </div>
         <div class="form-group">
             <div class="col-md-6">
-                <a href="<?php echo site_url('/login/fb'); ?>"><img class="img-responsive"
+                <a href="<?php echo site_url('/fb_login'); ?>"><img class="img-responsive"
                                                                     src="<?php echo site_url('/assets/img/logo/facebooklogin.png'); ?>"
                                                                     alt="Facebook login"></a>
             </div>
