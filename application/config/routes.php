@@ -46,10 +46,15 @@ $route['user/events/(:num)'] = 'user/events/friends/$1';
 $route['user/friends/(:num)'] = 'user/friends/friend/$1';
 
 $route['user'] = 'user/events';
+$route['user/settings'] = 'user/account_settings/index';
+$route['user/settings/avatar'] = 'user/account_settings/avatar_upload';
+
+
 
 $route['forgot_password'] = 'auth/forgot_password';
-$route['login/fb'] = 'auth/facebook_login';
+$route['fb_login'] = 'auth/facebook_login';
 $route['login'] = 'auth/login';
+$route['logout'] = 'auth/logout';
 
 
 /* End of file routes.php */

@@ -32,7 +32,7 @@ class Events_m extends MY_Model {
 			->join('venues AS v', 'e.venueId = v.id', 'left')
 			->join('cities AS ci', 'v.cityId = ci.id', 'left')
 			->join('metroareas AS ma', 'ci.metroId = ma.id', 'left')
-			->where('(e.ownerId IS NULL OR e.ownerId = "'.$this->db->escape($user_id).'" OR (e.ownerId IS NOT NULL AND e.is_public = 1))')
+			->where('(e.ownerId IS NULL OR e.ownerId = '.$this->db->escape($user_id).' OR (e.ownerId IS NOT NULL AND e.is_public = 1))')
 			->order_by('e.datetime')
 			->limit($options['limit'], $options['offset']);
 
@@ -154,7 +154,7 @@ class Events_m extends MY_Model {
 			->join('venues AS v', 'e.venueId = v.id', 'left')
 			->join('metroareas AS ma', 'v.cityId = ma.id', 'left')
 			->where('e.id', $id)
-            ->where('(e.ownerId IS NULL OR e.ownerId = "'.$this->db->escape($user_id).'" OR (e.ownerId IS NOT NULL AND e.is_public = 1))')
+            ->where('(e.ownerId IS NULL OR e.ownerId = '.$this->db->escape($user_id).' OR (e.ownerId IS NOT NULL AND e.is_public = 1))')
 			->get()
 			->row();
 	}
@@ -350,33 +350,27 @@ class Events_m extends MY_Model {
      * @return bool
      */
     public function add_to_calendar($event_id, $user_id = NULL) {
-
         $result = false;
-		$event_id_is_correct = $event_id !== NULL && is_numeric($event_id) && $event_id;
+        $event = $this->get_event_by_id($event_id);
+        if(!empty($event)){
+            $user_id_is_correct = $user_id !== NULL && is_numeric($user_id) && $user_id;
+            if (!$user_id_is_correct) {
+                $user_id = $this->ion_auth->user()->row()->id;
+            }
 
-        if($event_id_is_correct){
-            $event = $this->get_event_by_id($event_id);
-            if(!empty($event)){
-                $user_id_is_correct = $user_id !== NULL && is_numeric($user_id) && $user_id;
-                if (!$user_id_is_correct) {
-                    $user_id = $this->ion_auth->user()->row()->id;
-                }
-
-                $already_in_calendar = count($this->get_calendar_events($event_id, $user_id)) === 1;
-                if (!$already_in_calendar) {
-                    $result = $this->db->insert('user_events', array(
-                        'userId' => $user_id,
-                        'eventId' => $event_id,
-                        'insertedon' => NULL,
-                        'insertedby' => NULL,
-                        'updatedon' => NULL,
-                        'updatedby' => NULL,
-                        'ownerId' => NULL,
-                    ));
-                }
+            $already_in_calendar = count($this->get_calendar_events($event_id, $user_id)) === 1;
+            if (!$already_in_calendar) {
+                $result = $this->db->insert('user_events', array(
+                    'userId' => $user_id,
+                    'eventId' => $event_id,
+                    'insertedon' => NULL,
+                    'insertedby' => NULL,
+                    'updatedon' => NULL,
+                    'updatedby' => NULL,
+                    'ownerId' => $event->event_owner_id,
+                ));
             }
         }
-
         return $result;
 	}
 
@@ -392,20 +386,15 @@ class Events_m extends MY_Model {
         $event_id_is_correct = $event_id !== NULL && is_numeric($event_id) && $event_id;
 
         if($event_id_is_correct){
-            $event = $this->get_event_by_id($event_id);
-
-            if(!empty($event)){
-                $user_id_is_correct = $user_id !== NULL && is_numeric($user_id) && $user_id;
-                if (!$user_id_is_correct) {
-                    $user_id = $this->ion_auth->user()->row()->id;
-                }
-                if($event->event_owner_id != $user_id){
-                    $result = $this->db->delete('user_events', array(
-                        'userId' => $user_id,
-                        'eventId' => $event_id,
-                    ));
-                }
+            $user_id_is_correct = $user_id !== NULL && is_numeric($user_id) && $user_id;
+            if (!$user_id_is_correct) {
+                $user_id = $this->ion_auth->user()->row()->id;
             }
+            $result = $this->db->delete('user_events', array(
+                'userId' => $user_id,
+                'eventId' => $event_id,
+                'ownerId !=' => $user_id
+            ));
         }
 
         return $result;
@@ -414,19 +403,21 @@ class Events_m extends MY_Model {
 	public function restore_from_calendar($event_id, $user_id = NULL) {
 		$event_id_is_correct = $event_id !== NULL && is_numeric($event_id) && $event_id;
 
-		$user_id_is_correct = $user_id !== NULL && is_numeric($user_id) && $user_id;
-		if (!$user_id_is_correct) {
-			$user_id = $this->ion_auth->user()->row()->id;
-		}
+        if($event_id_is_correct){
+            $user_id_is_correct = $user_id !== NULL && is_numeric($user_id) && $user_id;
+            if (!$user_id_is_correct) {
+                $user_id = $this->ion_auth->user()->row()->id;
+            }
 
-		$already_in_calendar = count($this->get_calendar_events($event_id, $user_id)) === 1;
+            $already_in_calendar = count($this->get_calendar_events($event_id, $user_id)) === 1;
 
-		if ($already_in_calendar) {
-			$this->db->delete('user_events', array(
-				'userId' => $user_id,
-				'eventId' => $event_id,
-			));
-		}
+            if ($already_in_calendar) {
+                $this->db->delete('user_events', array(
+                    'userId' => $user_id,
+                    'eventId' => $event_id,
+                ));
+            }
+        }
 	}
 	
 	public function save($data) {
@@ -436,12 +427,27 @@ class Events_m extends MY_Model {
 			$data['private'] = FALSE;
 		}
 		if ($is_new) {
+
+            $venue_data = array(
+                'address' => $data['address']
+            );
+            if($data['city']){
+                $venue_data['cityId'] = $data['city']->id;
+                $venue_data['city'] = $data['city']->city;
+                $venue_data['stateId'] = $data['city']->stateId;
+                $venue_data['name'] = $data['address'];
+            }
+            $venue_id = NULL;
+            if($this->db->insert('venues', $venue_data)){
+                $venue_id = $this->db->insert_id();
+            }
+
 			$this->db->insert('events', array(
 				'name' => $data['name'],
 				'description' => $data['description'],
 				'typeId' => NULL,
 				'datetime' => $data['date'] .' '. $data['time'],
-				'venueId' => NULL,
+				'venueId' => $venue_id,
 				'stubhub_url' => NULL,
 				'insertedon' => NULL,
 				'insertedby' => NULL,
@@ -451,16 +457,8 @@ class Events_m extends MY_Model {
 				'ownerId' => $user_id,
 			));
 			$event_id = $this->db->insert_id();
-
-			$this->db->insert('user_events', array(
-				'userId' => $user_id,
-				'eventId' => $event_id,
-				'insertedon' => NULL,
-				'insertedby' => NULL,
-				'updatedon' => NULL,
-				'updatedby' => NULL,
-				'ownerId' => NULL,
-			));
+            $this->add_to_calendar($event_id);
 		}
+
 	}
 }

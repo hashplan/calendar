@@ -258,3 +258,8 @@ h1,h2,h3{font-family:georgia, serif;}
 .page-user-events .ui-autocomplete {
 	z-index: 10001;
 }
+
+/*account settings*/
+.page-account-settings #content {
+    padding-top: 15px;
+}

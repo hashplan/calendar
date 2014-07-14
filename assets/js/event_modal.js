@@ -9,6 +9,7 @@ $(function() {
 			if ($('#event_modal #event .map-holder').length === 1 && typeof eventOwnerId === 'undefined') {
 				var venueName = $('#event_modal .event-venue-hidden').val();
 				var cityName = $('#event_modal .event-city-hidden').val();
+                var address = $('#event_modal .event-address-hidden').val();
 				var googleMapsApiKey = $('#event_modal .google-maps-embed-api-key').val();
 				$('#event .map-holder').html('\
 					<iframe \

@@ -71,4 +71,13 @@ class Location_m extends MY_Model {
 			->get()
 			->result();
 	}
+
+    public function get_city_by_name($city_name = ''){
+        $result = false;
+        $query = $this->db->like('city', $city_name)->limit(1)->get('cities');
+        if($query->num_rows() > 0){
+            $result = $query->row();
+        }
+        return $result;
+    }
 } 

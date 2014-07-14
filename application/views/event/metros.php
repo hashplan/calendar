@@ -14,7 +14,7 @@
 					</div>
 				<?php } ?>
 				<?php foreach($metros as $metro) { ?>
-					<div class="col-md-6">
+					<div class="col-md-4 col-sm-12">
 						<div class="item-metro-id" style="display: none"><?php echo html_escape($metro->id) ?></div>
 						<a href="#" class="item-metro-name" aria-hidden="true"><?php echo html_escape($metro->city) ?></a>
 						<?php if (!$hide_events) { ?>
