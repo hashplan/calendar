@@ -19,7 +19,7 @@ class Events extends AuthController {
 	public	function __construct(){
 		parent::__construct();
 		$this->load->model('events_m');
-		$this->load->model('users_m');
+        $this->load->model('users_m');
 		$this->data['user'] = $this->user;
 		$this->data['user']->metro = $this->users_m->get_user_metro($this->data['user']->id);
 	}
@@ -40,10 +40,11 @@ class Events extends AuthController {
 		{
 			redirect(base_url('user/events'));
 		}
-		$friend = $this->db->where('id', $user_id)->get('users')->result();
-		$this->data['user'] = $friend[0];
+		$this->data['user'] = $this->db->where('id', $user_id)->get('users')->row();
+        $fullname = $this->data['user']->first_name . " " . $this->data['user']->last_name;
+        $fullname = trim($fullname);
 
-		$this->_render_events_list_page('friends', $user_id);
+		$this->_render_events_list_page('friends', $fullname.' Events', $user_id);
 	}
 
 	public function all() {

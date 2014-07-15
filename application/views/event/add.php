@@ -52,8 +52,11 @@
                 </div>
                 <div class="row">
                     <div class="col-md-12">
-                        <input type="checkbox" class="event-private" id="event-private" name="private"/>
-                        <label for="event-private">Private</label>
+                        <div class="checkbox">
+                            <label>
+                                <input type="checkbox" class="event-private" id="event-private" name="private"> Private
+                            </label>
+                        </div>
                     </div>
                 </div>
                 <div class="row">
@@ -86,7 +89,7 @@
         data.date = $('#user_added_event_form [name="date"]').val();
         data.time = $('#user_added_event_form [name="time"]').val();
         data.description = $('#user_added_event_form [name="description"]').val();
-        data.private = $('#user_added_event_form [name="private"]').val();
+        data.private = $('#user_added_event_form [name="private"]:checked').val();
         $.ajax(base_url + 'event/save', {
             type: 'POST',
             data: data,

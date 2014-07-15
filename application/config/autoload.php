@@ -80,7 +80,7 @@ $autoload['helper'] = array('form','my_form','url','html','cms','language');
 |
 */
 
-$autoload['config'] = array('cms_config', 'google_maps', 'yelp');
+$autoload['config'] = array('cms_config', 'google_maps', 'yelp', 'hashplans');
 
 
 /*

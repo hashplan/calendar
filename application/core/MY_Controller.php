@@ -82,20 +82,20 @@ class MY_Controller extends CI_Controller {
 //Protocontroller for authorized users
 class AuthController extends MY_Controller{
     public $user = NULL;
+    public $friends = NULL;
 
     public	function __construct(){
         parent::__construct();
 
         $this->form_validation->set_error_delimiters($this->config->item('error_start_delimiter', 'ion_auth'), $this->config->item('error_end_delimiter', 'ion_auth'));
-
         $this->lang->load('auth');
 
         if(!$this->ion_auth->in_group("members")&&!$this->ion_auth->in_group("admin")){
             redirect('auth/login','refresh');
         }
 
-        // Some user mess
         $this->user = $this->ion_auth->user()->row();
+        $this->friends = $this->update_friend_list();
     }
 
     public function get_user_identifier(){
@@ -105,6 +105,24 @@ class AuthController extends MY_Controller{
             $identifier = 'admin';
         }
         return $identifier;
+    }
+
+    protected function update_friend_list(){
+        $friend_list_last_update = $this->session->userdata('friend_list_last_update');
+        $friend_list_cache_expiry_time = $this->config->item('friend_list_cache_expiry_time');
+
+        if(!$friend_list_last_update || time() - $friend_list_cache_expiry_time > $friend_list_last_update){
+            $this->load->model('users_m');
+            $friends = $this->users_m->get_friends(array(),true);
+            $friend_ids = array();
+            if(!empty($friends)){
+                foreach($friends as $friend){
+                    $friend_ids[] = $friend->id;
+                }
+            }
+            $this->session->set_userdata(array('friend_ids' => $friend_ids, 'friend_list_last_update' => time()));
+        }
+        return $this->session->userdata('friend_ids');
     }
 }
 

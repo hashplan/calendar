@@ -211,8 +211,7 @@ class Event extends AuthController
             $this->form_validation->set_message('check_address', 'Wrong %s field.');
             return FALSE;
         }
-        if ($result) {
-            $city = $this->location_m->get_city_by_name($result);
+        if ($result && $city = $this->location_m->get_city_by_name($result)) {
             if ($city->metroId != $this->input->post('location')) {
                 $metro = $this->db->where(array('id' => $city->metroId))->get('metroareas')->row();
                 $this->form_validation->set_message('check_address', 'Wrong Event Address or Location fields. Location should be ' . $metro->city . ' or input another Address.');

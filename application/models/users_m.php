@@ -371,18 +371,27 @@ class Users_m extends MY_Model {
 	}
 
 	public function get_users_which_sent_friend_request($options = array()) {
-		$user_id = !empty($options['user_id']) && !$this->user_id_is_correct($options['user_id'])
-			? $options['user_id']
+		$user_id = !empty($options['user_id']) && !$this->user_id_is_correct($options['user_id'])? $options['user_id']
 			: $this->ion_auth->user()->row()->id;
 
-		$users_raw = $this->db
+		$this->db
 			->select('u.*, uc.*, u.id AS id, uc.id AS user_connection_id /* get_users_which_sent_friend_request */')
 			->from('user_connections AS uc')
 			->join('users AS u', 'uc.userId = u.id', 'inner')
 			->where('uc.type', 'friend_request')
 			->where('uc.connectionUserId', $user_id)
 			->order_by('first_name')
-			->order_by('last_name')
+			->order_by('last_name');
+
+            if (empty($options['limit'])) {
+                $options['limit'] = 5;
+            }
+
+            if (empty($options['offset'])) {
+                $options['offset'] = 0;
+            }
+        $users_raw = $this->db
+            /*->limit($options['limit'], $options['offset'])*/
 			->get()
 			->result();
 

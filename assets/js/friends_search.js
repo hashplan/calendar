@@ -1,9 +1,14 @@
 $(function() {
+    var page = $('body');
     var page_class = 'page-friends';
     var controller = 'friends_list';
-    if (!$('.'+page_class).length) {
+    if(page.hasClass('page-add-friend')){
         page_class = 'page-add-friend';
         controller = 'users_list';
+    }
+    else if(page.hasClass('page-invites')){
+        page_class = 'page-invites';
+        controller = 'invites';
     }
 
 	// filter friends by text input
@@ -97,11 +102,32 @@ $(function() {
     if ($('.'+page_class).length > 0) {
         $(window).scroll(function() {
             if($(window).scrollTop() + $(window).height() > $(document).height() - 1) {
+
                 var locationIds = [];
                 var user_id = $('#locations-left-block').data('user_id');
                 $('.'+page_class+' #locations-left-block .left-block-location:checked').each(function() {
                     locationIds.push($(this).val());
                 });
+                var url = null;
+                var user_id = $('#locations-left-block').data('user_id');
+                if ($('#friends-page-type').val() === 'friends' || $('#friends-page-type').val() === 'user_friends') {
+                    url = base_url + 'user/friends/friends_list/' + user_id;
+                }
+                else if ($('#friends-page-type').val() === 'add_friends') {
+                    url = base_url + 'user/friends/users_list';
+                }
+                else if ($('#friends-page-type').val() === 'friends_invites') {
+                    url = base_url + 'user/friends/inviters_list';
+                    return false;
+                }
+                else if ($('#friends-page-type').val() === 'invites_sent') {
+                    url = base_url + 'user/friends/invited_list';
+                    return false;
+                }
+                else if ($('#friends-page-type').val() === 'events_invites') {
+                    url = base_url + 'user/friends/inviters_events_list';
+                    return false;
+                }
                 var data = {
                     name: $('#friends-name').val(),
                     offset: $('#friends-list .friend-row').length,
@@ -111,7 +137,7 @@ $(function() {
                 if ($('.metro-id').text() > 0) {
                     data.metro_id = $('.metro-id').text();
                 }
-                $.ajax(base_url + 'user/friends/'+controller +'/'+user_id, {
+                $.ajax(url, {
                     type: 'POST',
                     data: data,
                     success: function(response) {
