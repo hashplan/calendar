@@ -32,10 +32,11 @@
 			<div class="panel panel-default">
 				<div class="panel-heading">People you may know</div>
 			</div>
-
-			<div id="people-you-may-know-block">
-				<?php echo $people_you_may_know_block ?>
-			</div>
+            <?if(isset($people_you_may_know_block) && !empty($people_you_may_know_block)):?>
+                <div id="people-you-may-know-block">
+                    <?php echo $people_you_may_know_block ?>
+                </div>
+            <?endif?>
 		</div>
 	</div>
 </div>

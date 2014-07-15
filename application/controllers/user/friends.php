@@ -80,7 +80,6 @@ class Friends extends AuthController
         if (!empty($post['location_name'])) {
             $options['location_name'] = $post['location_name'];
         }
-
         $users = $this->users_m->get_unknown_users($options);
         $users_ids = array();
         foreach ($users as $user) {
@@ -339,7 +338,9 @@ class Friends extends AuthController
 
     public function friend_accept($friend_id = NULL)
     {
-        $this->users_m->set_connection_between_users($friend_id, NULL, 'friend_request', 'friend');
+        if($this->users_m->set_connection_between_users($friend_id, NULL, 'friend_request', 'friend')){
+            $this->update_friend_list(true);
+        }
         redirect('user/friends/invites');
     }
 

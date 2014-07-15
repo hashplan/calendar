@@ -50,7 +50,7 @@ class Events extends AuthController {
 	public function all() {
 		Menu::setActive('user/events/all');
 		$default_location = $this->data['user']->metro;
-		$this->_render_events_list_page('all', 'Events in '. $default_location->city, NULL, $default_location);
+		$this->_render_events_list_page('all', isset($default_location->city)?'Events in '. $default_location->city:'', NULL, $default_location);
 	}
 
 	public function trash() {
@@ -101,9 +101,9 @@ class Events extends AuthController {
 
 		$events_search_params = array('events_type' => $events_type, 'user_id' => $user_id);
 		if ($default_location !== NULL) {
-			$events_search_params['metro_id'] = $default_location->metroId;
-			$this->data['metro_id'] = $default_location->metroId;
-			$this->data['metro_name'] = $default_location->city;
+			$events_search_params['metro_id'] = isset($default_location->metroId)?$default_location->metroId:'';
+			$this->data['metro_id'] = isset($default_location->metroId)?$default_location->metroId:'';
+			$this->data['metro_name'] = isset($default_location->city)?$default_location->city:'';
 		}
 		$events = $this->events_m->get_all($events_search_params);
 		$events_data = array(

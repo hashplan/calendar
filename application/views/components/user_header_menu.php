@@ -25,9 +25,8 @@
 
             <!--Side bar-->
             <ul class="nav navbar-nav navbar-right">
-                <li><?php echo anchor('user/events','Event Hosting');?></li>
                 <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-user">&nbsp </span><?php echo (string)isset($user->first_name)?$user->first_name:'Member';?><b class="caret"></b></a>
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-user">&nbsp </span><?php echo (string)isset($this->user->first_name)?$this->user->first_name:'Member';?><b class="caret"></b></a>
                     <ul class="dropdown-menu">
                         <li><?php echo anchor('user','<span class="glyphicon glyphicon-tasks">&nbsp </span>Account');?></li>
                         <li><?php echo anchor('user/account_settings','<span class="glyphicon glyphicon-cog">&nbsp </span>Settings');?></li>

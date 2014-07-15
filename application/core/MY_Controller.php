@@ -107,11 +107,11 @@ class AuthController extends MY_Controller{
         return $identifier;
     }
 
-    protected function update_friend_list(){
+    protected function update_friend_list($force = false){
         $friend_list_last_update = $this->session->userdata('friend_list_last_update');
         $friend_list_cache_expiry_time = $this->config->item('friend_list_cache_expiry_time');
 
-        if(!$friend_list_last_update || time() - $friend_list_cache_expiry_time > $friend_list_last_update){
+        if(!$friend_list_last_update || time() - $friend_list_cache_expiry_time > $friend_list_last_update || $force){
             $this->load->model('users_m');
             $friends = $this->users_m->get_friends(array(),true);
             $friend_ids = array();

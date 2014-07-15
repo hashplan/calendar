@@ -12,7 +12,18 @@ $(function() {
     }
 
 	// filter friends by text input
-	$('.'+page_class+' #friends-name').on('keyup', fetchFriends);
+    var delay = (function(){
+        var timer = 0;
+        return function(callback, ms){
+            clearTimeout (timer);
+            timer = setTimeout(callback, ms);
+        };
+    })();
+	$('.'+page_class+' #friends-name').on('keyup', function(){
+        delay(function(){
+            fetchFriends();
+        }, 500 );
+    });
 
 	$('.'+page_class+' #locations-left-block').on('change', '.left-block-location', function() {
 		if ($(this).val() === 'all') {
@@ -85,7 +96,6 @@ $(function() {
 			location_ids: locationIds,
 			location_name: $('#locations-enter-name-field').val()
 		};
-
 		if (url !== null) {
 			$.ajax(url, {
 				type: 'POST',
