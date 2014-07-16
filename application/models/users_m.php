@@ -131,7 +131,13 @@ class Users_m extends MY_Model
                 $name = 'Friend Request';
                 break;
             case 'event_invite':
-                $name = 'Event Invite';
+                $name = 'Event Invite Pending';
+                break;
+            case 'event_invite_accept':
+                $name = "Event Invite Accepted";
+                break;
+            case 'event_invite_declined':
+                $name = "Event Invite Declined";
                 break;
             default:
                 $name = NULL;
@@ -329,7 +335,7 @@ class Users_m extends MY_Model
         $connections = $this->get_connection_between_users($user_id, $connection_user_id, $type_to_search, $event_id);
         if (!empty($connections)) {
             $connection = reset($connections);
-            $this->db
+            $result = $this->db
                 ->where('id', $connection->id)
                 ->update('user_connections', array('type' => $type_to_set));
         } else {
@@ -342,8 +348,9 @@ class Users_m extends MY_Model
             if ($event_id_is_correct) {
                 $values['eventId'] = $event_id;
             }
-            $this->db->insert('user_connections', $values);
+            $result = $this->db->insert('user_connections', $values);
         }
+        return $result;
     }
 
     public function get_connection_between_users($user_id, $connection_user_id, $types = NULL, $event_id = NULL)
@@ -568,8 +575,7 @@ class Users_m extends MY_Model
 				FROM user_connections uc2
 				WHERE uc2.connectionUserId = ?
 			) uc
-			INNER JOIN users u ON uc.friend_id = u.id
-				AND uc.type = 'friend'
+			INNER JOIN users u ON uc.friend_id = u.id AND uc.type = 'friend'
 		";
 
         if (!empty($options['exclude_ids'])) {
@@ -583,15 +589,23 @@ class Users_m extends MY_Model
 			LEFT JOIN user_events ue ON u.id = ue.userId
 				AND ue.eventId = ?
 			LEFT JOIN user_connections uc3 ON u.id = uc3.userId
-					AND uc3.type = 'event_invite'
-					AND uc3.connectionUserId = ?
-					AND uc3.eventId = ?
+                AND uc3.type = 'event_invite'
+                AND uc3.connectionUserId = ?
+                AND uc3.eventId = ?
 			LEFT JOIN user_connections uc4 ON u.id = uc4.connectionUserId
-					AND uc4.type = 'event_invite'
-					AND uc4.userId = ?
-					AND uc4.eventId = ?
-			ORDER BY u.first_name, u.last_name
+                AND uc4.type = 'event_invite'
+                AND uc4.userId = ?
+                AND uc4.eventId = ?
 		";
+        if(isset($options['name']) && !empty($options['name'])){
+            $sql .= '
+                WHERE u.first_name LIKE "%'.$this->db->escape_like_str($options['name']).'%"
+                OR u.last_name LIKE "%'.$this->db->escape_like_str($options['name']).'%"
+            ';
+        }
+        $sql .='
+            ORDER BY u.first_name, u.last_name
+        ';
 
         $params = array($user_id, $user_id, $options['event_id'], $user_id, $options['event_id'], $user_id, $options['event_id']);
 
@@ -599,7 +613,6 @@ class Users_m extends MY_Model
             $sql .= " LIMIT ? ";
             $params[] = $options['limit'];
         }
-
         $friends_raw = $this->db->query($sql, $params)->result();
 
         $friends = array();
@@ -607,7 +620,9 @@ class Users_m extends MY_Model
             $friend->name = $this->generate_full_name($friend);
             if (!empty($options['name'])) {
                 if (stripos($friend->name, $options['name']) !== FALSE) {
-                    $friends[] = $friend;
+                    $friends[$friend->id]['id'] = $friend->id;
+                    $friends[$friend->id]['name'] = $friend->name;
+                    $friends[$friend->id]['avatar_path'] = $friend->avatar_path;
                 }
                 continue;
             }
@@ -615,6 +630,62 @@ class Users_m extends MY_Model
         }
 
         return $friends;
+    }
+
+    public function get_friends_related_with_event($event_id = null){
+
+        $result = array();
+        if(!is_null($event_id)){
+            $user_id = $user = $this->ion_auth->user()->row()->id;
+            $event_id_is_correct = $event_id !== NULL && is_numeric($event_id) && $event_id > 0;
+            if ($event_id_is_correct) {
+                $sql = "
+                SELECT uc.eventId, uc.type, u.*, uc.invited
+                FROM (
+                    SELECT uc1.connectionUserId friend_id, uc1.type, uc1.eventId, uc1.connectionUserId as invited
+                    FROM user_connections uc1
+                    WHERE uc1.userId = ?
+                    UNION
+                    SELECT uc2.userId friend_id, uc2.type, uc2.eventId, uc2.connectionUserId as invited
+                    FROM user_connections uc2
+                    WHERE uc2.connectionUserId = ?
+                ) uc
+                INNER JOIN users u ON uc.friend_id = u.id AND u.active = 1
+                WHERE uc.type IN ('event_invite', 'event_invite_accept', 'event_invite_declined') AND uc.eventId = ?
+                UNION ALL
+                SELECT uc.eventId, uc.type, u.*, uc.invited
+                FROM (
+                    SELECT uc1.connectionUserId friend_id, uc1.type, uc1.eventId, uc1.connectionUserId as invited
+                    FROM user_connections uc1
+                    WHERE uc1.userId = ?
+                    UNION
+                    SELECT uc2.userId friend_id, uc2.type, uc2.eventId, uc2.connectionUserId as invited
+                    FROM user_connections uc2
+                    WHERE uc2.connectionUserId = ?
+                ) uc
+                INNER JOIN users u ON uc.friend_id = u.id AND u.active = 1
+                INNER JOIN user_events ue
+                WHERE uc.type = 'friend' AND ue.userId = uc.friend_id AND ue.eventId = ?
+                ORDER BY last_name, first_name;
+            ";
+                $params = array($user_id, $user_id, $event_id, $user_id, $user_id, $event_id);
+                $result_raw = $this->db->query($sql, $params)->result();
+                if(!empty($result_raw)){
+                    foreach($result_raw as $row){
+                        $result[$row->id]['id'] = $row->id;
+                        $result[$row->id]['name'] = $this->generate_full_name($row);
+                        $result[$row->id]['type'] = $row->type;
+                        $result[$row->id]['invited'] = $row->invited;
+                        $result[$row->id]['avatar_path'] = $row->avatar_path;
+                    }
+                }
+                else{
+                    $result = $result_raw;
+                }
+            }
+        }
+
+        return $result;
     }
 
     public function save_user($user_data)
@@ -715,6 +786,30 @@ class Users_m extends MY_Model
                 $row->name = $this->generate_full_name($row);
                 $result[] = $row;
             }
+        }
+
+        return $result;
+    }
+
+    public function get_all_friends_ids_string(){
+        $user_id = $this->ion_auth->user()->row()->id;
+        $result = '';
+        $sql = "
+			SELECT GROUP_CONCAT(uc.friend_id) ids
+			FROM (
+				SELECT uc1.connectionUserId friend_id, uc1.type
+				FROM user_connections uc1
+				WHERE uc1.userId = ?
+				UNION
+				SELECT uc2.userId friend_id, uc2.type
+				FROM user_connections uc2
+				WHERE uc2.connectionUserId = ?
+			) uc
+			WHERE uc.type = 'friend'
+		";
+        $query = $this->db->query($sql, array($user_id, $user_id));
+        if($query->num_rows > 0){
+            $result = $query->row()->ids;
         }
 
         return $result;

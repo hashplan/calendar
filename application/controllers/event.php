@@ -107,7 +107,7 @@ class Event extends AuthController
             $geo_data = $this->get_geocode($post['address']);
             if ($geo_data) {
                 $post['city'] = $this->location_m->get_city_by_name($geo_data);
-            }else {
+            } else {
                 $post['city'] = null;
             }
 
@@ -131,7 +131,9 @@ class Event extends AuthController
         $this->data['is_my'] = $event->event_owner_id == $this->ion_auth->user()->row()->id;
         $this->data['is_favourite'] = count($this->events_m->get_favourite_events($event->event_id)) === 1;
         $this->data['in_calendar'] = count($this->events_m->get_calendar_events($event->event_id)) === 1;
-        $this->data['friends_you_can_invite_on_event'] = $this->users_m->get_friends_you_can_invite_on_event(array('event_id' => $event_id /*, 'limit' => 6*/));
+
+        $this->data['friends_related_with_event'] = $this->users_m->get_friends_related_with_event($event_id);
+        //$this->data['friends_you_can_invite_on_event'] = $this->users_m->get_friends_you_can_invite_on_event(array('event_id' => $event_id , 'limit' => 6));
         $this->load->view('event/index', $this->data);
     }
 
@@ -160,24 +162,52 @@ class Event extends AuthController
 
     public function invite_friends_autocomplete()
     {
-        $post = $this->input->post();
-        if (empty($post['name'])) {
-            header('Content-Type: application/json');
-            echo json_encode(array());
-            die();
+        if($this->input->is_ajax_request()){
+            $this->form_validation
+                ->set_rules('name','name','required')
+                ->set_rules('event_id','event_id','required');
+
+            if($this->form_validation->run() == TRUE){
+                $post = $this->input->post();
+                $exclude_ids = empty($post['exclude_ids']) ? array() : $post['exclude_ids'];
+
+                $this->load->model('users_m');
+                $options = array(
+                    'name' => $post['name'],
+                    'event_id' => $post['event_id'],
+                    'exclude_ids' => $exclude_ids,
+                );
+
+                $friends = $this->users_m->get_friends_you_can_invite_on_event($options);
+                header('Content-Type: application/json');
+                echo json_encode($friends);
+                die();
+            }
         }
 
-        $exclude_ids = empty($post['exclude_ids']) ? array() : $post['exclude_ids'];
-
-        $this->load->model('users_m');
-        $options = array(
-            'name' => $post['name'],
-            'event_id' => $post['event_id'],
-            'exclude_ids' => $exclude_ids,
-        );
-        $friends = $this->users_m->get_friends_you_can_invite_on_event($options);
         header('Content-Type: application/json');
-        echo json_encode($friends);
+        echo json_encode(array());
+        die();
+    }
+
+    public function send_invite()
+    {
+        if ($this->input->is_ajax_request()) {
+            $this->form_validation
+                ->set_rules('uid', 'uid', 'required')
+                ->set_rules('event_id', 'event_id', 'required');
+
+            if ($this->form_validation->run() == TRUE) {
+                $this->load->model('users_m');
+                if ($this->users_m->set_connection_between_users($this->input->post('uid'), NULL, NULL, 'event_invite', $this->input->post('event_id'))) {
+                    header('Content-Type: application/json');
+                    echo json_encode(array('result' => 'success'));
+                }
+            } else {
+                header('Content-Type: application/json');
+                echo json_encode(array('result' => 'error', 'error' => validation_errors()));
+            }
+        }
         die();
     }
 
@@ -186,7 +216,7 @@ class Event extends AuthController
         $result = false;
         $this->config->load('google_maps', TRUE);
         $api_key = $this->config->item('google_maps_embed_api_key', 'google_maps');
-        $url = "https://maps.googleapis.com/maps/api/geocode/json?address=" . urlencode($address) . "&key=".$api_key;
+        $url = "https://maps.googleapis.com/maps/api/geocode/json?address=" . urlencode($address) . "&key=" . $api_key;
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);

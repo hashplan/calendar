@@ -27,6 +27,7 @@
 
 	<script src="<?php echo site_url('assets/js/jquery-1.11.0.js');?>"></script>
 	<script src="<?php echo site_url('assets/js/jquery-ui-1.10.4.custom.min.js');?>"></script>
+	<script src="<?php echo site_url('assets/js/jquery.tmpl.js');?>"></script>
 	<script src="<?php echo site_url('assets/js/bootstrap.min.js');?>"></script>
 	<script src="<?php echo site_url('assets/js/bootstrap-datepicker.js');?>"></script>
 	<script src="<?php echo site_url('assets/js/bootstrap-formhelpers.min.js');?>"></script>

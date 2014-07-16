@@ -178,22 +178,45 @@ h1, h2, h3 {
     width: 85%;
 }
 
-#event_modal .friend-you-can-invite {
+#event_modal .friend-related-with-event {
     margin-bottom: 15px;
 }
 
-#event_modal .friend-you-can-invite input {
+#event_modal .friend-related-with-event input {
     margin-right: 10px;
 }
 
-#event_modal .friend-you-can-invite img {
+#event_modal .friend-related-with-event img {
     width: 30px;
     height: 30px;
     margin-right: 10px;
 }
 
-#event_modal .friend-you-can-invite label {
+#event_modal .friend-related-with-event label {
     font-weight: normal;
+}
+
+#event_modal .invite-icon{
+    margin-right: 9px;
+}
+.invite-icon-green{
+    color: #5cb85c;
+}
+.invite-icon-blue{
+    color: #428bca;
+}
+.invite-icon-orange{
+    color: #f0ad4e
+}
+.invite-icon-orange.glyphicon-arrow-up,
+.invite-icon-blue.glyphicon-arrow-down{
+    -webkit-transform: rotate(45deg);/* Safari */
+    -moz-transform: rotate(45deg);/* Firefox */
+    -ms-transform: rotate(45deg);/* IE */
+    -o-transform: rotate(45deg); /* Opera */
+}
+.invite-icon-red{
+    color: #d2322d;
 }
 
 .form_error {

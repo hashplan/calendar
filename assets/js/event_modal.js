@@ -94,12 +94,13 @@ $(function() {
 		if ($(this).hasClass('ui-autocomplete-input')) {
 			return;
 		}
-		var excludeIds = [];
-		$('#event_modal #attendees input[type="checkbox"]').each(function() {
-			excludeIds.push($(this).attr('id').split('-')[2]);
-		});
+
 		$(this).autocomplete({
 			source: function(query, responseCallback) {
+                var excludeIds = [];
+                $('#event_modal #attendees .friend-related-with-event').each(function() {
+                    excludeIds.push($(this).data('uid'));
+                });
 				$.ajax(base_url +'event/invite_friends_autocomplete', {
 					type: 'POST',
 					data: {
@@ -109,11 +110,15 @@ $(function() {
 					},
 					dataType: 'json',
 					success: function(response) {
+                        if (window.console) {
+                            console.log(response);
+                        }
 						var friends = [];
 						for (var i in response) {
 							var id = response[i].id;
 							var name = response[i].name;
-							friends.push({ value: id, label: name })
+                            var avatar_path = response[i].avatar_path;
+							friends.push({ value: id, label: name, id: id, name: name, avatar_path: avatar_path})
 						}
 						responseCallback(friends);
 					}
@@ -122,14 +127,23 @@ $(function() {
 			select: function(event, ui) {
 				event.preventDefault();
 				var item = ui.item;
-				$('#event_modal #attendees .friend-you-can-invite:last').after('\
-					<div class="col-md-6 friend-you-can-invite">\
-					<input type="checkbox" id="invite-friend-'+ item.value +'">\
-					<img src="/assets/img/icons/no-image-100.png">\
-						<label for="invite-friend-'+ item.value +'">'+ item.label +'</label>\
-					</div>\
-				');
-				event.target.value = '';
+                if (confirm("Are you sure?")) {
+                    $.ajax(base_url +'event/send_invite', {
+                        type: 'POST',
+                        data: {
+                            uid: item.id,
+                            event_id: $('#event_modal .event-id-hidden').val()
+                        },
+                        dataType: 'json',
+                        success: function(response) {
+                            if(response.result == 'success'){
+                                $('#attendees_tmpl').tmpl(item).appendTo('#attendees .friends');
+                            }
+                        }
+                    });
+                }
+                event.target.value = '';
+                return false;
 			},
 			focus: function(event, ui) {
 				event.preventDefault();
