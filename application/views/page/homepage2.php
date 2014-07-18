@@ -11,8 +11,6 @@
     </ol>
     <div class="carousel-inner">
         <div class="item active">
-            <img src="<?=site_url('/assets/img/homepage/crowd for homepage.jpg'); ?>" alt="Hashplan crowd!">
-
             <div class="container">
                 <div class="carousel-caption">
                     <h3>CONCERTS, SPORTING EVENTS, FESTIVALS & MORE</h3>
@@ -21,10 +19,9 @@
                     <p><?=anchor('signup', 'Sign Up Today <span class="glyphicon glyphicon-pencil"></span>', 'class="btn btn-md btn-primary" data-toggle="modal" data-target="#signup_modal"'); ?></p>
                 </div>
             </div>
+            <img src="<?=site_url('/assets/img/homepage/crowd for homepage.jpg'); ?>" alt="Hashplan crowd!">
         </div>
         <div class="item">
-            <img src="<?=site_url('/assets/img/homepage/baseball game2.jpg'); ?>" alt="Baseball game!">
-
             <div class="container">
                 <div class="carousel-caption">
                     <h2><span id="homepage_timer"></span></h2>
@@ -33,10 +30,9 @@
                     <p><?php echo anchor('signup', 'Sign Up Today <span class="glyphicon glyphicon-pencil"></span>', 'class="btn btn-md btn-primary" data-toggle="modal" data-target="#signup_modal"'); ?></p>
                 </div>
             </div>
+            <img src="<?=site_url('/assets/img/homepage/baseball game2.jpg'); ?>" alt="Baseball game!">
         </div>
         <div class="item">
-            <img src="<?=site_url('/assets/img/homepage/band.jpg'); ?>" alt="Band stage!">
-
             <div class="container">
                 <div class="carousel-caption">
                     <div class="col-md-12">
@@ -48,6 +44,7 @@
                     </div>
                 </div>
             </div>
+            <img src="<?=site_url('/assets/img/homepage/band.jpg'); ?>" alt="Band stage!">
         </div>
     </div>
     <a class="left carousel-control" href="#homepage-slider" data-slide="prev"><span

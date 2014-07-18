@@ -9,12 +9,10 @@
 /*Start carousel */
 /* Declare heights because of positioning of img element */
 .carousel .item {
-    height: 600px;
     background-color: #777;
 }
 
 .carousel-inner > .item > img {
-    position: absolute;
     top: 0;
     left: 0;
     height: 100%;
@@ -22,7 +20,6 @@
 }
 
 .carousel-caption {
-    text-align: auto;
     bottom: auto;
 }
 
