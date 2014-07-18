@@ -42,3 +42,24 @@ if (!function_exists('dump_exit')) {
         exit;
     }
 }
+
+if (!function_exists('display_notification')) {
+    function display_notification()
+    {
+        $CI = & get_instance();
+
+        $message = '';
+        $class = "alert alert-success fade in";
+        if ($CI->session->flashdata('flash_message_type') == 'warning') {
+            $class = "alert alert-warning fade in";
+        } elseif ($CI->session->flashdata('flash_message_type') == 'error') {
+            $class = "alert alert-danger fade in";
+        }
+
+        if($CI->session->flashdata('flash_message')){
+            $message = '<div class="' . $class . '">' . $CI->session->flashdata('flash_message') . '</div>';
+        }
+
+        return $message;
+    }
+}

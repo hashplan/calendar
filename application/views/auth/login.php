@@ -1,5 +1,5 @@
 <div class="col-md-offset-4 col-md-4 col-sm-12 well">
-    <?=validation_errors('<div class="form_error errors alert alert-danger" role="alert">','</div>')?>
+    <?=validation_errors('<div class="form_error_notification errors alert alert-danger" role="alert">','</div>')?>
     <form action="<?= site_url('login') ?>" method="POST" class="signin-form form-horizontal" role="form">
         <div class="form-group">
             <label for="identity" class="sr-only control-label">Email</label>

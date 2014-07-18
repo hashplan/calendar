@@ -17,9 +17,9 @@
             </ul>
             <ul class="nav navbar-nav navbar-right">
                 <? if ($this->ion_auth->logged_in()): ?>
-                    <li class="dropdown nav navbar-nav navbar-right">
+                    <li class="dropdown nav navbar-nav">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span
-                                class="glyphicon glyphicon-user">&nbsp </span><?php echo (string)isset($user->first_name) ? $user->first_name : 'Member'; ?>
+                                class="glyphicon glyphicon-user">&nbsp </span><?=(string)isset($user->first_name) ? $user->first_name : 'Member'; ?>
                             <b class="caret"></b></a>
                         <ul class="dropdown-menu">
                             <li><?=anchor('user', '<span class="glyphicon glyphicon-tasks">&nbsp </span>Account'); ?></li>

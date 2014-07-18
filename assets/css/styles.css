@@ -62,3 +62,13 @@ h1, h2, h3 {
 .page-account-settings #content {
     padding-top: 15px;
 }
+.notification {
+    position: absolute;
+    right: 0;
+    padding: 15px;
+    top: 40px;
+    z-index: 10;
+}
+.notification p {
+    cursor: pointer;
+}

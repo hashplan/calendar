@@ -52,3 +52,4 @@
 </head>
 
 <body class="page-<?php echo $page_class ?>">
+<div class="notification"><?=display_notification()?></div>

@@ -81,7 +81,6 @@
         return false;
     });
 
-
     //login form
     $('#signin_modal').on('hidden.bs.modal', function(){
         $('.generic-form-errors.form_error', this).empty();
@@ -103,6 +102,40 @@
                 if (typeof response.errors === 'undefined') {
                     $('.generic-form-errors.form_error').hide();
                     $('#signin_modal').modal('hide');
+                    location.href = base_url;
+                    return;
+                }
+                $('.generic-form-errors.form_error').html('<div class="alert alert-danger fade in" role="alert"><button type="button" class="close">×</button>'+response.errors+'</div>')
+
+            }
+        });
+        return false;
+    });
+
+    //signup form
+    $('#signup_modal').on('hidden.bs.modal', function(){
+        $('.generic-form-errors.form_error', this).empty();
+    });
+    $('body').on('click','#signup_modal .alert .close', function () {
+        $(this).alert('close');
+    });
+    $('body').on('submit','#signup_form', function () {
+        var form = $('#signup_form');
+        var data = {};
+        data.first_name = $('#signup_form #first_name').val();
+        data.last_name = $('#signup_form #last_name').val();
+        data.email = $('#signup_form #email').val();
+        data.password = $('#signup_form #password').val();
+        data.password_confirm = $('#signup_form #password_confirm').val();
+
+        $.ajax(base_url + 'signup', {
+            type: 'POST',
+            data: data,
+            success: function (response) {
+                if (typeof response.errors === 'undefined') {
+                    $('.generic-form-errors.form_error').hide();
+                    $('#signup_form').modal('hide');
+                    location.href = base_url;
                     return;
                 }
                 $('.generic-form-errors.form_error').html('<div class="alert alert-danger fade in" role="alert"><button type="button" class="close">×</button>'+response.errors+'</div>')
