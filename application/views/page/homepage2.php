@@ -11,31 +11,31 @@
     </ol>
     <div class="carousel-inner">
         <div class="item active">
-            <img src="<?php echo site_url('/assets/img/homepage/crowd for homepage.jpg'); ?>" alt="Hashplan crowd!">
+            <img src="<?=site_url('/assets/img/homepage/crowd for homepage.jpg'); ?>" alt="Hashplan crowd!">
 
             <div class="container">
                 <div class="carousel-caption">
                     <h3>CONCERTS, SPORTING EVENTS, FESTIVALS & MORE</h3>
                     <h4>Hashplan connects you and your friends through local events</h4>
 
-                    <p><?php echo anchor('auth/create_user', 'Sign Up Today <span class="glyphicon glyphicon-pencil"></span>', 'class="btn btn-md btn-primary"'); ?></p>
+                    <p><?=anchor('signup', 'Sign Up Today <span class="glyphicon glyphicon-pencil"></span>', 'class="btn btn-md btn-primary" data-toggle="modal" data-target="#signup_modal"'); ?></p>
                 </div>
             </div>
         </div>
         <div class="item">
-            <img src="<?php echo site_url('/assets/img/homepage/baseball game2.jpg'); ?>" alt="Baseball game!">
+            <img src="<?=site_url('/assets/img/homepage/baseball game2.jpg'); ?>" alt="Baseball game!">
 
             <div class="container">
                 <div class="carousel-caption">
                     <h2><span id="homepage_timer"></span></h2>
                     <h4>Time to start making plans!</h4>
 
-                    <p><?php echo anchor('auth/create_user', 'Sign Up Today <span class="glyphicon glyphicon-pencil"></span>', 'class="btn btn-md btn-primary"'); ?></p>
+                    <p><?php echo anchor('signup', 'Sign Up Today <span class="glyphicon glyphicon-pencil"></span>', 'class="btn btn-md btn-primary" data-toggle="modal" data-target="#signup_modal"'); ?></p>
                 </div>
             </div>
         </div>
         <div class="item">
-            <img src="<?php echo site_url('/assets/img/homepage/band.jpg'); ?>" alt="Band stage!">
+            <img src="<?=site_url('/assets/img/homepage/band.jpg'); ?>" alt="Band stage!">
 
             <div class="container">
                 <div class="carousel-caption">
@@ -44,7 +44,7 @@
                         <h4>Thousands of events at your fingertips</h4>
                     </div>
                     <div class="col-md-12">
-                        <?php echo anchor('auth/create_user', 'Sign Up Today <span class="glyphicon glyphicon-pencil"></span>', 'class="btn btn-md btn-primary"'); ?>
+                        <?=anchor('signup', 'Sign Up Today <span class="glyphicon glyphicon-pencil"></span>', 'class="btn btn-md btn-primary" data-toggle="modal" data-target="#signup_modal"'); ?>
                     </div>
                 </div>
             </div>
@@ -68,7 +68,7 @@
     </div>
     <div class="col-md-8 col-md-offset-2">
         <img class="featurette-image img-responsive"
-             src="<?php echo site_url('/assets/img/howitworks/how it works on homepage.jpg'); ?>" alt="How it works!">
+             src="<?=site_url('/assets/img/howitworks/how it works on homepage.jpg'); ?>" alt="How it works!">
     </div>
 </div>
 
@@ -80,12 +80,12 @@
     <div class="col-md-11 col-md-offset-1">
         <div class="col-md-2">
             <img class="featurette-image img-responsive"
-                 src="<?php echo site_url('/assets/img/homepage/googlemapsicon.png'); ?>"
+                 src="<?=site_url('/assets/img/homepage/googlemapsicon.png'); ?>"
                  alt="Google maps integration!">
         </div>
         <div class="col-md-2">
             <img class="featurette-image img-responsive"
-                 src="<?php echo site_url('/assets/img/homepage/YelpLogo1.jpg'); ?>" alt="Yelp integration!">
+                 src="<?=site_url('/assets/img/homepage/YelpLogo1.jpg'); ?>" alt="Yelp integration!">
         </div>
         <div class="col-md-6 col-md-offset-1" style="color: #3276b1;">
             <h4>
@@ -122,7 +122,7 @@
         </div>
         <div class="col-md-2 col-md-offset-2">
             <img class="featurette-image img-responsive"
-                 src="<?php echo site_url('/assets/img/homepage/hmobileapp.png'); ?>" alt="Hashplan Mobile app">
+                 src="<?=site_url('/assets/img/homepage/hmobileapp.png'); ?>" alt="Hashplan Mobile app">
         </div>
     </div>
 </div>

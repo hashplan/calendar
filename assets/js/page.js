@@ -48,12 +48,18 @@
         return i;
     }
 
-    if($('#homepage_timer')){
+    if ($('#homepage_timer')) {
         startTime();
     }
 
     //contact form
-    $('#contact_form').on('submit', function () {
+    $('#contact_modal').on('hidden.bs.modal', function(){
+        $('.generic-form-errors.form_error', this).empty();
+    });
+    $('body').on('click','#contact_modal .alert .close', function () {
+        $(this).alert('close');
+    });
+    $('body').on('submit', '#contact_form', function () {
         var form = $('#contact_form');
         var data = {};
         data.user_name = $('#contact_form [name="user_name"]').val();
@@ -69,13 +75,42 @@
                     $('#contact_form').modal('hide');
                     return;
                 }
-                if (window.console) {
-                    console.log(response);
-                }
-                $('.contact_us-form-errors.form_error').html(response.errors).show();
+                $('.contact_us-form-errors.form_error').html('<div class="alert alert-danger fade in" role="alert"><button type="button" class="close">×</button>'+response.errors+'</div>');
             }
         });
         return false;
     });
+
+
+    //login form
+    $('#signin_modal').on('hidden.bs.modal', function(){
+        $('.generic-form-errors.form_error', this).empty();
+    });
+    $('body').on('click','#signin_modal .alert .close', function () {
+        $(this).alert('close');
+    });
+    $('body').on('submit','#signin_form', function () {
+        var form = $('#signin_form');
+        var data = {};
+        data.identity = $('#signin_form #identity').val();
+        data.password = $('#signin_form #password').val();
+        data.remember = $('#signin_form #remember:checked').length?1:0;
+
+        $.ajax(base_url + 'login', {
+            type: 'POST',
+            data: data,
+            success: function (response) {
+                if (typeof response.errors === 'undefined') {
+                    $('.generic-form-errors.form_error').hide();
+                    $('#signin_modal').modal('hide');
+                    return;
+                }
+                $('.generic-form-errors.form_error').html('<div class="alert alert-danger fade in" role="alert"><button type="button" class="close">×</button>'+response.errors+'</div>')
+
+            }
+        });
+        return false;
+    });
+
 
 })(jQuery);

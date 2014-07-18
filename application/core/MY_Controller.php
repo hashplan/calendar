@@ -48,7 +48,7 @@ class MY_Controller extends CI_Controller
     public $data = array(
         'sub_layout' => 'layouts/generic_page',
         'page_class' => 'generic',
-        'error' => array()
+        'errors' => array()
     );
     public $layout = '_layout_default';
 
@@ -100,7 +100,16 @@ class MY_Controller extends CI_Controller
 
     protected function _render_page()
     {
-        $this->load->view($this->layout, $this->data);
+        if ($this->input->is_ajax_request()&&$this->input->post()) {
+            ob_clean();
+            header('Content-type: text/json');
+            echo json_encode($this->data);
+            die();
+        }
+        else
+        {
+            $this->load->view($this->layout, $this->data);
+        }
     }
 }
 
@@ -177,25 +186,25 @@ class AdminController extends AuthController
 
 class EmailController extends MY_Controller
 {
-
+    public $layout = '_layout_email';
     public function __construct()
     {
         parent::__construct();
     }
 
     //to render the html page which will be sent in email
-    public function render($from_user_email = null, $from_user_name = null, $to_user_email = null, $to_user_name = null, $subject = null, $return = false, $layout = null, $view = null)
+    public function render($view = null, $layout = null, $return = false)
     {
 
-        if ($layout == null) {
-            $$this->layout = '_layout_email';
+        if (!is_null($layout)) {
+            $this->layout = $layout;
         }
 
         if ($view == null) {
             $view = '';
         }
 
-        $email_content = $this->load->view($layout, array(
+        $email_content = $this->load->view($this->layout, array(
             'view' => $view,
             'data' => $this->data), $return);
 

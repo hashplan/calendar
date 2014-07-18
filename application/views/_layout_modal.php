@@ -4,7 +4,7 @@
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
             <h3><?=$modal_header?></h3>
 
-            <p class="<?=$page_class?>-form-errors form_error"></p>
+            <div class="<?=$page_class?>-form-errors form_error"></div>
         </div>
         <div class="modal-body">
             <? $this->load->view($view); ?>

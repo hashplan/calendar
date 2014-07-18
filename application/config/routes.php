@@ -48,6 +48,7 @@ $route['faq'] = "page/faq";
 $route['contact-us'] = "page/contact_us";
 
 
+
 $route['user/events/(:num)'] = 'user/events/friends/$1';
 $route['user/friends/(:num)'] = 'user/friends/friend/$1';
 
@@ -61,6 +62,7 @@ $route['forgot_password'] = 'auth/forgot_password';
 $route['fb_login'] = 'auth/facebook_login';
 $route['login'] = 'auth/login';
 $route['logout'] = 'auth/logout';
+$route['signup'] = "auth/create_user";
 
 
 /* End of file routes.php */

@@ -18,66 +18,29 @@ class Auth extends MY_Controller
         $this->login();
     }
 
-    //log the user in
     function login()
     {
-        if ($this->ion_auth->logged_in()) {
-            if ($this->ion_auth->in_group("admin")) {
-                redirect('admin');
-            } elseif ($this->ion_auth->in_group("members")) {
-                redirect('user');
-            } else {
-                redirect('/');
-            }
-        }
+        $this->_login_redirect();
         $this->data['title'] = "Login";
         $this->data['view'] = 'auth/login';
         if ($this->input->is_ajax_request()) {
             $this->layout = '_layout_modal';
             $this->data['view'] = 'auth/modal_login';
             $this->data['modal_header'] = 'Login';
-
         }
 
         //validate form input
         $this->form_validation->set_rules('identity', 'Identity', 'required');
-        $this->form_validation->set_rules('password', 'Password', 'required');
+        $this->form_validation->set_rules('password', 'Password', 'required|callback_check_password');
 
         if ($this->form_validation->run() == true) {
-            $remember = (bool)$this->input->post('remember');
 
-            if ($this->ion_auth->login($this->input->post('identity'), $this->input->post('password'), $remember)) {
-                if ($this->ion_auth->is_admin()) {
-                    $this->session->set_flashdata('message', $this->ion_auth->messages());
-                    $this->data['message'] = (validation_errors()) ? validation_errors() : $this->session->flashdata('message');
-                    redirect('admin', $this->data);
-                } elseif ($this->ion_auth->in_group("members")) {
-                    redirect('user', 'refresh');
-                } else {
-                    redirect('page', 'refresh');
-                }
-            } else {
-                $this->session->set_flashdata('message', $this->ion_auth->errors());
-                $this->_render_page($this->layout, $this->data);
-            }
-        } else {
-            $this->data['message'] = (validation_errors()) ? validation_errors() : $this->session->flashdata('message');
-            $this->data['identity'] = array('name' => 'identity',
-                'id' => 'identity',
-                'type' => 'text',
-                'value' => $this->form_validation->set_value('identity'),
-            );
-            $this->data['password'] = array('name' => 'password',
-                'id' => 'password',
-                'type' => 'password',
-            );
-            if (validation_errors()) {
-                header('Content-Type: application/json');
-                echo json_encode(array('result' => 'errors', 'errors' => validation_errors()));
-                die();
-            }
-            $this->_render_page($this->layout, $this->data);
+            $this->_login_redirect();
         }
+        else{
+            $this->data['errors'] = validation_errors();
+        }
+        $this->_render_page($this->layout, $this->data);
     }
 
     //log the user out
@@ -336,13 +299,24 @@ class Auth extends MY_Controller
     //create a new user
     function create_user()
     {
-        $this->data['title'] = "Create User";
+        if ($this->ion_auth->logged_in()) {
+            if ($this->ion_auth->in_group("admin")) {
+                redirect('admin');
+            } elseif ($this->ion_auth->in_group("members")) {
+                redirect('user');
+            } else {
+                redirect('/');
+            }
+        }
+        $this->data['title'] = "SignUp";
+        $this->data['view'] = 'auth/create_user';
+        if ($this->input->is_ajax_request()) {
+            $this->layout = '_layout_modal';
+            $this->data['view'] = 'auth/modal_create_user';
+            $this->data['modal_header'] = 'Join Hashplan today, it\'s FREE!';
 
-        /**if (!$this->ion_auth->logged_in() || !$this->ion_auth->is_admin())
-         * {
-         * redirect('auth', 'refresh');
-         * }
-         **/
+        }
+
         //validate form input
         $this->form_validation->set_rules('first_name', $this->lang->line('create_user_validation_fname_label'), 'required|xss_clean');
         $this->form_validation->set_rules('last_name', $this->lang->line('create_user_validation_lname_label'), 'required|xss_clean');
@@ -418,8 +392,8 @@ class Auth extends MY_Controller
             );
 
         }
-        $this->data['subview'] = 'auth/create_user';
-        $this->_render_page('_layout_plain', $this->data);
+
+        $this->_render_page($this->layout, $this->data);
     }
 
     //edit a user
@@ -661,18 +635,30 @@ class Auth extends MY_Controller
         }
     }
 
-    function _render_page($view, $data = null, $render = false)
-    {
-
-        $this->viewdata = (empty($data)) ? $this->data : $data;
-
-        $view_html = $this->load->view($view, $this->viewdata, $render);
-
-        if (!$render) return $view_html;
-    }
-
     function facebook_login()
     {
         $this->facebook_ion_auth->login();
+    }
+
+    private function _login_redirect()
+    {
+        if ($this->ion_auth->logged_in()) {
+            if ($this->ion_auth->in_group("admin")) {
+                redirect('admin');
+            } elseif ($this->ion_auth->in_group("members")) {
+                redirect('user');
+            } else {
+                redirect('/');
+            }
+        }
+    }
+
+    public function check_password(){
+        $remember = (bool)$this->input->post('remember');
+        if ($this->ion_auth->login($this->input->post('identity'), $this->input->post('password'), $remember)) {
+               return TRUE;
+        }
+        $this->form_validation->set_message('check_password', 'Incorrect username or password.');
+        return FALSE;
     }
 }

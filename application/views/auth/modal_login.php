@@ -1,46 +1,35 @@
-<?php echo form_open("login"); ?>
-
-    <div class="row">
-        <div class="col-md-3">
-            <p><strong>Email:</strong></p><!--<?php echo lang('login_identity_label', 'identity'); ?>-->
-        </div>
-        <div class="col-md-6">
-            <?php echo form_input($identity); ?>
+<form action="<?= site_url('login') ?>" method="POST" id="signin_form" class="signin-form form-horizontal" role="form">
+    <div class="form-group">
+        <label for="identity" class="col-md-2 control-label"><strong>Email:</strong></label>
+        <div class="col-md-10">
+            <input type="text" class="form-control" name="identity" id="identity" placeholder="Email" value="<?=set_value('identity')?>">
         </div>
     </div>
-    <br>
-
-    <div class="row">
-        <div class="col-md-3">
-            <?php echo lang('login_password_label', 'password'); ?>
-        </div>
-        <div class="col-md-6">
-            <?php echo form_input($password); ?>
+    <div class="form-group">
+        <label for="password" class="col-md-2 control-label"><strong><?=lang('login_password_label', 'password'); ?></strong></label>
+        <div class="col-md-10">
+            <input type="password" class="form-control" name="password" id="password" placeholder="Password" value="<?=set_value('password')?>">
         </div>
     </div>
     <hr>
-    <div class="row">
-        <div class="col-md-6">
-            <a href="auth/forgot_password"><?php echo lang('login_forgot_password'); ?></a>
-        </div>
-        <div class="col-md-6">
-            <?php echo lang('login_remember_label', 'remember'); ?>
-            <?php echo form_checkbox('remember', '1', FALSE, 'id="remember"'); ?>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-md-6">
-            <a href="<?php echo site_url('fb_login'); ?>"><img class="img-responsive"
-                                                               src="<?php echo site_url('/assets/img/logo/facebooklogin.png'); ?>"
-                                                               alt="Facebook login"></a>
-        </div>
-    </div>
-    <div class="row">
+    <div class="form-group">
         <div class="col-md-8">
+            <a href="<?=site_url('forgot_password')?>"><?php echo lang('login_forgot_password'); ?></a>
         </div>
-        <div class="col-md-4">
-            <?php echo form_submit('submit', 'Login', 'class = "btn btn-primary btn-sm"'); ?>
-            <?php echo anchor(site_url(), "Cancel", 'class = "btn btn-default btn-sm"'); ?>
+        <div class="col-md-4 text-right">
+            <?=lang('login_remember_label', 'remember'); ?>
+            <?=form_checkbox('remember', '1', FALSE, 'id="remember"'); ?>
         </div>
     </div>
-<?php echo form_close(); ?>
+    <div class="form-group">
+        <div class="col-md-8">
+            <a href="<?=site_url('fb_login'); ?>"><img class="img-responsive"
+                                                       src="<?=site_url('/assets/img/logo/facebooklogin.png'); ?>"
+                                                       alt="Facebook login"></a>
+        </div>
+        <div class="col-md-4 text-right">
+            <?=form_submit('submit', 'Login', 'class = "btn btn-primary btn-sm"'); ?>
+            <?=anchor(site_url(), "Cancel", 'class = "btn btn-default btn-sm"'); ?>
+        </div>
+    </div>
+</form>

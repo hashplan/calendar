@@ -13,7 +13,7 @@
         <div class="navbar-collapse collapse">
             <ul class="nav navbar-nav">
                 <li><?=anchor('', 'Home'); ?></li>
-                <li><a href="<?=site_url('page/about'); ?>">About</a></li>
+                <li><a href="<?=site_url('about'); ?>">About</a></li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
                 <? if ($this->ion_auth->logged_in()): ?>
@@ -29,7 +29,7 @@
                         </ul>
                     </li>
                 <? else: ?>
-                    <li><?=anchor('auth/login', 'Login <span class="glyphicon glyphicon-log-in">&nbsp </span>', 'data-toggle="modal" data-target="#login_modal"'); ?></li>
+                    <li><?=anchor('login', 'Login <span class="glyphicon glyphicon-log-in">&nbsp </span>', 'data-toggle="modal" data-target="#signin_modal"'); ?></li>
                 <?endif ?>
             </ul>
         </div>
