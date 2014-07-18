@@ -188,7 +188,7 @@ class EmailController extends MY_Controller
     {
 
         if ($layout == null) {
-            $layout = 'layouts/default';
+            $$this->layout = '_layout_email';
         }
 
         if ($view == null) {
