@@ -21,6 +21,14 @@ class Friends extends AuthController
     {
         parent::__construct();
         $this->load->model('users_m');
+        $js_assets = array(
+            array('friends_search'),
+            array('people_you_may_know'),
+        );
+        $css_assets = array(
+            array('friend.css'),
+        );
+        $this->carabiner->group('page_assets', array('js' => $js_assets, 'css' => $css_assets) );
     }
 
     public function index()

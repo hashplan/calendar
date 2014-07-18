@@ -14,12 +14,13 @@ class Email extends MY_Controller {
 	}
 
 	public function index(){ //this one can be deleted once contact form is hooked up
-	$this->data['subview']='email/contact';
-	$this->load->view('_layout_modal',$this->data);
+        $this->data['subview']='email/contact';
+        $this->load->view('_layout_modal',$this->data);
 	}
 		
 	protected function send($from_user_email, $type, $to_user_email, $subject, $sender = null){
 
+        $this->email->
 		$this->config->load('email', TRUE);
 		$this->load->library('email');
 		$this->email->set_newline("\r\n");
@@ -84,27 +85,6 @@ class Email extends MY_Controller {
 	}	
 }		
 	
-	//to render the html page which will be sent in email
-    public function render($from_user_email = null, $from_user_name = null, $to_user_email = null, $to_user_name = null, $subject = null, $return = false, $layout = null, $view = null)
-    {
 
-        if ($layout == null)
-        {
-            $layout = 'layouts/default';
-        }
-
-        if ($view == null)
-        {
-            $view = '';
-        }
-
-        $email_content = $this->load->view($layout, array(
-             'view' => $view,
-             'data' => $this->data), $return);
-
-        return $email_content;
-    }
 
 }
-
-?>

@@ -1,4 +1,4 @@
-<?php $this->load->view('components/user_header_menu') ?>
+<?php $this->load->view('user/components/header_menu') ?>
 
 <?php $this->load->view($view, $data) ?>
 
@@ -12,9 +12,6 @@
 </div>
 <!--modal for private event form-->
 <!-- Modal -->
-<div class="modal" id="user_added_event_form" tabindex="-1" role="dialog" aria-labelledby="user_added_event_form" aria-hidden="true">
-</div>
-<!--modal for contact form-->
-<!-- Modal -->
-<div class="modal" id="contact_form" tabindex="-1" role="dialog" aria-labelledby="contact_form" aria-hidden="true">
+<div class="modal" id="user_added_event_form" tabindex="-1" role="dialog" aria-labelledby="user_added_event_form"
+     aria-hidden="true">
 </div>

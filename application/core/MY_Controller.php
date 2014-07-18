@@ -1,4 +1,5 @@
-<?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+<?php if (!defined('BASEPATH')) exit('No direct script access allowed');
+
 /**
  * @property CI_DB_active_record $db              This is the platform-independent base Active Record implementation class.
  * @property CI_DB_forge $dbforge                 Database Utility Class
@@ -42,81 +43,115 @@
  * @property CI_Utf8 $utf8                        Provides support for UTF-8 environments
  * @property CI_Security $security                Security Class, xss, csrf, etc...
  */
+class MY_Controller extends CI_Controller
+{
+    public $data = array(
+        'sub_layout' => 'layouts/generic_page',
+        'page_class' => 'generic',
+        'error' => array()
+    );
+    public $layout = '_layout_default';
 
-class MY_Controller extends CI_Controller {
-	public $data = array(
-		'page_class' => 'generic'
-	);
-	public $layout = 'layouts/default';
+    function __construct()
+    {
+        parent::__construct();
 
-	function __construct() {
-		parent::__construct();
-		// Set default empty data if missing
-		if (empty($this->data)) {
-			$this->data = array();
-		}
+        if (empty($this->data['data'])) {
+            $this->data['data'] = array();
+        }
 
-		// Set layout if missing
-		if (empty($this->layout)) {
-			$this->layout = 'default';
-		}
+        /*if(ENVIRONMENT == 'development'){
+            if($this->input->is_ajax_request()){
+                $this->output->enable_profiler(FALSE);
+            }
+            else{
+                $this->output->enable_profiler(TRUE);
+            }
+        }*/
 
-		// Set page_class if missing
-		if (empty($this->data['page_class'])) {
-			$this->data['page_class']= 'generic';
-		}
+        $this->load->library('carabiner');
+        $this->_load_assets();
+    }
 
-		if (empty($this->data['data'])) {
-			$this->data['data'] = array();
-		}
+    protected function _load_assets()
+    {
+        $css = array(
+            array('bootstrap.min.css'),
+            array('datepicker.css'),
+            array('bootstrap-formhelpers.min.css'),
+            array('styles.css')
+        );
+        $js = array(
+            array('bootstrap.min.js'),
+            array('bootstrap-datepicker.js'),
+            array('bootstrap-formhelpers.min.js')
+        );
+        $this->carabiner->group('bootstrap', array('css' => $css, 'js' => $js));
 
-		$this->data['errors']=array();
-	}
+        $js = array(
+            array('jquery-1.11.0.js'),
+            array('jquery-ui-1.10.4.custom.min.js'),
+            array('jquery.tmpl.js')
+        );
+        $this->carabiner->group('header_js', array('js' => $js));
 
-    protected function _render_page() {
+
+    }
+
+    protected function _render_page()
+    {
         $this->load->view($this->layout, $this->data);
     }
 }
 
 
 //Protocontroller for authorized users
-class AuthController extends MY_Controller{
+class AuthController extends MY_Controller
+{
     public $user = NULL;
     public $friends = NULL;
 
-    public	function __construct(){
+    public function __construct()
+    {
         parent::__construct();
 
         $this->form_validation->set_error_delimiters($this->config->item('error_start_delimiter', 'ion_auth'), $this->config->item('error_end_delimiter', 'ion_auth'));
         $this->lang->load('auth');
 
-        if(!$this->ion_auth->in_group("members")&&!$this->ion_auth->in_group("admin")){
-            redirect('auth/login','refresh');
+        if (!$this->ion_auth->in_group("members") && !$this->ion_auth->in_group("admin")) {
+            redirect('auth/login', 'refresh');
         }
 
         $this->user = $this->ion_auth->user()->row();
         $this->friends = $this->update_friend_list();
+
+        $css = array(
+            array('styles.css')
+        );
+        $this->carabiner->group('page_css', array('css' => $css));
     }
 
-    public function get_user_identifier(){
-        if($this->ion_auth->in_group("members")){
+    public function get_user_identifier()
+    {
+        if ($this->ion_auth->in_group("members")) {
             $identifier = 'user';
-        }elseif($this->ion_auth->in_group("admin")){
+        } elseif ($this->ion_auth->in_group("admin")) {
             $identifier = 'admin';
         }
         return $identifier;
     }
 
-    protected function update_friend_list($force = false){
+    protected function update_friend_list($force = false)
+    {
         $friend_list_last_update = $this->session->userdata('friend_list_last_update');
         $friend_list_cache_expiry_time = $this->config->item('friend_list_cache_expiry_time');
 
-        if(!$friend_list_last_update || time() - $friend_list_cache_expiry_time > $friend_list_last_update || $force){
+        if (!$friend_list_last_update || time() - $friend_list_cache_expiry_time > $friend_list_last_update || $force) {
             $this->load->model('users_m');
-            $friends = $this->users_m->get_friends(array(),true);
+            $friends = $this->users_m->get_friends(array(), true);
             $friend_ids = array();
-            if(!empty($friends)){
-                foreach($friends as $friend){
+            if (!empty($friends)) {
+                foreach ($friends as $friend) {
                     $friend_ids[] = $friend->id;
                 }
             }
@@ -127,13 +162,43 @@ class AuthController extends MY_Controller{
 }
 
 //Protocontroller for admin
-class AdminController extends AuthController{
+class AdminController extends AuthController
+{
 
-    public	function __construct(){
+    public function __construct()
+    {
         parent::__construct();
 
-        if(!$this->ion_auth->in_group("admin")){
+        if (!$this->ion_auth->in_group("admin")) {
             show_404();
         }
+    }
+}
+
+class EmailController extends MY_Controller
+{
+
+    public function __construct()
+    {
+        parent::__construct();
+    }
+
+    //to render the html page which will be sent in email
+    public function render($from_user_email = null, $from_user_name = null, $to_user_email = null, $to_user_name = null, $subject = null, $return = false, $layout = null, $view = null)
+    {
+
+        if ($layout == null) {
+            $layout = 'layouts/default';
+        }
+
+        if ($view == null) {
+            $view = '';
+        }
+
+        $email_content = $this->load->view($layout, array(
+            'view' => $view,
+            'data' => $this->data), $return);
+
+        return $email_content;
     }
 }

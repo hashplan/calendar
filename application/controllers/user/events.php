@@ -22,6 +22,16 @@ class Events extends AuthController {
         $this->load->model('users_m');
 		$this->data['user'] = $this->user;
 		$this->data['user']->metro = $this->users_m->get_user_metro($this->data['user']->id);
+
+        $js_assets = array(
+            array('event_search.js'),
+            array('user_added_event_form.js'),
+            array('event_modal.js'),
+        );
+        $css_assets = array(
+            array('event.css'),
+        );
+        $this->carabiner->group('page_assets', array('js' => $js_assets, 'css' => $css_assets) );
 	}
 
 	public function index() {

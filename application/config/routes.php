@@ -41,6 +41,12 @@
 $route['default_controller'] = "page";
 $route['404_override'] = '';
 
+//page
+$route['about'] = "page/about";
+$route['how-it-works'] = "page/howitworks";
+$route['faq'] = "page/faq";
+$route['contact-us'] = "page/contact_us";
+
 
 $route['user/events/(:num)'] = 'user/events/friends/$1';
 $route['user/friends/(:num)'] = 'user/friends/friend/$1';

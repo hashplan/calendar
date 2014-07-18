@@ -1,0 +1,35 @@
+#homepage_timer {
+    color: #3276b1;
+}
+
+.signin-form {
+    margin: 0 auto;
+}
+
+/*Start carousel */
+/* Declare heights because of positioning of img element */
+.carousel .item {
+    height: 600px;
+    background-color: #777;
+}
+
+.carousel-inner > .item > img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+}
+
+.carousel-caption {
+    text-align: auto;
+    bottom: auto;
+}
+
+/*end carousel*/
+.jumbotron-about {
+    opacity: .80;
+    margin-top: 20px;
+    padding-top: 20px;
+    padding-bottom: 10px;
+}

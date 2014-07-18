@@ -22,9 +22,9 @@
                 <? if (isset($metros) && !empty($metros)): ?>
                     <div class="row">
                         <div class="col-md-6">
-                            <select name="location"  class="form-control event-location">
+                            <select name="location" class="form-control event-location">
                                 <? foreach ($metros as $metro): ?>
-                                    <option value="<?=$metro->id?>"><?=html_escape($metro->city)?></option>
+                                    <option value="<?= $metro->id ?>"><?= html_escape($metro->city) ?></option>
                                 <? endforeach ?>
                             </select>
                         </div>

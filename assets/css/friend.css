@@ -1,0 +1,87 @@
+/* Friends pages - start */
+.page-add-friend .panel .panel-body,
+.page-invites .panel .panel-body,
+.page-friends .panel .panel-body {
+    position: relative;
+}
+
+.page-add-friend .left-section,
+.page-invites .left-section,
+.page-friends .left-section {
+    float: left;
+    margin-right: 15px;
+}
+
+.page-add-friend .right-section,
+.page-invites .right-section,
+.page-friends .right-section {
+    float: left;
+}
+
+.page-add-friend .panel .friend-pic img,
+.page-invites .panel .friend-pic img,
+.page-friends .panel .friend-pic img {
+    width: 60px;
+    height: 60px;
+}
+
+.page-add-friend .panel .button-wrapper,
+.page-invites .panel .button-wrapper,
+.page-friends .panel .button-wrapper {
+    position: absolute;
+    right: 10px;
+    bottom: 10px;
+}
+
+.page-add-friend .panel .button-wrapper .btn-danger,
+.page-invites .panel .button-wrapper .btn-danger,
+.page-friends .panel .button-wrapper .btn-danger {
+    margin-right: 5px;
+}
+
+#people-you-may-know-block {
+    height: 500px;
+    overflow-y: scroll;
+    overflow-x: hidden;
+}
+
+.page-add-friend #people-you-may-know-block .dude-pic img,
+.page-invites #people-you-may-know-block .dude-pic img,
+.page-friends #people-you-may-know-block .dude-pic img {
+    width: 40px;
+    height: 40px;
+}
+
+.page-add-friend #people-you-may-know-block .row,
+.page-invites #people-you-may-know-block .row,
+.page-friends #people-you-may-know-block .row {
+    margin-bottom: 20px;
+}
+
+.page-add-friend #people-you-may-know-block .glyphicon-remove,
+.page-invites #people-you-may-know-block .glyphicon-remove,
+.page-friends #people-you-may-know-block .glyphicon-remove {
+    font-size: 12px;
+    color: #CCCCCC;
+    position: absolute;
+    top: 0;
+    right: 20px;
+}
+
+.page-add-friend .friend-mutual-count .glyphicon,
+.page-invites .friend-mutual-count .glyphicon,
+.page-friends .friend-mutual-count .glyphicon {
+    top: 0px;
+    font-size: 10px;
+}
+
+#locations-left-block ul,
+#locations-left-block ul li {
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+}
+
+#locations-left-block .location-hidden {
+    display: none;
+}
