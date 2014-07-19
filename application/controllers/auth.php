@@ -123,29 +123,19 @@ class Auth extends MY_Controller
     {
         $this->form_validation->set_rules('email', $this->lang->line('forgot_password_validation_email_label'), 'required');
         if ($this->form_validation->run() == false) {
-            //setup the input
-            $this->data['email'] = array('name' => 'email',
-                'id' => 'email',
-            );
-
-            if ($this->config->item('identity', 'ion_auth') == 'username') {
-                $this->data['identity_label'] = $this->lang->line('forgot_password_username_identity_label');
-            } else {
-                $this->data['identity_label'] = $this->lang->line('forgot_password_email_identity_label');
-            }
 
             //set any errors and display the form
             $this->data['message'] = (validation_errors()) ? validation_errors() : $this->session->flashdata('message');
-            $this->data['subview'] = 'auth/forgot_password';
-            $this->_render_page('_layout_modal', $this->data);
+            $this->data['view'] = 'auth/forgot_password';
+            $this->_render_page($this->layout, $this->data);
         } else {
             // get identity for that email
             $identity = $this->ion_auth->where('email', strtolower($this->input->post('email')))->users()->row();
             if (empty($identity)) {
                 $this->ion_auth->set_message('forgot_password_email_not_found');
                 $this->session->set_flashdata('message', $this->ion_auth->messages());
-                $this->data['subview'] = 'auth/forgot_password';
-                $this->_render_page('_layout_modal', $this->data);
+                $this->data['view'] = 'auth/forgot_password';
+                $this->_render_page($this->layout, $this->data);
             }
 
             //run the forgotten password method to email an activation code to the user
@@ -154,13 +144,11 @@ class Auth extends MY_Controller
             if ($forgotten) {
                 //if there were no errors
                 $this->session->set_flashdata('message', $this->ion_auth->messages());
-                $this->data['subview'] = 'auth/login';
-                $this->_render_page('_layout_modal', $this->data);
-                //we should display a confirmation page here instead of the login page
+                redirect('login', 'refresh');
             } else {
                 $this->session->set_flashdata('message', $this->ion_auth->errors());
-                $this->data['subview'] = 'auth/forgot_password';
-                $this->_render_page('_layout_modal', $this->data);
+                $this->data['view'] = 'auth/forgot_password';
+                $this->_render_page($this->layout, $this->data);
             }
         }
     }
@@ -173,6 +161,7 @@ class Auth extends MY_Controller
         }
 
         $user = $this->ion_auth->forgotten_password_check($code);
+        $this->data['view'] = 'auth/reset_password';
 
         if ($user) {
             //if the code is valid then display the password reset form
@@ -181,45 +170,21 @@ class Auth extends MY_Controller
             $this->form_validation->set_rules('new_confirm', $this->lang->line('reset_password_validation_new_password_confirm_label'), 'required');
 
             if ($this->form_validation->run() == false) {
-                //display the form
-
-                //set the flash data error message if there is one
-                $this->data['message'] = (validation_errors()) ? validation_errors() : $this->session->flashdata('message');
-
-                $this->data['min_password_length'] = $this->config->item('min_password_length', 'ion_auth');
-                $this->data['new_password'] = array(
-                    'name' => 'new',
-                    'id' => 'new',
-                    'type' => 'password',
-                    'pattern' => '^.{' . $this->data['min_password_length'] . '}.*$',
-                );
-                $this->data['new_password_confirm'] = array(
-                    'name' => 'new_confirm',
-                    'id' => 'new_confirm',
-                    'type' => 'password',
-                    'pattern' => '^.{' . $this->data['min_password_length'] . '}.*$',
-                );
-                $this->data['user_id'] = array(
-                    'name' => 'user_id',
-                    'id' => 'user_id',
-                    'type' => 'hidden',
-                    'value' => $user->id,
-                );
                 $this->data['csrf'] = $this->_get_csrf_nonce();
                 $this->data['code'] = $code;
+                $this->data['user_id'] = $user->id;
 
                 //render
-                $this->_render_page('auth/reset_password', $this->data);
-            } else {
+                $this->_render_page($this->layout, $this->data);
+            }
+            else {
                 // do we have a valid request?
                 if ($this->_valid_csrf_nonce() === FALSE || $user->id != $this->input->post('user_id')) {
-
-                    //something fishy might be up
                     $this->ion_auth->clear_forgotten_password_code($code);
-
                     show_error($this->lang->line('error_csrf'));
-
-                } else {
+                }
+                else
+                {
                     // finally change the password
                     $identity = $user->{$this->config->item('identity', 'ion_auth')};
 
@@ -229,16 +194,17 @@ class Auth extends MY_Controller
                         //if the password was successfully changed
                         $this->session->set_flashdata('message', $this->ion_auth->messages());
                         $this->logout();
-                    } else {
+                    }
+                    else {
                         $this->session->set_flashdata('message', $this->ion_auth->errors());
-                        redirect('auth/reset_password/' . $code, 'refresh');
+                        redirect('reset_password' . $code, 'refresh');
                     }
                 }
             }
         } else {
             //if the code is invalid then send them back to the forgot password page
             $this->session->set_flashdata('message', $this->ion_auth->errors());
-            redirect("auth/forgot_password", 'refresh');
+            redirect("forgot_password", 'refresh');
         }
     }
 
@@ -255,11 +221,11 @@ class Auth extends MY_Controller
         if ($activation) {
             //redirect them to the auth page
             $this->session->set_flashdata('message', $this->ion_auth->messages());
-            redirect("auth", 'refresh');
+            redirect("login", 'refresh');
         } else {
             //redirect them to the forgot password page
             $this->session->set_flashdata('message', $this->ion_auth->errors());
-            redirect("auth/forgot_password", 'refresh');
+            redirect("forgot_password", 'refresh');
         }
     }
 

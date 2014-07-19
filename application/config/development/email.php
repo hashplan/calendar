@@ -13,7 +13,7 @@
 $config['protocol'] = 'smtp';
 $config['smtp_host'] = 'ssl://smtp.gmail.com.';
 $config['smtp_port'] = '465';
-$config['smtp_timeout'] = '30';
+//$config['smtp_timeout'] = '30';
 //$config['smtp_user'] = 'hashplans@gmail.com';
 //$config['smtp_pass'] = 'Hashplan0514';
 $config['smtp_user'] = 'devdevdevdevdevdev727@gmail.com';

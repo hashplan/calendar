@@ -184,31 +184,3 @@ class AdminController extends AuthController
         }
     }
 }
-
-class EmailController extends MY_Controller
-{
-    public $layout = '_layout_email';
-    public function __construct()
-    {
-        parent::__construct();
-    }
-
-    //to render the html page which will be sent in email
-    public function render($view = null, $layout = null, $return = false)
-    {
-
-        if (!is_null($layout)) {
-            $this->layout = $layout;
-        }
-
-        if ($view == null) {
-            $view = '';
-        }
-
-        $email_content = $this->load->view($this->layout, array(
-            'view' => $view,
-            'data' => $this->data), $return);
-
-        return $email_content;
-    }
-}

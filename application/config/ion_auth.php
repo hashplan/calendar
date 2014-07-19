@@ -81,8 +81,8 @@ $config['max_rounds']     = 9;
  | The controller should check this function and act
  | appropriately. If this variable set to 0, there is no maximum.
  */
-$config['site_title']                 = "Example.com";       // Site Title, example.com
-$config['admin_email']                = "admin@example.com"; // Admin Email, admin@example.com
+$config['site_title']                 = "Hashplans.com";       // Site Title, example.com
+$config['admin_email']                = "noreply@hashplans.com"; // Admin Email, admin@example.com
 $config['default_group']              = 'members';           // Default group, use name
 $config['admin_group']                = 'admin';             // Default administrators group, use name
 $config['identity']                   = 'email';             // A database column which is used to login with
@@ -109,9 +109,7 @@ $config['forgot_password_expiration'] = 0;                   // The number of mi
  | 	  array  = Manually set your email config settings
  */
 $config['use_ci_email'] = TRUE; // Send Email using the builtin CI email class, if false it will return the code and the identity
-$config['email_config'] = array(
-	'mailtype' => 'html',
-);
+$config['email_config'] = 'file';
 
 /*
  | -------------------------------------------------------------------------
@@ -157,8 +155,8 @@ $config['email_forgot_password_complete'] = 'new_password.tpl.php';
  | default password, 'password', changes to
  | fbaa5e216d163a02ae630ab1a43372635dd374c0 with default salt.
  */
-$config['salt_length'] = 0;
-$config['store_salt']  = FALSE;
+$config['salt_length'] = 10;
+$config['store_salt']  = TRUE;
 
 /*
  | -------------------------------------------------------------------------

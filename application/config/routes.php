@@ -59,10 +59,12 @@ $route['user/settings/avatar'] = 'user/account_settings/avatar_upload';
 
 
 $route['forgot_password'] = 'auth/forgot_password';
+$route['reset_password/(:any)'] = 'auth/reset_password/$1';
 $route['fb_login'] = 'auth/facebook_login';
 $route['login'] = 'auth/login';
 $route['logout'] = 'auth/logout';
 $route['signup'] = "auth/create_user";
+$route['activate/(:num)/(:any)'] = "auth/activate/$1/$2";
 
 
 /* End of file routes.php */

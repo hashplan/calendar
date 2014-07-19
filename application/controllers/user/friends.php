@@ -340,7 +340,12 @@ class Friends extends AuthController
 
     public function friend_request($friend_id = NULL)
     {
-        $this->users_m->set_connection_between_users($friend_id, NULL, NULL, 'friend_request');
+        if($this->users_m->set_connection_between_users($friend_id, NULL, NULL, 'friend_request')){
+            $this->load->library('email');
+            $to = $this->ion_auth->user($friend_id)->row();
+            $from = $this->ion_auth->user()->row();
+            $this->email->send_friend_invite_email($from, $to);
+        }
         redirect('user/friends/add');
     }
 
