@@ -22,6 +22,8 @@ $config['mailtype'] = 'html';
 $config['charset'] = 'utf-8';
 $config['newline'] = "\r\n";
 
+$config['admin_email'] = 'devdevdevdevdevdev727@gmail.com';
+
 
 /* End of file email.php */
 /* Location: ./application/config/email.php */

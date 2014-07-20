@@ -360,7 +360,9 @@ class Friends extends AuthController
     public function event_invite_accept($inviter_id, $event_id)
     {
         $this->users_m->set_connection_between_users($inviter_id, NULL, 'event_invite', 'event_invite_accept', $event_id);
-        // todo: moar logic
+        // todo: more logic
+        $this->load->library('hashplans_mailer');
+        $this->hashplans_mailer->send_event_confirmed_email($this->user, $this->ion_auth->user($inviter_id)->row());
         redirect('user/friends/invites/events');
     }
 

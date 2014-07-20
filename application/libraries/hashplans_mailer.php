@@ -1,18 +1,22 @@
 <?php  if (!defined('BASEPATH')) exit('No direct script access allowed');
 
-class Hashplans_mailer {
+class Hashplans_mailer{
 
     protected $layout = '_layout_email';
     protected $data = array(
         'subject' => 'Hashplans Notification',
-        'from' => array('noreply@hashplans.com', 'Hashplans'),
+        'from_email' => 'noreply@hashplans.com',
+        'from_name' => 'Hashplans',
         'data' => array()
     );
     protected $CI;
+    protected $admin_email;
 
     public function __construct(){
         $this->CI = &get_instance();
         $this->CI->load->library('email');
+        $this->CI->config->load('email');
+        $this->admin_email = $this->CI->config->item('admin_email');
         $this->CI->email->set_newline("\r\n");
     }
 
@@ -41,13 +45,21 @@ class Hashplans_mailer {
     }
 
     //send to invited
-    public function send_event_invite_email(){
+    public function send_event_invite_email($from, $to){
         $this->data['view'] = 'email/event_invite.tpl.php';
+        $this->data['subject'] = 'Invitation to Event';
+        $this->data['to'] = $to->email;
+        $this->data['data']['from_name'] = $this->_generate_full_name($from);
+        $this->_send();
     }
 
     //send back to inviter
-    public function send_event_confirmed_email(){
+    public function send_event_confirmed_email($from, $to){
         $this->data['view'] = 'email/event_confirmed.tpl.php';
+        $this->data['subject'] = 'Invitation to Event';
+        $this->data['to'] = $to->email;
+        $this->data['data']['from_name'] = $this->_generate_full_name($from);
+        $this->_send();
     }
 
     //send back to inviter
@@ -55,14 +67,20 @@ class Hashplans_mailer {
         $this->data['view'] = 'email/event_invite.tpl.php';
     }
 
-    public function send_confirm_form_email(){
-        $this->data['view'] = 'email/event_invite.tpl.php';
+    public function send_contact_us_form_email($data){
+        $this->data['view'] = 'email/contact_us.tpl.php';
+        $this->data['subject'] = 'Contact Us';
+        $this->data['to'] = $this->admin_email;
+        $this->data['from_email'] = $data['user_email'];
+        $this->data['from_name'] = $data['user_name'];
+        $this->data['data'] = $data;
+        $this->_send();
     }
 
     protected function _render(){
         $message = $this->CI->load->view($this->layout, $this->data, TRUE);
         $this->CI->email->subject($this->data['subject']);
-        $this->CI->email->from($this->data['from'],'Hashplans');
+        $this->CI->email->from($this->data['from_email'], $this->data['from_name']);
         $this->CI->email->to($this->data['to']);
         $this->CI->email->message($message);
     }

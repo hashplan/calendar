@@ -72,7 +72,7 @@
             success: function (response) {
                 if (typeof response.errors === 'undefined') {
                     $('.contact_us-form-errors.form_error').hide();
-                    $('#contact_form').modal('hide');
+                    $('#contact_modal').modal('hide');
                     return;
                 }
                 $('.contact_us-form-errors.form_error').html('<div class="alert alert-danger fade in" role="alert"><button type="button" class="close">×</button>'+response.errors+'</div>');

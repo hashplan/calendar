@@ -200,6 +200,9 @@ class Event extends AuthController
             if ($this->form_validation->run() == TRUE) {
                 $this->load->model('users_m');
                 if ($this->users_m->set_connection_between_users($this->input->post('uid'), NULL, NULL, 'event_invite', $this->input->post('event_id'))) {
+                    $this->load->library('hashplans_mailer');
+                    $to_user = $this->ion_auth->user($this->input->post('uid'))->row();
+                    $this->hashplans_mailer->send_event_invite_email($this->user, $to_user);
                     header('Content-Type: application/json');
                     echo json_encode(array('result' => 'success'));
                 }

@@ -62,7 +62,12 @@ class Page extends MY_Controller
 
         if($this->form_validation->run() == TRUE)
         {
-            //send email
+            $this->load->library('hashplans_mailer');
+            $this->hashplans_mailer->send_contact_us_form_email(array(
+                'user_name' => $this->input->post('user_name'),
+                'user_email' => $this->input->post('user_email'),
+                'contact_description' => $this->input->post('contact_description'),
+            ));
             header('Content-Type: application/json');
             echo json_encode(array('result' => 'success'));
             die();

@@ -1,2 +1,2 @@
-<h1>New invitation</h1>
+<h1>Invitation to Event</h1>
 <p><?= $from_name ?> invites you to attend the event.</p>
