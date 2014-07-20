@@ -341,10 +341,8 @@ class Friends extends AuthController
     public function friend_request($friend_id = NULL)
     {
         if($this->users_m->set_connection_between_users($friend_id, NULL, NULL, 'friend_request')){
-            $this->load->library('email');
-            $to = $this->ion_auth->user($friend_id)->row();
-            $from = $this->ion_auth->user()->row();
-            $this->email->send_friend_invite_email($from, $to);
+            $this->load->library('hashplans_mailer');
+            $this->hashplans_mailer->send_friend_invite_email($this->user, $this->ion_auth->user($friend_id)->row());
         }
         redirect('user/friends/add');
     }
@@ -353,6 +351,8 @@ class Friends extends AuthController
     {
         if($this->users_m->set_connection_between_users($friend_id, NULL, 'friend_request', 'friend')){
             $this->update_friend_list(true);
+            $this->load->library('hashplans_mailer');
+            $this->hashplans_mailer->send_friend_confirmed_email($this->ion_auth->user($friend_id)->row(), $this->user);
         }
         redirect('user/friends/invites');
     }

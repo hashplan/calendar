@@ -102,7 +102,12 @@
                 if (typeof response.errors === 'undefined') {
                     $('.generic-form-errors.form_error').hide();
                     $('#signin_modal').modal('hide');
-                    location.href = base_url;
+                    if(response.redirect){
+                        location.href = base_url + response.redirect;
+                    }
+                    else{
+                        location.href = base_url;
+                    }
                     return;
                 }
                 $('.generic-form-errors.form_error').html('<div class="alert alert-danger fade in" role="alert"><button type="button" class="close">×</button>'+response.errors+'</div>')

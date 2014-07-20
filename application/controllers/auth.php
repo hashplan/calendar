@@ -34,9 +34,18 @@ class Auth extends MY_Controller
         $this->form_validation->set_rules('password', 'Password', 'required|callback_check_password');
 
         if ($this->form_validation->run() == true) {
-            $this->session->set_flashdata('flash_message', $this->ion_auth->messages());
-            $this->session->set_flashdata( 'flash_message_type', 'success');
-            $this->_login_redirect();
+            $remember = (bool)$this->input->post('remember');
+            if ($this->ion_auth->login($this->input->post('identity'), $this->input->post('password'), $remember))
+            {
+                $this->session->set_flashdata('flash_message', $this->ion_auth->messages());
+                $this->session->set_flashdata( 'flash_message_type', 'success');
+                $this->_login_redirect();
+            }
+            else{
+                $this->session->set_flashdata('message', $this->ion_auth->errors());
+                $this->data['errors'] = $this->ion_auth->errors();
+            }
+
         }
         else{
             $this->data['errors'] = validation_errors();
@@ -201,7 +210,8 @@ class Auth extends MY_Controller
                     }
                 }
             }
-        } else {
+        }
+        else {
             //if the code is invalid then send them back to the forgot password page
             $this->session->set_flashdata('message', $this->ion_auth->errors());
             redirect("forgot_password", 'refresh');
@@ -524,7 +534,7 @@ class Auth extends MY_Controller
     }
 
 
-    function _get_csrf_nonce()
+    private function _get_csrf_nonce()
     {
         $this->load->helper('string');
         $key = random_string('alnum', 8);
@@ -535,13 +545,14 @@ class Auth extends MY_Controller
         return array($key => $value);
     }
 
-    function _valid_csrf_nonce()
+    private function _valid_csrf_nonce()
     {
         if ($this->input->post($this->session->flashdata('csrfkey')) !== FALSE &&
             $this->input->post($this->session->flashdata('csrfkey')) == $this->session->flashdata('csrfvalue')
         ) {
             return TRUE;
-        } else {
+        }
+        else {
             return FALSE;
         }
     }
@@ -555,10 +566,29 @@ class Auth extends MY_Controller
     {
         if ($this->ion_auth->logged_in()) {
             if ($this->ion_auth->in_group("admin")) {
-                redirect('admin');
-            } elseif ($this->ion_auth->in_group("members")) {
-                redirect('user');
-            } else {
+                if($this->input->is_ajax_request()){
+                    ob_clean();
+                    header('Content-type: text/json');
+                    echo json_encode(array('redirect' => 'admin'));
+                    die();
+                }
+                else{
+                    redirect('admin');
+                }
+            }
+            elseif ($this->ion_auth->in_group("members")) {
+                if($this->input->is_ajax_request()){
+                    ob_clean();
+                    header('Content-type: text/json');
+                    echo json_encode(array('redirect' => 'user'));
+                    die();
+                }
+                else{
+                    redirect('user');
+                }
+
+            }
+            else {
                 redirect('/');
             }
         }
@@ -571,5 +601,34 @@ class Auth extends MY_Controller
         }
         $this->form_validation->set_message('check_password', $this->ion_auth->errors());
         return FALSE;
+    }
+
+    public function test(){
+        /*$config = Array(
+            'protocol' => 'smtp',
+            'smtp_host' => 'smtp.googlemail.com',
+            'smtp_port' => 25,
+            'smtp_user' => 'devdevdevdevdevdev727@gmail.com',
+            'smtp_pass' => '123QWEasdZXC',
+            'mailtype'  => 'html',
+            'charset'   => 'utf-8'
+        );
+        $this->load->library('email', $config);
+        $this->email->set_newline("\r\n");
+
+        $this->email->from('devdevdevdevdevdev727@gmail.com','ASD');
+        $this->email->to('dev1dev1dev1@yandex.ru');
+        $this->email->subject('AAAAA');
+        $this->email->message('asdasdasdasd');
+        $this->email->set_newline("\r\n");
+        if ($this->email->send()) {
+            echo 'success';
+
+        } else {
+            show_error($this->email->print_debugger());
+
+        }*/
+        $this->load->library('hashplans_mailer');
+        $this->hashplans_mailer->send_friend_invite_email($this->ion_auth->user(4)->row(), $this->ion_auth->user(127)->row());
     }
 }

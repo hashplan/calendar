@@ -1,31 +1,37 @@
 <?php  if (!defined('BASEPATH')) exit('No direct script access allowed');
 
-class MY_Email extends CI_Email {
+class Hashplans_mailer {
 
-    /*protected $layout = '_layout_email';
+    protected $layout = '_layout_email';
     protected $data = array(
         'subject' => 'Hashplans Notification',
-        'from' => array('noreply@hashplans.com', 'Hashplans')
-    );*/
+        'from' => array('noreply@hashplans.com', 'Hashplans'),
+        'data' => array()
+    );
+    protected $CI;
 
     public function __construct(){
-        parent::__construct();
+        $this->CI = &get_instance();
+        $this->CI->load->library('email');
+        $this->CI->email->set_newline("\r\n");
     }
 
     //send to invited
-   /* public function send_friend_invite_email($from, $to){
+    public function send_friend_invite_email($from, $to){
         $this->data['view'] = 'email/friend_invite.tpl.php';
         $this->data['subject'] = 'Friendship request';
         $this->data['to'] = $to->email;
-        $this->data['from_name'] = $this->generate_full_name($from);
-        echo $this->print_debugger();
-        $this->send();
-        echo $this->print_debugger();
+        $this->data['data']['from_name'] = $this->_generate_full_name($from);
+        $this->_send();
     }
 
     //send back to inviter
-    public function send_friend_confirmed_email(){
+    public function send_friend_confirmed_email($from, $to){
         $this->data['view'] = 'email/friend_confirmed.tpl.php';
+        $this->data['subject'] = 'Friendship request';
+        $this->data['to'] = $to->email;
+        $this->data['data']['from_name'] = $this->_generate_full_name($from);
+        $this->_send();
     }
 
     //send back to inviter
@@ -53,13 +59,22 @@ class MY_Email extends CI_Email {
         $this->data['view'] = 'email/event_invite.tpl.php';
     }
 
-    protected function render(){
-        $this->subject($this->data['subject']);
-        $this->to($this->data['to']);
-        $this->message($this->load->view($this->layout, $this->data, TRUE));
+    protected function _render(){
+        $message = $this->CI->load->view($this->layout, $this->data, TRUE);
+        $this->CI->email->subject($this->data['subject']);
+        $this->CI->email->from($this->data['from'],'Hashplans');
+        $this->CI->email->to($this->data['to']);
+        $this->CI->email->message($message);
     }
 
-    public function generate_full_name($user)
+    protected function _send(){
+        $this->_render();
+        if(!$this->CI->email->send()){
+            error_log('error', $this->email->print_debugger());
+        }
+    }
+
+    protected function _generate_full_name($user)
     {
         $name = $user->first_name . ' ' . $user->last_name;
         $name = trim($name);
@@ -68,6 +83,6 @@ class MY_Email extends CI_Email {
         }
 
         return $name;
-    }*/
+    }
 
 }

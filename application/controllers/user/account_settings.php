@@ -24,7 +24,7 @@ class Account_settings extends AuthController
         $this->form_validation->set_rules('first_name', 'First name', 'trim|required|xss_clean');
         $this->form_validation->set_rules('last_name', 'Last name', 'trim|required|xss_clean');
         $this->form_validation->set_rules('metro_id', 'Location', 'trim|required|integer');
-        if($this->input->post('password')){
+        if($this->input->post('old_password')||$this->input->post('password')||$this->input->post('password_confirm')){
             $this->form_validation->set_rules('old_password', 'Old Password', 'required');
             $this->form_validation->set_rules('password', 'Password', 'required|min_length[' . $this->config->item('min_password_length', 'ion_auth') . ']|max_length[' . $this->config->item('max_password_length', 'ion_auth') . ']|matches[password_confirm]');
             $this->form_validation->set_rules('password_confirm', 'Confirm password', 'required');

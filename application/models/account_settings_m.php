@@ -23,7 +23,13 @@ class Account_settings_m extends MY_Model {
         if(is_null($user_id) || !$this->ion_auth->in_group("admin")){
             $user_id = $this->ion_auth->user()->row()->id;
         }
-        $result = $this->db->update($this->table, array($key=>$value), array('userId' => $user_id));
+        if($this->db->get_where($this->table, array('userId'=>$user_id))->num_rows()){
+            $result = $this->db->update($this->table, array($key=>$value), array('userId' => $user_id));
+        }
+        else{
+            $result = $this->db->insert($this->table, array($key=>$value, 'userId' => $user_id));
+        }
+
         return $result;
     }
 }

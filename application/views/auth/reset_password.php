@@ -20,8 +20,8 @@
         </div>
         <div class="form-group">
             <div class="col-sm-12">
-                <?php echo form_hidden($csrf); ?>
-                <?php echo form_hidden($user_id); ?>
+                <input type="hidden" name="<?=key($csrf)?>" value="<?=$csrf[key($csrf)]?>"/>
+                <input type="hidden" name="user_id" value="<?=$user_id?>"/>
                 <button type="submit" class="btn btn-default"><?= lang('forgot_password_submit_btn') ?></button>
             </div>
         </div>

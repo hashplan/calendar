@@ -38,6 +38,9 @@ h1, h2, h3 {
 .datepicker {
     z-index: 1051;
 }
+.modal{
+    overflow-y: auto;
+}
 
 
 .form_error {
