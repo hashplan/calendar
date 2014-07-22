@@ -558,9 +558,18 @@ class Auth extends MY_Controller
         }
     }
 
-    function facebook_login()
+    function facebook_login($code = null)
     {
-        $this->facebook_ion_auth->login();
+        if(!is_null($code)){
+            echo "<pre>";
+            var_dump($code);
+            echo "</pre>";
+            die(__FILE__ . ':' . __LINE__);
+        }
+        //$this->facebook_ion_auth->login();
+        $this->load->library('facebook');
+        $login_url = $this->facebook->get_login_url();
+        echo "<a href='".$login_url."'>Login</a>";
     }
 
     private function _login_redirect()
@@ -630,3 +639,4 @@ class Auth extends MY_Controller
         $this->hashplans_mailer->send_friend_invite_email($this->ion_auth->user(4)->row(), $this->ion_auth->user(127)->row());
     }
 }
+
