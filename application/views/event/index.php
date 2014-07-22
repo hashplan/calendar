@@ -43,14 +43,14 @@
                     </div>
                 </div>
                 <div class="tab-pane" id="venue">
-                    <div class="yelp-content-holder empty">
-                    </div>
+                    <div class="yelp-content-holder empty"></div>
                 </div>
                 <div class="tab-pane" id="attendees">
                     <div class="row friends">
                         <? if (isset($friends_related_with_event) && !empty($friends_related_with_event)): ?>
                             <? foreach ($friends_related_with_event as $friendId => $friend): ?>
-                                <? if ($friend['type'] == 'friend'): ?>
+                                <?$class = ''; $tooltip = ''?>
+                                <? if ($friend['type'] == 'friend' || $friend['type'] == 'event_invite_accept'): ?>
                                     <? $class = 'class="invite-icon invite-icon-green glyphicon glyphicon-ok"'; ?>
                                     <? $tooltip = 'Will visit!'; ?>
                                 <? elseif ($friend['type'] == 'event_invite' && $friend['invited'] == $user->id): ?>
@@ -60,16 +60,11 @@
                                 elseif ($friend['type'] == 'event_invite' && $friend['invited'] != $user->id): ?>
                                     <? $class = 'class="invite-icon invite-icon-orange glyphicon glyphicon-arrow-up"'; ?>
                                     <? $tooltip = 'Invited you.'; ?>
-                                <?
-                                elseif ($friend['type'] == 'event_invite_declined'): ?>
-                                    <? $class = 'class="invite-icon invite-icon-red glyphicon glyphicon-remove"'; ?>
-                                    <? $tooltip = 'Refused the invitation.'; ?>
                                 <?endif ?>
                                 <div class="col-md-6 friend-related-with-event" data-uid="<?= $friendId ?>">
                                     <i <?= $class ?> title="<?= $tooltip ?>"></i>
                                     <a href="<?= site_url('user/events/' . $friendId) ?>">
-                                        <img
-                                            src="<?= site_url('/assets/img/' . ($friend['avatar_path'] ? 'users/' . $friend['avatar_path'] : 'icons/no-image-100.png')) ?>"/>
+                                        <img src="<?= site_url('/assets/img/' . ($friend['avatar_path'] ? 'users/' . $friend['avatar_path'] : 'icons/no-image-100.png')) ?>"/>
                                     </a>
                                     <span>
                                         <a href="<?= site_url('user/events/' . $friendId) ?>"><?= html_escape($friend['name']) ?></a>

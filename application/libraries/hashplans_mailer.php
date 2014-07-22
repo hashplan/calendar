@@ -45,26 +45,33 @@ class Hashplans_mailer{
     }
 
     //send to invited
-    public function send_event_invite_email($from, $to){
+    public function send_event_invite_email($from, $to, $event){
         $this->data['view'] = 'email/event_invite.tpl.php';
         $this->data['subject'] = 'Invitation to Event';
         $this->data['to'] = $to->email;
         $this->data['data']['from_name'] = $this->_generate_full_name($from);
+        $this->data['data']['event_name'] = $event->event_name;
         $this->_send();
     }
 
     //send back to inviter
-    public function send_event_confirmed_email($from, $to){
+    public function send_event_confirmed_email($from, $to, $event){
         $this->data['view'] = 'email/event_confirmed.tpl.php';
-        $this->data['subject'] = 'Invitation to Event';
+        $this->data['subject'] = 'Invitation to Event has been Accepted';
         $this->data['to'] = $to->email;
         $this->data['data']['from_name'] = $this->_generate_full_name($from);
+        $this->data['data']['event_name'] = $event->event_name;
         $this->_send();
     }
 
     //send back to inviter
-    public function send_event_refused_email(){
-        $this->data['view'] = 'email/event_invite.tpl.php';
+    public function send_event_refused_email($from, $to, $event){
+        $this->data['view'] = 'email/event_refused.tpl.php';
+        $this->data['subject'] = 'Invitation to Event has been declined';
+        $this->data['to'] = $to->email;
+        $this->data['data']['from_name'] = $this->_generate_full_name($from);
+        $this->data['data']['event_name'] = $event->event_name;
+        $this->_send();
     }
 
     public function send_contact_us_form_email($data){

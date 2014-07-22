@@ -70,17 +70,6 @@ $(function() {
 		$.ajax(base_url +'event/add_to_calendar/'+ eventId, {
 			type: 'POST',
 			success: function() {
-				var ids = [];
-				$('#event_modal input[type="checkbox"]:checked').each(function() {
-					var id = $(this).attr('id').split('-')[2];
-					ids.push(id);
-				});
-				if (ids.length > 0) {
-					$.ajax(base_url +'user/friends/send_multiple_event_invites', {
-						type: 'POST',
-						data: { friend_ids: ids, event_id: $('#event_modal .event-id-hidden').val() }
-					});
-				}
 				if ($('#event_modal .in-calendar').hasClass('in-calendar-hidden')) {
 					$('#event_modal .in-calendar').removeClass('in-calendar-hidden').addClass('in-calendar-shown');
 					$('#event_modal .button-add-to-calendar').remove();
@@ -138,6 +127,10 @@ $(function() {
                         success: function(response) {
                             if(response.result == 'success'){
                                 $('#attendees_tmpl').tmpl(item).appendTo('#attendees .friends');
+                                if($('.button-add-to-calendar').length){
+                                    $('.button-add-to-calendar').remove();
+                                }
+
                             }
                         }
                     });

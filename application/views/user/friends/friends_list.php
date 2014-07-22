@@ -39,7 +39,7 @@
                         } else if ($page_type === 'friends_invites') {
                             echo anchor('user/friends/friend_accept/' . $friend->id, 'Connect', array('class' => 'btn btn-primary friend-view-plans-button'));
                         } else if ($page_type === 'events_invites') {
-                            echo anchor('user/friends/event_invite_accept/' . $friend->id . '/' . $friend->eventId, 'Connect', array('class' => 'btn btn-primary friend-view-plans-button'));
+                            echo anchor('user/friends/event_invite_accept/' . $friend->eventId, 'Connect', array('class' => 'btn btn-primary friend-view-plans-button'));
                         }
                     }?>
                 </div>

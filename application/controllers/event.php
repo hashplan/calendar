@@ -199,14 +199,18 @@ class Event extends AuthController
 
             if ($this->form_validation->run() == TRUE) {
                 $this->load->model('users_m');
+                $this->load->model('events_m');
+                $this->events_m->add_to_calendar($this->input->post('event_id'));
                 if ($this->users_m->set_connection_between_users($this->input->post('uid'), NULL, NULL, 'event_invite', $this->input->post('event_id'))) {
                     $this->load->library('hashplans_mailer');
+                    $event = $this->events_m->get_event_by_id($this->input->post('event_id'));
                     $to_user = $this->ion_auth->user($this->input->post('uid'))->row();
-                    $this->hashplans_mailer->send_event_invite_email($this->user, $to_user);
+                    $this->hashplans_mailer->send_event_invite_email($this->user, $to_user, $event);
                     header('Content-Type: application/json');
                     echo json_encode(array('result' => 'success'));
                 }
-            } else {
+            }
+            else {
                 header('Content-Type: application/json');
                 echo json_encode(array('result' => 'error', 'error' => validation_errors()));
             }

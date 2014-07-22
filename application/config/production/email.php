@@ -10,19 +10,25 @@
 | http://ellislab.com/codeigniter/user-guide/libraries/email.html
 |
 */
-$config['protocol'] = 'smtp';
-$config['smtp_host'] = 'ssl://smtp.gmail.com.';
-$config['smtp_port'] = '465';
-//$config['smtp_timeout'] = '30';
-//$config['smtp_user'] = 'hashplans@gmail.com';
-//$config['smtp_pass'] = 'Hashplan0514';
-$config['smtp_user'] = 'devdevdevdevdevdev727@gmail.com';
-$config['smtp_pass'] = '123QWEasdZXC';
-$config['mailtype'] = 'html';
-$config['charset'] = 'utf-8';
-$config['newline'] = "\r\n";
+//$config['protocol'] = 'smtp';
+//$config['smtp_host'] = 'ssl://smtp.gmail.com.';
+//$config['smtp_port'] = '465';
+////$config['smtp_timeout'] = '30';
+////$config['smtp_user'] = 'hashplans@gmail.com';
+////$config['smtp_pass'] = 'Hashplan0514';
+//$config['smtp_user'] = 'devdevdevdevdevdev727@gmail.com';
+//$config['smtp_pass'] = '123QWEasdZXC';
+//$config['mailtype'] = 'html';
+//$config['charset'] = 'utf-8';
+//$config['newline'] = "\r\n";
 
 $config['admin_email'] = 'devdevdevdevdevdev727@gmail.com';
+
+$config['protocol'] = 'sendmail';
+$config['mailpath'] = '/usr/sbin/sendmail';
+$config['charset'] = 'utf-8';
+$config['mailtype'] = 'html';
+$config['newline'] = "\r\n";
 
 
 /* End of file email.php */

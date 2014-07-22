@@ -130,34 +130,35 @@ class Auth extends MY_Controller
     //forgot password
     function forgot_password()
     {
-        $this->form_validation->set_rules('email', $this->lang->line('forgot_password_validation_email_label'), 'required');
-        if ($this->form_validation->run() == false) {
+        $this->data['identity_field'] = $this->config->item('identity', 'ion_auth');
+        $this->form_validation->set_rules($this->data['identity_field'], $this->lang->line('forgot_password_validation_email_label'), 'required');
 
+        if ($this->form_validation->run() == false) {
             //set any errors and display the form
             $this->data['message'] = (validation_errors()) ? validation_errors() : $this->session->flashdata('message');
             $this->data['view'] = 'auth/forgot_password';
             $this->_render_page($this->layout, $this->data);
-        } else {
-            // get identity for that email
-            $identity = $this->ion_auth->where('email', strtolower($this->input->post('email')))->users()->row();
+        }
+        else {
+            $identity = $this->ion_auth->where($this->data['identity_field'], strtolower($this->input->post($this->data['identity_field'])))->users()->row();
             if (empty($identity)) {
                 $this->ion_auth->set_message('forgot_password_email_not_found');
                 $this->session->set_flashdata('message', $this->ion_auth->messages());
                 $this->data['view'] = 'auth/forgot_password';
                 $this->_render_page($this->layout, $this->data);
             }
-
-            //run the forgotten password method to email an activation code to the user
-            $forgotten = $this->ion_auth->forgotten_password($identity->{$this->config->item('identity', 'ion_auth')});
-
-            if ($forgotten) {
-                //if there were no errors
-                $this->session->set_flashdata('message', $this->ion_auth->messages());
-                redirect('login', 'refresh');
-            } else {
-                $this->session->set_flashdata('message', $this->ion_auth->errors());
-                $this->data['view'] = 'auth/forgot_password';
-                $this->_render_page($this->layout, $this->data);
+            else{
+                //run the forgotten password method to email an activation code to the user
+                $forgotten = $this->ion_auth->forgotten_password($identity->{$this->data['identity_field']});
+                if ($forgotten) {
+                    $this->session->set_flashdata('message', $this->ion_auth->messages());
+                    redirect('login', 'refresh');
+                }
+                else {
+                    $this->session->set_flashdata('message', $this->ion_auth->errors());
+                    $this->data['view'] = 'auth/forgot_password';
+                    $this->_render_page($this->layout, $this->data);
+                }
             }
         }
     }
@@ -604,12 +605,9 @@ class Auth extends MY_Controller
     }
 
     public function test(){
-        /*$config = Array(
-            'protocol' => 'smtp',
-            'smtp_host' => 'smtp.googlemail.com',
-            'smtp_port' => 25,
-            'smtp_user' => 'devdevdevdevdevdev727@gmail.com',
-            'smtp_pass' => '123QWEasdZXC',
+        /*$config = array(
+            'protocol' => 'sendmail',
+            'mailpath' => '/usr/sbin/sendmail',
             'mailtype'  => 'html',
             'charset'   => 'utf-8'
         );

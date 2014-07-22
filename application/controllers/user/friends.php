@@ -328,8 +328,7 @@ class Friends extends AuthController
         }
     }
 
-    public function remove_from_contact($user_id)
-    {
+    public function remove_from_contact($user_id){
         if ($this->users_m->user_id_is_correct($user_id)) {
             $this->users_m->delete_connection_between_users($user_id, NULL);
             if (!$this->input->is_ajax_request()) {
@@ -357,13 +356,32 @@ class Friends extends AuthController
         redirect('user/friends/invites');
     }
 
-    public function event_invite_accept($inviter_id, $event_id)
+    public function event_invite_accept($event_id)
     {
-        $this->users_m->set_connection_between_users($inviter_id, NULL, 'event_invite', 'event_invite_accept', $event_id);
-        // todo: more logic
-        $this->load->library('hashplans_mailer');
-        $this->hashplans_mailer->send_event_confirmed_email($this->user, $this->ion_auth->user($inviter_id)->row());
+        $this->load->model('events_m');
+        $users = $this->users_m->get_invites_by_event_id($event_id);
+        $event = $this->events_m->get_event_by_id($event_id);
+        if(!empty($users) && !empty($event)){
+            $this->load->library('hashplans_mailer');
+            foreach($users as $user){
+                $this->hashplans_mailer->send_event_confirmed_email($this->user, $user, $event);
+            }
+            $this->users_m->accept_event_invite($event_id);
+        }
         redirect('user/friends/invites/events');
+    }
+
+    public function refuse_event($event_id){
+        $this->load->model('events_m');
+        $users = $this->users_m->get_invites_by_event_id($event_id);
+        $event = $this->events_m->get_event_by_id($event_id);
+        if(!empty($users) && !empty($event)){
+            $this->load->library('hashplans_mailer');
+            foreach($users as $user){
+                $this->hashplans_mailer->send_event_refused_email($this->user, $user, $event);
+            }
+            $this->users_m->refused_event_invite($event_id);
+        }
     }
 
     public function locations_autocomplete()
@@ -408,18 +426,4 @@ class Friends extends AuthController
 
         $this->_render_page();
     }
-
-    public function send_multiple_event_invites()
-    {
-        $post = $this->input->post();
-        $friend_ids = !empty($post['friend_ids']) ? $post['friend_ids'] : NULL;
-        $event_id_is_correct = $post['event_id'] !== NULL && is_numeric($post['event_id']) && $post['event_id'] > 0;
-        if ($friend_ids === NULL || !$event_id_is_correct) {
-            return;
-        }
-        foreach ($friend_ids as $friend_id) {
-            $this->users_m->set_connection_between_users($friend_id, NULL, NULL, 'event_invite', $post['event_id']);
-        }
-    }
-
 }

@@ -46,8 +46,7 @@ class Events extends AuthController {
 
 	public function friends($user_id)
 	{
-		if(!$this->users_m->is_friend_of($user_id))
-		{
+		if(!$this->users_m->is_friend_of($user_id)){
 			redirect(base_url('user/events'));
 		}
 		$this->data['user'] = $this->db->where('id', $user_id)->get('users')->row();
@@ -88,7 +87,6 @@ class Events extends AuthController {
 			$options['events_type'] = 'all';
 		}
 		$current_date = !empty($post['current_date']) ? $post['current_date'] : NULL;
-
 		$events_data= array(
 			'events' => $this->events_m->get_all($options),
 			'current_date' => $current_date,
@@ -123,11 +121,9 @@ class Events extends AuthController {
 			'user_id' => $this->data['user_id']
 		);
 		$this->data['data']['events'] = $this->load->view($this->get_user_identifier() . '/events/events_' . $events_type, $events_data, true);
-
 		$this->data['data']['has_events'] = count($events) > 0;
 		$this->data['data']['events_type'] = $events_type;
 		$this->data['data']['page_title'] = $page_title;
-
 		$this->_render_page();
 	}
 

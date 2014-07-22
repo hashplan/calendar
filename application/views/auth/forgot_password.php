@@ -8,7 +8,7 @@
             <label for="email" class="sr-only control-label">Email</label>
 
             <div class="col-sm-12">
-                <input type="email" class="form-control" id="email" name="email" value="<?= set_value('email') ?>"
+                <input type="email" class="form-control" id="email" name="<?=$identity_field?>" value="<?= set_value('email') ?>"
                        placeholder="Email">
             </div>
         </div>

@@ -69,9 +69,9 @@ class Users_m extends MY_Model
 			WHERE u.id != ?
 		';
 
-        if(isset($options['name']) && !empty($options['name'])){
+        if (isset($options['name']) && !empty($options['name'])) {
             $sql .= '
-            AND (u.first_name LIKE "%'.$this->db->escape_like_str($options['name']).'%" OR u.last_name LIKE "%'.$this->db->escape_like_str($options['name']).'%")';
+            AND (u.first_name LIKE "%' . $this->db->escape_like_str($options['name']) . '%" OR u.last_name LIKE "%' . $this->db->escape_like_str($options['name']) . '%")';
         }
 
         $sql .= '
@@ -135,9 +135,6 @@ class Users_m extends MY_Model
                 break;
             case 'event_invite_accept':
                 $name = "Event Invite Accepted";
-                break;
-            case 'event_invite_declined':
-                $name = "Event Invite Declined";
                 break;
             default:
                 $name = NULL;
@@ -281,8 +278,7 @@ class Users_m extends MY_Model
                 }
                 $people[] = $dude;
             }
-        }
-        else{
+        } else {
             //maybe we should show random users from the same location
         }
 
@@ -319,9 +315,40 @@ class Users_m extends MY_Model
             ->delete('user_connections');
     }
 
+    public function refused_event_invite($event_id)
+    {
+        return $this->db->delete('user_connections',
+            array('eventId' => $event_id,
+                'connectionUserId' => $this->ion_auth->user()->row()->id,
+                'type' => 'event_invite'));
+    }
+
+    public function accept_event_invite($event_id){
+        return $this->db->update('user_connections',
+            array('type' => 'event_invite_accept'),
+            array('eventId' => $event_id,
+                'connectionUserId' => $this->ion_auth->user()->row()->id,
+                'type' => 'event_invite'));
+    }
+
+    public function get_invites_by_event_id($eventId, $userId = null){
+        if(is_null($userId)){
+            $userId = $this->ion_auth->user()->row()->id;
+        }
+        $where = array(
+            'eventId' => $eventId,
+            'connectionUserId' => $userId
+        );
+        return $this->db
+            ->join('users', 'users.id = user_connections.userId', 'INNER')
+            ->where($where)
+            ->get('user_connections')
+            ->result();
+    }
+
     public function set_connection_between_users($connection_user_id, $user_id = NULL, $type_to_search = NULL, $type_to_set = NULL, $event_id = NULL)
     {
-        if (!$this->user_id_is_correct($connection_user_id)) {
+        if (!$this->user_id_is_correct($connection_user_id)&&!$event_id) {
             return;
         }
 
@@ -338,7 +365,8 @@ class Users_m extends MY_Model
             $result = $this->db
                 ->where('id', $connection->id)
                 ->update('user_connections', array('type' => $type_to_set));
-        } else {
+        }
+        else {
             $values = array(
                 'userId' => $user_id,
                 'connectionUserId' => $connection_user_id,
@@ -597,13 +625,13 @@ class Users_m extends MY_Model
                 AND uc4.userId = ?
                 AND uc4.eventId = ?
 		";
-        if(isset($options['name']) && !empty($options['name'])){
+        if (isset($options['name']) && !empty($options['name'])) {
             $sql .= '
-                WHERE u.first_name LIKE "%'.$this->db->escape_like_str($options['name']).'%"
-                OR u.last_name LIKE "%'.$this->db->escape_like_str($options['name']).'%"
+                WHERE u.first_name LIKE "%' . $this->db->escape_like_str($options['name']) . '%"
+                OR u.last_name LIKE "%' . $this->db->escape_like_str($options['name']) . '%"
             ';
         }
-        $sql .='
+        $sql .= '
             ORDER BY u.first_name, u.last_name
         ';
 
@@ -632,10 +660,11 @@ class Users_m extends MY_Model
         return $friends;
     }
 
-    public function get_friends_related_with_event($event_id = null){
+    public function get_friends_related_with_event($event_id = null)
+    {
 
         $result = array();
-        if(!is_null($event_id)){
+        if (!is_null($event_id)) {
             $user_id = $user = $this->ion_auth->user()->row()->id;
             $event_id_is_correct = $event_id !== NULL && is_numeric($event_id) && $event_id > 0;
             if ($event_id_is_correct) {
@@ -651,7 +680,7 @@ class Users_m extends MY_Model
                     WHERE uc2.connectionUserId = ?
                 ) uc
                 INNER JOIN users u ON uc.friend_id = u.id AND u.active = 1
-                WHERE uc.type IN ('event_invite', 'event_invite_accept', 'event_invite_declined') AND uc.eventId = ?
+                WHERE uc.type IN ('event_invite', 'event_invite_accept') AND uc.eventId = ?
                 UNION ALL
                 SELECT uc.eventId, uc.type, u.*, uc.invited
                 FROM (
@@ -670,16 +699,15 @@ class Users_m extends MY_Model
             ";
                 $params = array($user_id, $user_id, $event_id, $user_id, $user_id, $event_id);
                 $result_raw = $this->db->query($sql, $params)->result();
-                if(!empty($result_raw)){
-                    foreach($result_raw as $row){
+                if (!empty($result_raw)) {
+                    foreach ($result_raw as $row) {
                         $result[$row->id]['id'] = $row->id;
                         $result[$row->id]['name'] = $this->generate_full_name($row);
                         $result[$row->id]['type'] = $row->type;
                         $result[$row->id]['invited'] = $row->invited;
                         $result[$row->id]['avatar_path'] = $row->avatar_path;
                     }
-                }
-                else{
+                } else {
                     $result = $result_raw;
                 }
             }
@@ -765,7 +793,7 @@ class Users_m extends MY_Model
             $this->db->like('ma.city', $options['location_name']);
         }
 
-        if(isset($options['name']) && !empty($options['name'])){
+        if (isset($options['name']) && !empty($options['name'])) {
             $this->db->like('u.first_name', $options['name']);
             $this->db->or_like('u.last_name', $options['name']);
         }
@@ -791,7 +819,8 @@ class Users_m extends MY_Model
         return $result;
     }
 
-    public function get_all_friends_ids_string(){
+    public function get_all_friends_ids_string()
+    {
         $user_id = $this->ion_auth->user()->row()->id;
         $result = '';
         $sql = "
@@ -808,7 +837,7 @@ class Users_m extends MY_Model
 			WHERE uc.type = 'friend'
 		";
         $query = $this->db->query($sql, array($user_id, $user_id));
-        if($query->num_rows > 0){
+        if ($query->num_rows > 0) {
             $result = $query->row()->ids;
         }
 
