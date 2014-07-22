@@ -1,2 +1,2 @@
-<h1>Invitation declined</h1>
-<p><?=$from_name?> has been refused to go to the event &quot;<?=$event_name?>&quot;.</p>
+<h1>Invitation cancelled</h1>
+<p><?=$from_name?> has refused to visit the event &quot;<?=$event_name?>&quot;.</p>

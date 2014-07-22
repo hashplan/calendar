@@ -131,9 +131,9 @@ class Event extends AuthController
         $this->data['is_my'] = $event->event_owner_id == $this->ion_auth->user()->row()->id;
         $this->data['is_favourite'] = count($this->events_m->get_favourite_events($event->event_id)) === 1;
         $this->data['in_calendar'] = count($this->events_m->get_calendar_events($event->event_id)) === 1;
+        $this->data['can_invite'] = !is_null($event->event_owner_id)&&$event->event_owner_id==$this->ion_auth->user()->row()->id||is_null($event->event_owner_id);
 
         $this->data['friends_related_with_event'] = $this->users_m->get_friends_related_with_event($event_id);
-        //$this->data['friends_you_can_invite_on_event'] = $this->users_m->get_friends_you_can_invite_on_event(array('event_id' => $event_id , 'limit' => 6));
         $this->load->view('event/index', $this->data);
     }
 

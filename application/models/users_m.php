@@ -550,32 +550,38 @@ class Users_m extends MY_Model
             ? $options['user_id']
             : $this->ion_auth->user()->row()->id;
 
-        $users_raw = $this->db
-            ->select('u.*, uc.*, u.id AS id, uc.id AS user_connection_id /* get_users_you_sent_event_invite */')
+        $events_raw = $this->db
+            ->select('uc.type as type, u.id as uid, u.first_name as first_name, u.last_name as last_name, u.avatar_path as avatar_path')
+            ->select('e.id as event_id, e.name as event_name, v.name as venue_name, e.datetime as datetime')
             ->from('user_connections AS uc')
             ->join('users AS u', 'uc.userId = u.id', 'inner')
+            ->join('events AS e', 'uc.eventId = e.id', 'inner')
+            ->join('venues AS v', 'v.id = e.venueId', 'inner')
             ->where('uc.type', 'event_invite')
-            ->where('uc.eventid IS NOT NULL', NULL, FALSE)
+            ->where('uc.eventId IS NOT NULL', NULL, FALSE)
             ->where('uc.connectionUserId', $user_id)
-            ->order_by('first_name')
-            ->order_by('last_name')
+            ->order_by('u.first_name')
+            ->order_by('u.last_name')
             ->get()
             ->result();
 
-        $users = array();
-        foreach ($users_raw as $user) {
-            $user->name = $this->generate_full_name($user);
-            if (!empty($options['name'])) {
-                if (stripos($user->name, $options['name']) !== FALSE) {
-                    $users[] = $user;
-                }
+        $events = array();
+        foreach ((array)$events_raw as $event) {
+            $event->user_name = $this->generate_full_name($event);
+            if (!empty($options['name']) && stripos($event->user_name, $options['name']) == FALSE) {
                 continue;
             }
-            $user->connection_type_full = $this->get_connection_type_full_name($user->type);
-            $users[] = $user;
+            $events[$event->event_id]['users'][$event->uid] = array(
+                'uid' => $event->uid,
+                'user_name' => $event->user_name,
+                'avatar_path' => $event->avatar_path
+            );
+            $events[$event->event_id]['event_id'] = $event->event_id;
+            $events[$event->event_id]['event_name'] = $event->event_name;
+            $events[$event->event_id]['vanue_name'] = $event->venue_name;
+            $events[$event->event_id]['datetime'] = $event->datetime;
         }
-
-        return $users;
+        return $events;
     }
 
     public function get_friends_you_can_invite_on_event($options = array())

@@ -11,7 +11,7 @@ class Friends extends AuthController
     protected $typesView = array(
         'friends' => 'friends_list',
         'friends_invites' => 'invites_list',
-        'events_invites' => 'invites_list',
+        'events_invites' => 'events_invites_list',
         'invites_sent' => 'invites_list',
         'add_friends' => 'users_list',
         'user_friends' => 'users_friends_list',
@@ -24,9 +24,11 @@ class Friends extends AuthController
         $js_assets = array(
             array('friends_search'),
             array('people_you_may_know'),
+            array('event_modal'),
         );
         $css_assets = array(
             array('friend.css'),
+            array('event_modal.css'),
         );
         $this->carabiner->group('page_assets', array('js' => $js_assets, 'css' => $css_assets) );
     }
@@ -147,13 +149,13 @@ class Friends extends AuthController
         $this->_render_users_page($page_class, $page_title, $page_type, $left_block, $users);
     }
 
-    protected function _invites_events($users, $counts)
+    protected function _invites_events($events, $counts)
     {
         $page_class = 'invites';
         $page_title = 'Invites to visit events';
         $page_type = 'events_invites';
         $left_block = $this->load->view('user/friends/invites_left_block', array('counts' => $counts), TRUE);
-        $this->_render_users_page($page_class, $page_title, $page_type, $left_block, $users);
+        $this->_render_users_page($page_class, $page_title, $page_type, $left_block, null, $events);
     }
 
     protected function _invites_sent($users, $counts)
@@ -356,7 +358,7 @@ class Friends extends AuthController
         redirect('user/friends/invites');
     }
 
-    public function event_invite_accept($event_id)
+    public function event_invitation_accept($event_id)
     {
         $this->load->model('events_m');
         $users = $this->users_m->get_invites_by_event_id($event_id);
@@ -366,12 +368,14 @@ class Friends extends AuthController
             foreach($users as $user){
                 $this->hashplans_mailer->send_event_confirmed_email($this->user, $user, $event);
             }
-            $this->users_m->accept_event_invite($event_id);
+            if($this->users_m->accept_event_invite($event_id)){
+                $this->events_m->add_to_calendar($event_id);
+            }
         }
         redirect('user/friends/invites/events');
     }
 
-    public function refuse_event($event_id){
+    public function event_invitation_cancelled($event_id){
         $this->load->model('events_m');
         $users = $this->users_m->get_invites_by_event_id($event_id);
         $event = $this->events_m->get_event_by_id($event_id);
@@ -397,22 +401,22 @@ class Friends extends AuthController
         die();
     }
 
-    protected function _render_users_page($page_class, $page_title, $page_type, $left_block, $users)
+    protected function _render_users_page($page_class, $page_title, $page_type, $left_block, $users, $events = array())
     {
         $this->data['page_class'] = $page_class;
-        $this->data['view'] = $this->get_user_identifier() . '/friends/users';
+        $this->data['view'] = 'user/friends/users';
         $this->data['data']['page_title'] = $page_title;
         $this->data['data']['page_type'] = $page_type;
         $this->data['data']['left_block'] = $left_block;
         $this->data['user'] = $this->user;
 
         $users_ids = array();
-        foreach ($users as $user) {
+        foreach ((array)$users as $user) {
             $users_ids[] = $user->id;
         }
 
         $mutual_friends_count = $this->users_m->get_mutual_friends_count($users_ids, $this->friends);
-        foreach ($users as $user) {
+        foreach ((array)$users as $user) {
             $user->mutual_friends_count = !empty($mutual_friends_count[$user->id]) ? $mutual_friends_count[$user->id] : 0;
         }
 
@@ -421,7 +425,7 @@ class Friends extends AuthController
             $dude->name = $this->users_m->generate_full_name($dude);
         }
         $this->data['data']['people_you_may_know_block'] = $this->load->view('user/friends/people_you_may_know_block', array('people_you_may_know' => $people_you_may_know), TRUE);
-        $users_list = $this->load->view('user/friends/' . $this->typesView[$page_type], array('people' => $users, 'page_type' => $page_type, 'my_friends' => $this->friends), TRUE);
+        $users_list = $this->load->view('user/friends/' . $this->typesView[$page_type], array('people' => $users, 'events' => $events, 'page_type' => $page_type, 'my_friends' => $this->friends), TRUE);
         $this->data['data']['users_list'] = $users_list;
 
         $this->_render_page();

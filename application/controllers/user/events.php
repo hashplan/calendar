@@ -1,6 +1,5 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 class Events extends AuthController {
-//inherits from core/my controller
 
 	public $data = array(
 		'sub_layout' => 'layouts/user_page',
@@ -30,6 +29,7 @@ class Events extends AuthController {
         );
         $css_assets = array(
             array('event.css'),
+            array('event_modal.css'),
         );
         $this->carabiner->group('page_assets', array('js' => $js_assets, 'css' => $css_assets) );
 	}
@@ -52,14 +52,14 @@ class Events extends AuthController {
 		$this->data['user'] = $this->db->where('id', $user_id)->get('users')->row();
         $fullname = $this->data['user']->first_name . " " . $this->data['user']->last_name;
         $fullname = trim($fullname);
-
 		$this->_render_events_list_page('friends', $fullname.' Events', $user_id);
 	}
 
 	public function all() {
 		Menu::setActive('user/events/all');
 		$default_location = $this->data['user']->metro;
-		$this->_render_events_list_page('all', isset($default_location->city)?'Events in '. $default_location->city:'', NULL, $default_location);
+        $user_id = $this->ion_auth->user()->row()->id;
+		$this->_render_events_list_page('all', isset($default_location->city)?'Events in '. $default_location->city:'', $user_id, $default_location);
 	}
 
 	public function trash() {
@@ -102,7 +102,6 @@ class Events extends AuthController {
 
 	protected function _render_events_list_page($events_type, $page_title, $user_id = NULL, $default_location = NULL) {
 		$this->load->model('categories_m');
-
 		$this->data['page_class'] = 'user-events';
 		$this->data['view'] = $this->get_user_identifier().'/events/'.$this->typesView[$events_type];
 		$this->data['user_id'] = $this->users_m->user_id_is_correct($user_id) ? $user_id : $this->user->id;
@@ -120,7 +119,7 @@ class Events extends AuthController {
 			'current_date' => NULL,
 			'user_id' => $this->data['user_id']
 		);
-		$this->data['data']['events'] = $this->load->view($this->get_user_identifier() . '/events/events_' . $events_type, $events_data, true);
+		$this->data['data']['events'] = $this->load->view('user/events/events_' . $events_type, $events_data, true);
 		$this->data['data']['has_events'] = count($events) > 0;
 		$this->data['data']['events_type'] = $events_type;
 		$this->data['data']['page_title'] = $page_title;
