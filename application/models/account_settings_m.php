@@ -32,4 +32,13 @@ class Account_settings_m extends MY_Model {
 
         return $result;
     }
+
+    public function find_user_by_facebook_id($facebook_id){
+        return $this->db
+            ->from($this->table)
+            ->where(array('fb_id' => $facebook_id))
+            ->get()
+            ->row();
+    }
+
 }

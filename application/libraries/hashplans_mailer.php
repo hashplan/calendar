@@ -93,6 +93,7 @@ class Hashplans_mailer{
     }
 
     protected function _send(){
+        $this->CI->email->clear();
         $this->_render();
         if(!$this->CI->email->send()){
             error_log('error', $this->email->print_debugger());

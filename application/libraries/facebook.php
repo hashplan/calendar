@@ -43,7 +43,7 @@ class Facebook
         $this->helper = new FacebookRedirectLoginHelper($this->redirectUrl);
 
         if ($this->CI->session->userdata('fb_token')) {
-            $this->session = new FacebookSession($$this->CI->session->userdata('fb_token'));
+            $this->session = new FacebookSession($this->CI->session->userdata('fb_token'));
 
             // Validate the access_token to make sure it's still valid
             try {

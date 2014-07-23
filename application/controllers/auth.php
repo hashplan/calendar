@@ -558,18 +558,61 @@ class Auth extends MY_Controller
         }
     }
 
-    function facebook_login($code = null)
+    function facebook_login()
     {
-        if(!is_null($code)){
-            echo "<pre>";
-            var_dump($code);
-            echo "</pre>";
-            die(__FILE__ . ':' . __LINE__);
-        }
-        //$this->facebook_ion_auth->login();
+        //$this->session->sess_destroy();
         $this->load->library('facebook');
-        $login_url = $this->facebook->get_login_url();
-        echo "<a href='".$login_url."'>Login</a>";
+        $fb_user = $this->facebook->get_user();
+        if(!$fb_user){
+            $login_url = $this->facebook->get_login_url();
+            redirect($login_url);
+        }
+        else{
+            //check for facebook id in the account settings table
+            $this->load->model('account_settings_m');
+            $settings = $this->account_settings_m->find_user_by_facebook_id($fb_user['id']);
+            if($settings){
+                $user = $this->ion_auth->user($settings->userId)->row();
+                if($user){
+                    $this->_custom_login($user);
+                    $this->_login_redirect();
+                }
+            }
+            else{
+                //if no, then check user with such facebook email
+                $user = $this->ion_auth->where('email',$fb_user['email'])->user()->row();
+                if($user){
+                    //add facebook data to user settings and log in this user
+                    $this->account_settings_m->save('fb_id', $fb_user['id'], $user->id);
+                    $this->account_settings_m->save('fb_email', $fb_user['email'], $user->email);
+                    $this->_custom_login($user);
+                }
+                else{
+                    //if no, then register user with facebook email login,
+                    //generate a random password and send it along with an activation email
+                    $username = strtolower($fb_user['name']);
+                    $email = strtolower($fb_user['email']);
+                    $password = null;
+                    $additional_data = array(
+                        'first_name' => $fb_user['first_name'],
+                        'last_name' => $fb_user['last_name']
+                    );
+                    if ($this->ion_auth->register($username, $password, $email, $additional_data)) {
+                        $this->session->set_flashdata('flash_message', $this->ion_auth->messages());
+                        redirect("auth", 'refresh');
+                    }
+                }
+
+            }
+        }
+    }
+
+
+
+    private function _custom_login($user){
+        $this->ion_auth->set_session($user);
+        $this->ion_auth->update_last_login($user->id);
+        $this->ion_auth->clear_login_attempts($user->email);
     }
 
     private function _login_redirect()
@@ -611,32 +654,6 @@ class Auth extends MY_Controller
         }
         $this->form_validation->set_message('check_password', $this->ion_auth->errors());
         return FALSE;
-    }
-
-    public function test(){
-        /*$config = array(
-            'protocol' => 'sendmail',
-            'mailpath' => '/usr/sbin/sendmail',
-            'mailtype'  => 'html',
-            'charset'   => 'utf-8'
-        );
-        $this->load->library('email', $config);
-        $this->email->set_newline("\r\n");
-
-        $this->email->from('devdevdevdevdevdev727@gmail.com','ASD');
-        $this->email->to('dev1dev1dev1@yandex.ru');
-        $this->email->subject('AAAAA');
-        $this->email->message('asdasdasdasd');
-        $this->email->set_newline("\r\n");
-        if ($this->email->send()) {
-            echo 'success';
-
-        } else {
-            show_error($this->email->print_debugger());
-
-        }*/
-        $this->load->library('hashplans_mailer');
-        $this->hashplans_mailer->send_friend_invite_email($this->ion_auth->user(4)->row(), $this->ion_auth->user(127)->row());
     }
 }
 
