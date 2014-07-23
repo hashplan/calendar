@@ -1,6 +1,6 @@
 <?php  if (!defined('BASEPATH')) exit('No direct script access allowed');
 
-require_once(APPPATH . 'libraries/ion_auth.php');
+require_once(APPPATH . 'libraries/Ion_auth.php');
 
 class Ion_auth_ext extends Ion_auth
 {
@@ -20,7 +20,7 @@ class Ion_auth_ext extends Ion_auth
      * @param array $group_ids
      * @return array|bool|void
      */
-    public function register($username, $password_form, $email, $additional_data = array(), $group_ids = array()) //need to test email activation
+    public function register($username, $password_form, $email, $additional_data = array(), $group_ids = array(), $auto_activate = false) //need to test email activation
     {
         if (!$password_form) {
             $password = $this->_generate_password();
@@ -66,9 +66,11 @@ class Ion_auth_ext extends Ion_auth
             $data = array(
                 'identity' => $user->{$identity},
                 'id' => $user->id,
-                'email' => $email,
-                'activation' => $activation_code,
+                'email' => $email
             );
+            if(!$auto_activate){
+                $data['activation'] = $activation_code;
+            }
             if (!$password_form) {
                 $data['password'] = $password;
             }
@@ -77,27 +79,33 @@ class Ion_auth_ext extends Ion_auth
                 $this->set_message('activation_email_successful');
                 return $data;
             } else {
-                $tmpl = $this->config->item('email_templates', 'ion_auth');
-                if ($password_form) {
-                    $tmpl .= $this->config->item('email_activate', 'ion_auth');
+                if(!$auto_activate){
+                    $tmpl = $this->config->item('email_templates', 'ion_auth');
+                    if ($password_form) {
+                        $tmpl .= $this->config->item('email_activate', 'ion_auth');
+                    }
+                    else{
+                        $tmpl .= 'activate_with_password.tpl.php';
+                    }
+
+                    $message = $this->load->view($tmpl, $data, true);
+
+                    $this->email->clear();
+                    $this->email->from($this->config->item('admin_email', 'ion_auth'), $this->config->item('site_title', 'ion_auth'));
+                    $this->email->to($email);
+                    $this->email->subject($this->config->item('site_title', 'ion_auth') . ' - ' . $this->lang->line('email_activation_subject'));
+                    $this->email->message($message);
+
+                    if ($this->email->send() == TRUE) {
+                        $this->ion_auth_model->trigger_events(array('post_account_creation', 'post_account_creation_successful', 'activation_email_successful'));
+                        $this->set_message('activation_email_successful');
+
+                    }
                 }
                 else{
-                    $tmpl .= 'activate_with_password.tpl';
+                    $this->activate($id);
                 }
-
-                $message = $this->load->view($tmpl, $data, true);
-
-                $this->email->clear();
-                $this->email->from($this->config->item('admin_email', 'ion_auth'), $this->config->item('site_title', 'ion_auth'));
-                $this->email->to($email);
-                $this->email->subject($this->config->item('site_title', 'ion_auth') . ' - ' . $this->lang->line('email_activation_subject'));
-                $this->email->message($message);
-
-                if ($this->email->send() == TRUE) {
-                    $this->ion_auth_model->trigger_events(array('post_account_creation', 'post_account_creation_successful', 'activation_email_successful'));
-                    $this->set_message('activation_email_successful');
-                    return $id;
-                }
+                return $id;
             }
 
             $this->ion_auth_model->trigger_events(array('post_account_creation', 'post_account_creation_unsuccessful', 'activation_email_unsuccessful'));

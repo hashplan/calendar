@@ -558,10 +558,12 @@ class Auth extends MY_Controller
         }
     }
 
-    function facebook_login()
+    public function facebook_login()
     {
-        //$this->session->sess_destroy();
+        //var_dump($this->session->all_userdata()); $this->session->sess_destroy(); die();
         $this->load->library('facebook');
+        $this->load->library('ion_auth_ext');
+        //$this->load->model('account_settings_m');
         $fb_user = $this->facebook->get_user();
         if(!$fb_user){
             $login_url = $this->facebook->get_login_url();
@@ -572,7 +574,8 @@ class Auth extends MY_Controller
             $this->load->model('account_settings_m');
             $settings = $this->account_settings_m->find_user_by_facebook_id($fb_user['id']);
             if($settings){
-                $user = $this->ion_auth->user($settings->userId)->row();
+                $user = $this->ion_auth_ext->user($settings->userId)->row();
+
                 if($user){
                     $this->_custom_login($user);
                     $this->_login_redirect();
@@ -580,11 +583,12 @@ class Auth extends MY_Controller
             }
             else{
                 //if no, then check user with such facebook email
-                $user = $this->ion_auth->where('email',$fb_user['email'])->user()->row();
+                $user = $this->ion_auth_ext->where('email',$fb_user['email'])->user()->row();
+
                 if($user){
                     //add facebook data to user settings and log in this user
                     $this->account_settings_m->save('fb_id', $fb_user['id'], $user->id);
-                    $this->account_settings_m->save('fb_email', $fb_user['email'], $user->email);
+                    $this->account_settings_m->save('fb_email', $fb_user['email'], $user->id);
                     $this->_custom_login($user);
                 }
                 else{
@@ -597,9 +601,13 @@ class Auth extends MY_Controller
                         'first_name' => $fb_user['first_name'],
                         'last_name' => $fb_user['last_name']
                     );
-                    if ($this->ion_auth->register($username, $password, $email, $additional_data)) {
-                        $this->session->set_flashdata('flash_message', $this->ion_auth->messages());
-                        redirect("auth", 'refresh');
+                    $user_id = $this->ion_auth_ext->register($username, $password, $email, $additional_data, array(), true);
+                    if ($user_id) {
+                        $user = $this->ion_auth_ext->user($user_id)->row();
+                        $this->account_settings_m->save('fb_id', $fb_user['id'], $user->id);
+                        $this->account_settings_m->save('fb_email', $fb_user['email'], $user->id);
+                        $this->_custom_login($user);
+                        $this->_login_redirect($user);
                     }
                 }
 
@@ -607,7 +615,15 @@ class Auth extends MY_Controller
         }
     }
 
+    public function facebook_signout(){
+        $this->load->library('facebook');
+        $logout_url = $this->facebook->get_logout_url();
+        redirect($logout_url);
+    }
 
+    public function facebook_connect(){
+        //TODO
+    }
 
     private function _custom_login($user){
         $this->ion_auth->set_session($user);
