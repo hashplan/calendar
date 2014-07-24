@@ -20,7 +20,25 @@
 .carousel-caption {
     bottom: auto;
 }
-
+@media (max-width: 768px) {
+    .carousel-caption{
+        text-align: center;
+        width: 100%;
+        left: 0;
+        right: auto;
+        padding: 0;
+        margin: 0;
+    }
+    .carousel-caption h4, .h4,  .carousel-caption h3, .h3{
+        margin-top: 10px;
+    }
+    .carousel-caption h3, .h3 {
+        font-size: 22px;
+    }
+    .carousel-control{
+        z-index: 11;
+    }
+}
 /*end carousel*/
 .jumbotron-about {
     opacity: .80;

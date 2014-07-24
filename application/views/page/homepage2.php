@@ -4,7 +4,7 @@
 	================================================== -->
 <div id="homepage-slider" class="carousel slide" data-ride="carousel">
     <!-- Indicators -->
-    <ol class="carousel-indicators">
+    <ol class="carousel-indicators hidden-xs hidden-sm">
         <li data-target="#homepage-slider" data-slide-to="0" class="active black"></li>
         <li data-target="#homepage-slider" data-slide-to="1"></li>
         <li data-target="#homepage-slider" data-slide-to="2"></li>
