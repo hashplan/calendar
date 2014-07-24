@@ -116,25 +116,23 @@ $(function() {
 			select: function(event, ui) {
 				event.preventDefault();
 				var item = ui.item;
-                if (confirm("Are you sure?")) {
-                    $.ajax(base_url +'event/send_invite', {
-                        type: 'POST',
-                        data: {
-                            uid: item.id,
-                            event_id: $('#event_modal .event-id-hidden').val()
-                        },
-                        dataType: 'json',
-                        success: function(response) {
-                            if(response.result == 'success'){
-                                $('#attendees_tmpl').tmpl(item).appendTo('#attendees .friends');
-                                if($('.button-add-to-calendar').length){
-                                    $('.button-add-to-calendar').remove();
-                                }
-
+                $.ajax(base_url +'event/send_invite', {
+                    type: 'POST',
+                    data: {
+                        uid: item.id,
+                        event_id: $('#event_modal .event-id-hidden').val()
+                    },
+                    dataType: 'json',
+                    success: function(response) {
+                        if(response.result == 'success'){
+                            $('#attendees_tmpl').tmpl(item).appendTo('#attendees .friends');
+                            if($('.button-add-to-calendar').length){
+                                $('.button-add-to-calendar').remove();
                             }
+
                         }
-                    });
-                }
+                    }
+                });
                 event.target.value = '';
                 return false;
 			},
