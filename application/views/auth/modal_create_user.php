@@ -37,7 +37,7 @@
     </div>
     <div class="row">
         <div class="col-md-6">
-            <a href="<?=site_url('Facebook_ion_auth/login'); ?>"><img class="img-responsive"
+            <a href="<?=site_url('fb_signup'); ?>"><img class="img-responsive"
                                                                       src="<?=site_url('/assets/img/logo/facebooksignup.png'); ?>"
                                                                       alt="Facebook sign up"></a>
         </div>
