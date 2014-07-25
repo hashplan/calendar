@@ -15,8 +15,11 @@
                 <div class="carousel-caption">
                     <h3>CONCERTS, SPORTING EVENTS, FESTIVALS & MORE</h3>
                     <h4>Hashplan connects you and your friends through local events</h4>
-
-                    <p><?=anchor('signup', 'Sign Up Today <span class="glyphicon glyphicon-pencil"></span>', 'class="btn btn-md btn-primary" data-toggle="modal" data-target="#signup_modal"'); ?></p>
+                    <?if(is_logged_in()):?>
+                        <p><?=anchor('user', 'Sign Up Today <span class="glyphicon glyphicon-pencil"></span>', 'class="btn btn-md btn-primary"'); ?></p>
+                    <?else:?>
+                        <p><?=anchor('signup', 'Sign Up Today <span class="glyphicon glyphicon-pencil"></span>', 'class="btn btn-md btn-primary" data-toggle="modal" data-target="#signup_modal"'); ?></p>
+                    <?endif?>
                 </div>
             </div>
             <img src="<?=site_url('/assets/img/homepage/crowd for homepage.jpg'); ?>" alt="Hashplan crowd!">
@@ -26,8 +29,11 @@
                 <div class="carousel-caption">
                     <h2><span id="homepage_timer"></span></h2>
                     <h4>Time to start making plans!</h4>
-
-                    <p><?php echo anchor('signup', 'Sign Up Today <span class="glyphicon glyphicon-pencil"></span>', 'class="btn btn-md btn-primary" data-toggle="modal" data-target="#signup_modal"'); ?></p>
+                    <?if(is_logged_in()):?>
+                        <p><?=anchor('user', 'Sign Up Today <span class="glyphicon glyphicon-pencil"></span>', 'class="btn btn-md btn-primary"'); ?></p>
+                    <?else:?>
+                        <p><?=anchor('signup', 'Sign Up Today <span class="glyphicon glyphicon-pencil"></span>', 'class="btn btn-md btn-primary" data-toggle="modal" data-target="#signup_modal"'); ?></p>
+                    <?endif?>
                 </div>
             </div>
             <img src="<?=site_url('/assets/img/homepage/baseball game2.jpg'); ?>" alt="Baseball game!">
@@ -40,7 +46,11 @@
                         <h4>Thousands of events at your fingertips</h4>
                     </div>
                     <div class="col-md-12">
-                        <?=anchor('signup', 'Sign Up Today <span class="glyphicon glyphicon-pencil"></span>', 'class="btn btn-md btn-primary" data-toggle="modal" data-target="#signup_modal"'); ?>
+                        <?if(is_logged_in()):?>
+                            <p><?=anchor('user', 'Sign Up Today <span class="glyphicon glyphicon-pencil"></span>', 'class="btn btn-md btn-primary"'); ?></p>
+                        <?else:?>
+                            <p><?=anchor('signup', 'Sign Up Today <span class="glyphicon glyphicon-pencil"></span>', 'class="btn btn-md btn-primary" data-toggle="modal" data-target="#signup_modal"'); ?></p>
+                        <?endif?>
                     </div>
                 </div>
             </div>

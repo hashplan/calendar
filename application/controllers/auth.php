@@ -73,7 +73,7 @@ class Auth extends MY_Controller
         $this->form_validation->set_rules('new', $this->lang->line('change_password_validation_new_password_label'), 'required|min_length[' . $this->config->item('min_password_length', 'ion_auth') . ']|max_length[' . $this->config->item('max_password_length', 'ion_auth') . ']|matches[new_confirm]');
         $this->form_validation->set_rules('new_confirm', $this->lang->line('change_password_validation_new_password_confirm_label'), 'required');
 
-        if (!$this->ion_auth->logged_in()) {
+        if (!is_logged_in()) {
             redirect('auth/login', 'refresh');
         }
 
@@ -264,7 +264,7 @@ class Auth extends MY_Controller
                 }
 
                 // do we have the right userlevel?
-                if ($this->ion_auth->logged_in() && $this->ion_auth->is_admin()) {
+                if (is_logged_in() && $this->ion_auth->is_admin()) {
                     $this->ion_auth->deactivate($id);
                 }
             }
@@ -323,7 +323,7 @@ class Auth extends MY_Controller
     {
         $this->data['title'] = "Edit User";
 
-        if (!$this->ion_auth->logged_in() || (!$this->ion_auth->is_admin() && !($this->ion_auth->user()->row()->id == $id))) {
+        if (!is_logged_in() || (!$this->ion_auth->is_admin() && !($this->ion_auth->user()->row()->id == $id))) {
             redirect('auth', 'refresh');
         }
 
@@ -441,7 +441,7 @@ class Auth extends MY_Controller
     {
         $this->data['title'] = $this->lang->line('create_group_title');
 
-        if (!$this->ion_auth->logged_in() || !$this->ion_auth->is_admin()) {
+        if (!is_logged_in() || !$this->ion_auth->is_admin()) {
             redirect('auth', 'refresh');
         }
 
@@ -489,7 +489,7 @@ class Auth extends MY_Controller
 
         $this->data['title'] = $this->lang->line('edit_group_title');
 
-        if (!$this->ion_auth->logged_in() || !$this->ion_auth->is_admin()) {
+        if (!is_logged_in() || !$this->ion_auth->is_admin()) {
             redirect('auth', 'refresh');
         }
 
@@ -560,12 +560,11 @@ class Auth extends MY_Controller
 
     public function facebook_login()
     {
-        //var_dump($this->session->all_userdata()); $this->session->sess_destroy(); die();
         $this->load->library('facebook');
         $this->load->library('ion_auth_ext');
-        //$this->load->model('account_settings_m');
         $fb_user = $this->facebook->get_user();
         if(!$fb_user){
+            $this->session->sess_destroy();
             $login_url = $this->facebook->get_login_url();
             redirect($login_url);
         }
@@ -633,7 +632,7 @@ class Auth extends MY_Controller
 
     private function _login_redirect()
     {
-        if ($this->ion_auth->logged_in()) {
+        if (is_logged_in()) {
             if ($this->ion_auth->in_group("admin")) {
                 if($this->input->is_ajax_request()){
                     ob_clean();

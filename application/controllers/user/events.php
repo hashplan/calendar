@@ -92,7 +92,7 @@ class Events extends AuthController {
 			'current_date' => $current_date,
 			'user_id' => $options['user_id']?$options['user_id']:$this->ion_auth->user()->row()->id
 		);
-		$this->load->view($this->get_user_identifier() . '/events/events_'.$options['events_type'], $events_data);
+		$this->load->view('user/events/events_'.$options['events_type'], $events_data);
 	}
 
 	public function choose_metro() {
@@ -103,7 +103,7 @@ class Events extends AuthController {
 	protected function _render_events_list_page($events_type, $page_title, $user_id = NULL, $default_location = NULL) {
 		$this->load->model('categories_m');
 		$this->data['page_class'] = 'user-events';
-		$this->data['view'] = $this->get_user_identifier().'/events/'.$this->typesView[$events_type];
+		$this->data['view'] = 'user/events/'.$this->typesView[$events_type];
 		$this->data['user_id'] = $this->users_m->user_id_is_correct($user_id) ? $user_id : $this->user->id;
 
 		$events_search_params = array('events_type' => $events_type, 'user_id' => $user_id);

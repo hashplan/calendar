@@ -16,7 +16,7 @@
                 <li><a href="<?=site_url('about'); ?>">About</a></li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
-                <? if ($this->ion_auth->logged_in()): ?>
+                <? if (is_logged_in()): ?>
                     <li class="dropdown nav navbar-nav">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span
                                 class="glyphicon glyphicon-user">&nbsp </span><?=(string)isset($user->first_name) ? $user->first_name : 'Member'; ?>
