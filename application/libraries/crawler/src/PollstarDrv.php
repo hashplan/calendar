@@ -18,7 +18,7 @@ class PollstarDrv extends CrawlerDrv
 
         foreach ($result as $pollstar) {
             $this->process($pollstar->PollstarID);
-            die(); //sleep(30);
+            sleep(30);
         }
     }
 
@@ -80,17 +80,12 @@ class PollstarDrv extends CrawlerDrv
             $datetime = trim($date) . " " . $time;
 
             if ($isFirst == true) {
-                //$this->CI->db->query("insert into crawlstatus(crawler, city) values('pollstar', '" . $cityId . "');");
+                $this->CI->db->query("insert into crawlstatus(crawler, city) values('pollstar', '" . $cityId . "');");
                 $isFirst = false;
             }
 
             $sql = "call calander.InsertPollStarEvent('" . addslashes(trim($event)) . "','" . $datetime . "','" . addslashes(trim($venue)) . "','" . trim($city) . "','" . trim($state) . "'," . $cityId . ");";
-            echo "<pre>";
-            var_dump($sql);
-            echo "<br/>";
-            echo "</pre>";
-
-            //$this->CI->db->query($sql);
+            $this->CI->db->query($sql);
 
 
         }

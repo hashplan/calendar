@@ -8,7 +8,12 @@ class Crawler extends AdminController {
     }
 
     public function index(){
-        $this->event_crawler->start_parse('pollstar');
+        $this->data['view'] = 'admin/crawler/index';
+        $this->_render_page();
     }
 
+    public function run(){
+        $this->event_crawler->start_parse();
+        redirect('admin/crawler');
+    }
 }
