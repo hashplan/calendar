@@ -19,7 +19,7 @@ class StubhubDrv extends CrawlerDrv
             sleep(30);
         }
 
-       $this->CI->db
+        $this->CI->db
             ->join('cities AS c', 'v.city = c.city AND v.stateId = c.stateId')
             ->update('venues AS v', array('v.cityid' => 'c.id'), array('v.cityId' => 0));
     }
@@ -30,7 +30,7 @@ class StubhubDrv extends CrawlerDrv
         $html = new simple_html_dom();
         $html->Load($dom);
         $resultRed = $html->find('span[@class="resultRed"]', 0);
-        if($resultRed){
+        if ($resultRed) {
             $totalCount = $resultRed->innertext;
             if ($totalCount > 0) {
                 for ($i = 0; $i <= $totalCount; $i = $i + 100) {
@@ -96,7 +96,7 @@ class StubhubDrv extends CrawlerDrv
                             $isFirst = false;
                         }
 
-                        $sql = "call calendar.InsertEvent('" . addslashes(trim($eventName)) . "','" . $datetime . "','" . addslashes(trim($venueName)) . "','" . trim($city) . "','" . trim($state) . "','" . addslashes(trim($link)) . "');";
+                        $sql = "call " . $this->CI->db->database . ".InsertEvent('" . addslashes(trim($eventName)) . "','" . $datetime . "','" . addslashes(trim($venueName)) . "','" . trim($city) . "','" . trim($state) . "','" . addslashes(trim($link)) . "');";
                         $this->CI->db->query($sql);
                     };
                 }

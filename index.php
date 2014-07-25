@@ -1,5 +1,10 @@
 <?php
 @ini_set('zlib.output_compression', 0);
+
+if (!isset($_SERVER['REMOTE_ADDR'])) {
+    $_SERVER['REMOTE_ADDR'] = '';
+}
+
 /*
  *---------------------------------------------------------------
  * APPLICATION ENVIRONMENT

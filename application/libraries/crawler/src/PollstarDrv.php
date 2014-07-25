@@ -84,7 +84,8 @@ class PollstarDrv extends CrawlerDrv
                 $isFirst = false;
             }
 
-            $sql = "call calander.InsertPollStarEvent('" . addslashes(trim($event)) . "','" . $datetime . "','" . addslashes(trim($venue)) . "','" . trim($city) . "','" . trim($state) . "'," . $cityId . ");";
+            $sql = "call " . $this->CI->db->database . ".InsertPollStarEvent('" . addslashes(trim($event)) . "','" . $datetime . "','" . addslashes(trim($venue)) . "','" . trim($city) . "','" . trim($state) . "'," . $cityId . ");";
+            echo $sql . "</br>";
             $this->CI->db->query($sql);
 
 
