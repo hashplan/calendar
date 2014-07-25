@@ -5,6 +5,25 @@ if (!isset($_SERVER['REMOTE_ADDR'])) {
     $_SERVER['REMOTE_ADDR'] = '';
 }
 
+//trick for cronjob
+/*if (!isset($_SERVER['HTTP_HOST']) && defined('PHP_SAPI') && (PHP_SAPI == 'cli') && isset($argv)) {
+    $host = $argv[(count($argv)-1)];
+    $host = str_replace('www.','',$host);
+    if (stristr($host,'hashplan.dev')) {
+        $_SERVER['HTTP_HOST'] = 'hashplan.dev';
+    }
+    elseif (stristr($host,'hashplan.dev.my')) {
+        $_SERVER['HTTP_HOST'] = 'hashplan.dev.my';
+    }
+    elseif (stristr($host,'hashplans.com')) {
+        $_SERVER['HTTP_HOST'] = 'hashplans.com';
+    }
+    else{
+        $_SERVER['HTTP_HOST'] = 'hashplan.dev';
+    }
+}*/
+
+
 /*
  *---------------------------------------------------------------
  * APPLICATION ENVIRONMENT
