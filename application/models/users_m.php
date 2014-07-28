@@ -800,8 +800,7 @@ class Users_m extends MY_Model
         }
 
         if (isset($options['name']) && !empty($options['name'])) {
-            $this->db->like('u.first_name', $options['name']);
-            $this->db->or_like('u.last_name', $options['name']);
+            $this->db->where('(u.first_name LIKE "%' . $this->db->escape_like_str($options['name']) . '%" OR u.last_name LIKE "%' . $this->db->escape_like_str($options['name']) . '%")');
         }
 
         $this->db
