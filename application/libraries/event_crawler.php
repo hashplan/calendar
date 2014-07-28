@@ -7,7 +7,7 @@ class Event_crawler
 
     private $drivers = array(
         'stubhub' => '_drv_stubhub',
-        'pollstar' => '_drv_pollstar'
+        //'pollstar' => '_drv_pollstar'
     );
     private $CI = null;
 
