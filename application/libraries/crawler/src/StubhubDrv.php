@@ -45,62 +45,59 @@ class StubhubDrv extends CrawlerDrv
         $isFirst = true;
         $dom = $this->curl($url);
         $html = new simple_html_dom();
-        $html->Load($dom);
+        $r = $html->load($dom);
         // get count
-        $ret['Count'] = $html->find('span[@class="resultRed"]', 0)->innertext;
+        $ret['count'] = $html->find('span.resultRed', 0)->innertext;
 
         // get overview
-        foreach ($html->find('//tr') as $div) {
+        foreach ($html->find('tr') as $tr) {
 
-            $insideDiv = $div->find('//th', 0);
-            if (sizeof($insideDiv) == 0) {
-                $link = $div->find('/a', 0)->href;
-
-                for ($i = 0; $i <= 2; $i++) {
-                    if ($i == 0) {
-                        $eventName = $div->find('/a', $i)->title;
-                    };
-                    if ($i == 1) {
-                        $day = $div->find('span[@id="ticketEventDate"]', 0)->innertext;
-                        $month = $div->find('span[@id="ticketEventMonth"]', 0)->innertext;
-                        if (!is_null($div->find('span[@id="ticketEventYear"]', 0))) {
-                            $year = $div->find('span[@id="ticketEventYear"]', 0)->innertext;
-
-                        } else {
-                            $year = date('Y');
-
-                        }
-
-                        $day = trim($day);
-                    };
-                    if ($i == 2) {
-                        $new = $div->find('//td', $i);
-                        $var = $new->innertext;
-                        foreach ($new->find('//a') as $a) {
-                            $venueName = $a->innertext;
-
-                        }
-                        $pieces = explode("<br/>", $var);
-
-                        $citystate = explode(",", $pieces[2]); // piece2
-                        $city = $citystate[0];
-                        $state = $citystate[1];
-                        $time = $pieces[3];
-                        $time = trim($time);
-
-                        $date = date_parse($year . "-" . date('m', strtotime($month)) . "-" . $day . " " . $time);
-                        $datetime = $date["year"] . "-" . $date["month"] . "-" . $date["day"] . " " . $date["hour"] . ":" . $date["minute"];
-
-                        if ($isFirst == true) {
-                            $this->CI->db->query("insert into crawlstatus(crawler, city) values('stubhub', '" . trim($city) . "');");
-                            $isFirst = false;
-                        }
-
-                        $sql = "call " . $this->CI->db->database . ".InsertEvent('" . addslashes(trim($eventName)) . "','" . $datetime . "','" . addslashes(trim($venueName)) . "','" . trim($city) . "','" . trim($state) . "','" . addslashes(trim($link)) . "');";
-                        $this->CI->db->query($sql);
-                    };
-                }
+            if (sizeof($tr->find('th', 0))) {
+                continue;
             }
+
+            $title = $tr->find('td.eventName a', 0);
+            $eventName = trim($title->title);
+            if(!$eventName){
+                continue;
+            }
+            $eventLink = $title->href;
+
+            $day = trim($tr->find('td.eventDate span#ticketEventDate', 0)->innertext);
+            $month = trim($tr->find('td.eventDate span#ticketEventMonth', 0)->innertext);
+            if (!is_null($tr->find('td.eventDate span#tticketEventYear', 0))) {
+                $year = $tr->find('td.eventDate span#tticketEventYear', 0)->innertext;
+
+            } else {
+                $year = date('Y');
+            }
+            $year = trim($year);
+            if(!$day || !$month  || !$year){
+                continue;
+            }
+
+            $venueName = $tr->find('td.eventLocation a', 0)->innertext;
+            $pieces = preg_split('/<br[^>]*>/i', $tr->find('td.eventLocation', 0)->innertext);
+
+            $citystate = explode(",", $pieces[2]);
+
+            $city = trim($citystate[0]);
+            $state = trim($citystate[1]);
+            $time = trim($pieces[3]);
+
+            $date = date_parse($year . "-" . date('m', strtotime($month)) . "-" . $day . " " . $time);
+            $datetime = $date["year"] . "-" . sprintf("%02d", $date["month"]) . "-" . sprintf("%02d", $date["day"]) . " " . sprintf("%02d", $date["hour"]) . ":" . sprintf("%02d", $date["minute"]);
+
+            if ($isFirst == true) {
+                $this->CI->db->query("insert into crawlstatus(crawler, city) values('stubhub', '" . $city . "');");
+                $isFirst = false;
+            }
+
+            $sql = "call " . $this->CI->db->database . ".InsertEvent('" . addslashes($eventName) . "','" . $datetime . "','" .
+                addslashes($venueName) . "','" . $city .
+                "','" . $state . "','" . addslashes($eventLink) . "');";
+            //echo $sql. "<br/>";
+            $this->CI->db->query($sql);
         }
         $html->clear();
         unset($html);
