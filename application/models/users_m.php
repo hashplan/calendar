@@ -150,7 +150,7 @@ class Users_m extends MY_Model
             return array();
         }
 
-// array of "?" joined into smth like "?, ?, ?..."
+        // array of "?" joined into smth like "?, ?, ?..."
         $placeholders_user_ids = join(',', array_fill(0, count($user_ids), '?'));
         $placeholders_friends_to_search_ids = join(',', array_fill(0, count($friends_to_search_ids), '?'));
 
@@ -323,7 +323,8 @@ class Users_m extends MY_Model
                 'type' => 'event_invite'));
     }
 
-    public function accept_event_invite($event_id){
+    public function accept_event_invite($event_id)
+    {
         return $this->db->update('user_connections',
             array('type' => 'event_invite_accept'),
             array('eventId' => $event_id,
@@ -331,8 +332,9 @@ class Users_m extends MY_Model
                 'type' => 'event_invite'));
     }
 
-    public function get_invites_by_event_id($eventId, $userId = null){
-        if(is_null($userId)){
+    public function get_invites_by_event_id($eventId, $userId = null)
+    {
+        if (is_null($userId)) {
             $userId = $this->ion_auth->user()->row()->id;
         }
         $where = array(
@@ -348,7 +350,7 @@ class Users_m extends MY_Model
 
     public function set_connection_between_users($connection_user_id, $user_id = NULL, $type_to_search = NULL, $type_to_set = NULL, $event_id = NULL)
     {
-        if (!$this->user_id_is_correct($connection_user_id)&&!$event_id) {
+        if (!$this->user_id_is_correct($connection_user_id) && !$event_id) {
             return;
         }
 
@@ -365,8 +367,7 @@ class Users_m extends MY_Model
             $result = $this->db
                 ->where('id', $connection->id)
                 ->update('user_connections', array('type' => $type_to_set));
-        }
-        else {
+        } else {
             $values = array(
                 'userId' => $user_id,
                 'connectionUserId' => $connection_user_id,
@@ -566,21 +567,24 @@ class Users_m extends MY_Model
             ->result();
 
         $events = array();
-        foreach ((array)$events_raw as $event) {
-            $event->user_name = $this->generate_full_name($event);
-            if (!empty($options['name']) && stripos($event->user_name, $options['name']) == FALSE) {
-                continue;
+        if (!empty($events_raw)) {
+            foreach ($events_raw as $event) {
+                $event->user_name = $this->generate_full_name($event);
+                if (!empty($options['name']) && stripos($event->user_name, $options['name']) == FALSE) {
+                    continue;
+                }
+                $events[$event->event_id]['users'][$event->uid] = array(
+                    'uid' => $event->uid,
+                    'user_name' => $event->user_name,
+                    'avatar_path' => $event->avatar_path
+                );
+                $events[$event->event_id]['event_id'] = $event->event_id;
+                $events[$event->event_id]['event_name'] = $event->event_name;
+                $events[$event->event_id]['vanue_name'] = $event->venue_name;
+                $events[$event->event_id]['datetime'] = $event->datetime;
             }
-            $events[$event->event_id]['users'][$event->uid] = array(
-                'uid' => $event->uid,
-                'user_name' => $event->user_name,
-                'avatar_path' => $event->avatar_path
-            );
-            $events[$event->event_id]['event_id'] = $event->event_id;
-            $events[$event->event_id]['event_name'] = $event->event_name;
-            $events[$event->event_id]['vanue_name'] = $event->venue_name;
-            $events[$event->event_id]['datetime'] = $event->datetime;
         }
+
         return $events;
     }
 
@@ -849,4 +853,83 @@ class Users_m extends MY_Model
         return $result;
     }
 
+    public function get_common_friends_with($options = array(), $get_all = false)
+    {
+        $result = array();
+
+        if (isset($options['user_id'])) {
+
+            $current_user_id = $this->ion_auth->user()->row()->id;
+            $params = array(
+                $options['user_id'], $options['user_id'], $options['user_id'], $current_user_id, $current_user_id,
+                $current_user_id, $current_user_id, $current_user_id, $options['user_id'], $options['user_id']
+            );
+
+            if (empty($options['limit'])) {
+                $options['limit'] = 5;
+            }
+
+            if (empty($options['offset'])) {
+                $options['offset'] = 0;
+            }
+
+            $sql = "
+                SELECT u.id as id, u.first_name as first_name, u.last_name as last_name, u.avatar_path as avatar_path
+                FROM (SELECT CASE WHEN uc.userId = ? THEN uc.connectionUserId ELSE uc.userId END as friendId
+                FROM user_connections uc
+                WHERE uc.type = 'friend' AND (uc.userId=? OR uc.connectionUserId=?) AND uc.userId != ? AND uc.connectionUserId != ?) a
+                JOIN (SELECT CASE WHEN uc.userId = ? THEN uc.connectionUserId ELSE uc.userId END as friendId
+                      FROM user_connections uc
+                      WHERE uc.type = 'friend' AND (uc.userId=? OR uc.connectionUserId=?) AND uc.userId != ? AND uc.connectionUserId != ?) b
+                ON a.friendId = b.friendId
+                INNER JOIN users u ON u.id = a.friendId
+            ";
+
+            if (!empty($options['location_ids']) && $options['location_ids'][0] !== 'all' && empty($options['location_name'])) {
+                foreach ($options['location_ids'] as &$location_id) {
+                    $location_id = $this->db->escape($location_id);
+                }
+                $sql .= '
+			    INNER JOIN user_settings us ON u.id = us.userId AND us.metroId IN (' . join(', ', $options['location_ids']) . ')
+			';
+            }
+
+            if (!empty($options['location_name'])) {
+                $sql .= '
+                INNER JOIN user_settings us ON u.id = us.userId
+                INNER JOIN metroareas ma ON us.metroId = ma.id AND ma.city LIKE "%' . $this->db->escape_like_str($options['location_name']) . '%"
+			';
+            }
+            if (isset($options['name']) && !empty($options['name'])) {
+                $sql .= '
+            AND (u.first_name LIKE "%' . $this->db->escape_like_str($options['name']) . '%" OR u.last_name LIKE "%' . $this->db->escape_like_str($options['name']) . '%")';
+            }
+
+            $sql .= '
+                ORDER BY u.first_name, u.last_name
+            ';
+            if (!$get_all) {
+                $sql .= '
+                    LIMIT ?, ?
+                ';
+                $params[] = isset($options['offset']) ? $options['offset'] : 0;
+                $params[] = isset($options['limit']) ? $options['limit'] : 0;
+
+            }
+
+            $friends_raw = $this->db->query($sql, $params)->result();
+            foreach ($friends_raw as $friend) {
+                $friend->name = $this->generate_full_name($friend);
+                if (!empty($options['name'])) {
+                    if (stripos($friend->name, $options['name']) !== FALSE) {
+                        $result[] = $friend;
+                    }
+                    continue;
+                }
+                $result[] = $friend;
+            }
+        }
+
+        return $result;
+    }
 }

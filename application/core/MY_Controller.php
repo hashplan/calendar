@@ -141,16 +141,6 @@ class AuthController extends MY_Controller
         $this->carabiner->group('page_css', array('css' => $css));
     }
 
-    public function get_user_identifier()
-    {
-        if ($this->ion_auth->in_group("members")) {
-            $identifier = 'user';
-        } elseif ($this->ion_auth->in_group("admin")) {
-            $identifier = 'admin';
-        }
-        return $identifier;
-    }
-
     protected function update_friend_list($force = false)
     {
         $friend_list_last_update = $this->session->userdata('friend_list_last_update');

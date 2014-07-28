@@ -50,7 +50,7 @@ $route['contact-us'] = "page/contact_us";
 
 
 $route['user/events/(:num)'] = 'user/events/friends/$1';
-$route['user/friends/(:num)'] = 'user/friends/friend/$1';
+$route['user/friends/(:num)'] = 'user/friends/common_friends/$1';
 
 $route['user'] = 'user/events';
 $route['user/settings'] = 'user/account_settings/index';

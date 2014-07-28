@@ -20,14 +20,16 @@
             </div>
             <hr>
             <div class="row">
-                <? foreach ((array)$event['users'] as $user): ?>
-                    <div class="friend-pic col-md-2">
-                        <? $avatar_path = $user['avatar_path'] ? site_url('/assets/img/users/' . $user['avatar_path']) : site_url('/assets/img/icons/no-image-100.png') ?>
-                        <a href="<?= site_url('user/events/' . $user['uid']) ?>">
-                            <img src="<?= $avatar_path ?>" title="<?= $user['user_name'] ?>"/>
-                        </a>
-                    </div>
-                <? endforeach ?>
+                <?if(!empty($event['users'])):?>
+                    <? foreach ($event['users'] as $user): ?>
+                        <div class="friend-pic col-md-2">
+                            <? $avatar_path = $user['avatar_path'] ? site_url('/assets/img/users/' . $user['avatar_path']) : site_url('/assets/img/icons/no-image-100.png') ?>
+                            <a href="<?= site_url('user/events/' . $user['uid']) ?>">
+                                <img src="<?= $avatar_path ?>" title="<?= $user['user_name'] ?>"/>
+                            </a>
+                        </div>
+                    <? endforeach ?>
+                <?endif?>
             </div>
         </div>
     </div>
