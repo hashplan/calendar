@@ -129,7 +129,13 @@ class AuthController extends MY_Controller
         $this->lang->load('auth');
 
         if (!$this->ion_auth->in_group("members") && !$this->ion_auth->in_group("admin")) {
+            $this->session->set_userdata('redirect_to', $this->router->uri->uri_string());
             redirect('auth/login', 'refresh');
+        }
+        $redirect_to = $this->session->userdata('redirect_to');
+        if($redirect_to){
+            $this->session->unset_userdata('redirect_to');
+            redirect($redirect_to, 'refresh');
         }
 
         $this->user = $this->ion_auth->user()->row();
