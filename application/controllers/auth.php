@@ -30,24 +30,17 @@ class Auth extends MY_Controller
         }
 
         //validate form input
-        $this->form_validation->set_rules('identity', 'Identity', 'required');
-        $this->form_validation->set_rules('password', 'Password', 'required|callback_check_password');
+        $this->form_validation->set_rules('identity', 'Identity', 'required|callback_check_password');
+        $this->form_validation->set_rules('password', 'Password', 'required');
 
         if ($this->form_validation->run() == true) {
-            $remember = (bool)$this->input->post('remember');
-            if ($this->ion_auth->login($this->input->post('identity'), $this->input->post('password'), $remember))
-            {
-                $this->session->set_flashdata('flash_message', $this->ion_auth->messages());
-                $this->session->set_flashdata( 'flash_message_type', 'success');
-                $this->_login_redirect();
-            }
-            else{
-                $this->session->set_flashdata('message', $this->ion_auth->errors());
-                $this->data['errors'] = $this->ion_auth->errors();
-            }
+            $this->session->set_flashdata('flash_message', $this->ion_auth->messages());
+            $this->session->set_flashdata( 'flash_message_type', 'success');
+            $this->_login_redirect();
 
         }
         else{
+            $this->session->set_flashdata('message', $this->ion_auth->errors());
             $this->data['errors'] = validation_errors();
         }
         $this->_render_page($this->layout, $this->data);
@@ -304,8 +297,16 @@ class Auth extends MY_Controller
                 'last_name' => $this->input->post('last_name')
             );
             if ($this->ion_auth->register($username, $password, $email, $additional_data)) {
-                $this->session->set_flashdata('flash_message', $this->ion_auth->messages());
-                redirect("auth", 'refresh');
+                $this->session->set_flashdata('flash_message', 'Registration Successful');
+                if($this->input->is_ajax_request()){
+                    ob_clean();
+                    header('Content-type: text/json');
+                    echo json_encode(array('redirect' => 'thankyou_page'));
+                    die();
+                }
+                else{
+                    redirect("thankyou_page");
+                }
             }
             else{
                 $this->data['errors'] = $this->ion_auth->errors();
@@ -315,6 +316,12 @@ class Auth extends MY_Controller
         else {
             $this->data['errors'] = validation_errors();
         }
+        $this->_render_page($this->layout, $this->data);
+    }
+
+    public function registration_successful(){
+        $this->data['title'] = "Registration Successful";
+        $this->data['view'] = 'auth/thankyou_page';
         $this->_render_page($this->layout, $this->data);
     }
 

@@ -68,6 +68,7 @@ $route['login'] = 'auth/login';
 $route['logout'] = 'auth/logout';
 $route['signup'] = "auth/create_user";
 $route['activate/(:num)/(:any)'] = "auth/activate/$1/$2";
+$route['thankyou_page'] = "auth/registration_successful";
 
 
 /* End of file routes.php */

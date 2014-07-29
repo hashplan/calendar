@@ -108,7 +108,6 @@
                     else{
                         location.href = base_url;
                     }
-                    return;
                 }
                 $('.generic-form-errors.form_error').html('<div class="alert alert-danger fade in" role="alert"><button type="button" class="close">×</button>'+response.errors+'</div>')
 
@@ -140,8 +139,12 @@
                 if (typeof response.errors === 'undefined') {
                     $('.generic-form-errors.form_error').hide();
                     $('#signup_form').modal('hide');
-                    location.href = base_url;
-                    return;
+                    if(response.redirect){
+                        location.href = base_url + response.redirect;
+                    }
+                    else{
+                        location.href = base_url;
+                    }
                 }
                 $('.generic-form-errors.form_error').html('<div class="alert alert-danger fade in" role="alert"><button type="button" class="close">×</button>'+response.errors+'</div>')
 
