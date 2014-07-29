@@ -394,7 +394,7 @@ class Friends extends AuthController
         if ($this->users_m->set_connection_between_users($friend_id, NULL, 'friend_request', 'friend')) {
             $this->update_friend_list(true);
             $this->load->library('hashplans_mailer');
-            $this->hashplans_mailer->send_friend_confirmed_email($this->ion_auth->user($friend_id)->row(), $this->user);
+            $this->hashplans_mailer->send_friend_confirmed_email($this->user, $this->ion_auth->user($friend_id)->row());
         }
         redirect('user/friends/invites');
     }
