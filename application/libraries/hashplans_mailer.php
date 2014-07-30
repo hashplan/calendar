@@ -77,8 +77,7 @@ class Hashplans_mailer{
         $this->data['view'] = 'email/contact_us.tpl.php';
         $this->data['subject'] = 'Contact Us';
         $this->data['to'] = $this->CI->config->item('contact_form_email');
-        $this->data['from_email'] = $data['user_email'];
-        $this->data['from_name'] = $data['user_name'];
+        $this->data['from_name'] = 'Hashplans Contact Form';
         $this->data['data'] = $data;
         $this->_send();
     }
