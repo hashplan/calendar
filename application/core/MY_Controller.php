@@ -85,7 +85,8 @@ class MY_Controller extends CI_Controller
             array('bootstrap.min.js'),
             array('bootstrap-datepicker.js'),
             array('bootstrap-formhelpers.min.js'),
-            array('global.js')
+            array('global.js'),
+            array('back_to_top.js')
         );
         $this->carabiner->group('bootstrap', array('css' => $css, 'js' => $js));
 
