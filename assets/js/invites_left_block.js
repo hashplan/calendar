@@ -1,3 +1,5 @@
-$(function() {
-	$('.sent-invites-link').tooltip();
-});
+(function ($) {
+    $(function () {
+        $('.sent-invites-link').tooltip();
+    });
+})(jQuery);

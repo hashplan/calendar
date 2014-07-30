@@ -48,110 +48,111 @@
         return i;
     }
 
-    if ($('#homepage_timer')) {
-        startTime();
-    }
+    $(function () {
+        if ($('#homepage_timer')) {
+            startTime();
+        }
 
-    //contact form
-    $('#contact_modal').on('hidden.bs.modal', function(){
-        $('.generic-form-errors.form_error', this).empty();
-    });
-    $('body').on('click','#contact_modal .alert .close', function () {
-        $(this).alert('close');
-    });
-    $('body').on('submit', '#contact_form', function () {
-        var form = $('#contact_form');
-        var data = {};
-        data.user_name = $('#contact_form [name="user_name"]').val();
-        data.user_email = $('#contact_form [name="user_email"]').val();
-        data.contact_description = $('#contact_form [name="contact_description"]').val();
-
-        $.ajax(base_url + 'contact-us', {
-            type: 'POST',
-            data: data,
-            success: function (response) {
-                if (typeof response.errors === 'undefined') {
-                    $('.contact_us-form-errors.form_error').hide();
-                    $('#contact_modal').modal('hide');
-                    return;
-                }
-                $('.contact_us-form-errors.form_error').html('<div class="alert alert-danger fade in" role="alert"><button type="button" class="close">×</button>'+response.errors+'</div>');
-            }
+        //contact form
+        $('#contact_modal').on('hidden.bs.modal', function () {
+            $('.generic-form-errors.form_error', this).empty();
         });
-        return false;
-    });
-
-    //login form
-    $('#signin_modal').on('hidden.bs.modal', function(){
-        $('.generic-form-errors.form_error', this).empty();
-    });
-    $('body').on('click','#signin_modal .alert .close', function () {
-        $(this).alert('close');
-    });
-    $('body').on('submit','#signin_form', function () {
-        var form = $('#signin_form');
-        var data = {};
-        data.identity = $('#signin_form #identity').val();
-        data.password = $('#signin_form #password').val();
-        data.remember = $('#signin_form #remember:checked').length?1:0;
-
-        $.ajax(base_url + 'login', {
-            type: 'POST',
-            data: data,
-            success: function (response) {
-                if (typeof response.errors === 'undefined') {
-                    $('.generic-form-errors.form_error').hide();
-                    $('#signin_modal').modal('hide');
-                    if(response.redirect){
-                        location.href = base_url + response.redirect;
-                    }
-                    else{
-                        location.href = base_url;
-                    }
-                }
-                $('.generic-form-errors.form_error').html('<div class="alert alert-danger fade in" role="alert"><button type="button" class="close">×</button>'+response.errors+'</div>')
-
-            }
+        $('body').on('click', '#contact_modal .alert .close', function () {
+            $(this).alert('close');
         });
-        return false;
-    });
+        $('body').on('submit', '#contact_form', function () {
+            var form = $('#contact_form');
+            var data = {};
+            data.user_name = $('#contact_form [name="user_name"]').val();
+            data.user_email = $('#contact_form [name="user_email"]').val();
+            data.contact_description = $('#contact_form [name="contact_description"]').val();
 
-    //signup form
-    $('#signup_modal').on('hidden.bs.modal', function(){
-        $('.generic-form-errors.form_error', this).empty();
-    });
-    $('body').on('click','#signup_modal .alert .close', function () {
-        $(this).alert('close');
-    });
-    $('body').on('submit','#signup_form', function () {
-        var form = $('#signup_form');
-        var data = {};
-        data.first_name = $('#signup_form #first_name').val();
-        data.last_name = $('#signup_form #last_name').val();
-        data.email = $('#signup_form #email').val();
-        data.password = $('#signup_form #password').val();
-        data.password_confirm = $('#signup_form #password_confirm').val();
-
-        $.ajax(base_url + 'signup', {
-            type: 'POST',
-            data: data,
-            success: function (response) {
-                if (typeof response.errors === 'undefined') {
-                    $('.generic-form-errors.form_error').hide();
-                    $('#signup_form').modal('hide');
-                    if(response.redirect){
-                        location.href = base_url + response.redirect;
+            $.ajax(base_url + 'contact-us', {
+                type: 'POST',
+                data: data,
+                success: function (response) {
+                    if (typeof response.errors === 'undefined') {
+                        $('.contact_us-form-errors.form_error').hide();
+                        $('#contact_modal').modal('hide');
+                        return;
                     }
-                    else{
-                        location.href = base_url;
-                    }
+                    $('.contact_us-form-errors.form_error').html('<div class="alert alert-danger fade in" role="alert"><button type="button" class="close">×</button>' + response.errors + '</div>');
                 }
-                $('.generic-form-errors.form_error').html('<div class="alert alert-danger fade in" role="alert"><button type="button" class="close">×</button>'+response.errors+'</div>')
-
-            }
+            });
+            return false;
         });
-        return false;
-    });
 
+        //login form
+        $('#signin_modal').on('hidden.bs.modal', function () {
+            $('.generic-form-errors.form_error', this).empty();
+        });
+        $('body').on('click', '#signin_modal .alert .close', function () {
+            $(this).alert('close');
+        });
+        $('body').on('submit', '#signin_form', function () {
+            var form = $('#signin_form');
+            var data = {};
+            data.identity = $('#signin_form #identity').val();
+            data.password = $('#signin_form #password').val();
+            data.remember = $('#signin_form #remember:checked').length ? 1 : 0;
+
+            $.ajax(base_url + 'login', {
+                type: 'POST',
+                data: data,
+                success: function (response) {
+                    if (typeof response.errors === 'undefined') {
+                        $('.generic-form-errors.form_error').hide();
+                        $('#signin_modal').modal('hide');
+                        if (response.redirect) {
+                            location.href = base_url + response.redirect;
+                        }
+                        else {
+                            location.href = base_url;
+                        }
+                    }
+                    $('.generic-form-errors.form_error').html('<div class="alert alert-danger fade in" role="alert"><button type="button" class="close">×</button>' + response.errors + '</div>')
+
+                }
+            });
+            return false;
+        });
+
+        //signup form
+        $('#signup_modal').on('hidden.bs.modal', function () {
+            $('.generic-form-errors.form_error', this).empty();
+        });
+        $('body').on('click', '#signup_modal .alert .close', function () {
+            $(this).alert('close');
+        });
+        $('body').on('submit', '#signup_form', function () {
+            var form = $('#signup_form');
+            var data = {};
+            data.first_name = $('#signup_form #first_name').val();
+            data.last_name = $('#signup_form #last_name').val();
+            data.email = $('#signup_form #email').val();
+            data.password = $('#signup_form #password').val();
+            data.password_confirm = $('#signup_form #password_confirm').val();
+
+            $.ajax(base_url + 'signup', {
+                type: 'POST',
+                data: data,
+                success: function (response) {
+                    if (typeof response.errors === 'undefined') {
+                        $('.generic-form-errors.form_error').hide();
+                        $('#signup_form').modal('hide');
+                        if (response.redirect) {
+                            location.href = base_url + response.redirect;
+                        }
+                        else {
+                            location.href = base_url;
+                        }
+                    }
+                    $('.generic-form-errors.form_error').html('<div class="alert alert-danger fade in" role="alert"><button type="button" class="close">×</button>' + response.errors + '</div>')
+
+                }
+            });
+            return false;
+        });
+    });
 
 })(jQuery);
