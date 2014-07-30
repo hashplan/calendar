@@ -10,14 +10,13 @@ class Hashplans_mailer{
         'data' => array()
     );
     protected $CI;
-    protected $admin_email;
 
     public function __construct(){
         $this->CI = &get_instance();
         $this->CI->load->library('email');
         $this->CI->config->load('email');
-        $this->admin_email = $this->CI->config->item('admin_email');
         $this->CI->email->set_newline("\r\n");
+        $this->data['from_email'] = $this->CI->config->item('from_email');
     }
 
     //send to invited
@@ -77,7 +76,7 @@ class Hashplans_mailer{
     public function send_contact_us_form_email($data){
         $this->data['view'] = 'email/contact_us.tpl.php';
         $this->data['subject'] = 'Contact Us';
-        $this->data['to'] = $this->admin_email;
+        $this->data['to'] = $this->CI->config->item('contact_form_email');
         $this->data['from_email'] = $data['user_email'];
         $this->data['from_name'] = $data['user_name'];
         $this->data['data'] = $data;
@@ -96,7 +95,8 @@ class Hashplans_mailer{
         $this->CI->email->clear();
         $this->_render();
         if(!$this->CI->email->send()){
-            error_log('error', $this->email->print_debugger());
+            print_r($this->CI->email->print_debugger());
+            error_log('error', $this->CI->email->print_debugger());
         }
     }
 
