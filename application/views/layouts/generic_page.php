@@ -6,6 +6,5 @@
         </div>
     </div>
 </div>
-<div class="modal" id="contact_modal" tabindex="-1" role="dialog" aria-labelledby="contact_modal" aria-hidden="true"></div>
 <div class="modal" id="signin_modal" tabindex="-1" role="dialog" aria-labelledby="signin_modal" aria-hidden="true"></div>
 <div class="modal" id="signup_modal" tabindex="-1" role="dialog" aria-labelledby="signup_modal" aria-hidden="true"></div>
