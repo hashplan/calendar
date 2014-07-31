@@ -5,7 +5,7 @@
                 <div class="friend-pic"><img src="<?= site_url('/assets/img/icons/no-image-100.png') ?>"/></div>
             </div>
             <div class="right-section">
-                <div class="friend-name"><?php echo anchor('user/events/' . $friend->id, $friend->name) ?></div>
+                <div class="friend-name"><?= $friend->name ?></div>
                 <? if ($page_type === 'invites_sent'): ?>
                     <? $label_class = $friend->connection_type_full === 'Friend Request' ? 'label-success' : 'label-primary' ?>
                     <div class="connection-type-full"><span

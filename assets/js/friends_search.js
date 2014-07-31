@@ -82,8 +82,8 @@ $(function () {
         else if ($('#friends-page-type').val() === 'events_invites') {
             url = base_url + 'user/friends/inviters_events_list';
         }
-        else if ($('#friends-page-type').val() === 'common_friends') {
-            url = base_url + 'user/friends/common_users_list/' + user_id;
+        else if ($('#friends-page-type').val() === 'mutual_friends') {
+            url = base_url + 'user/friends/mutual_users_list/' + user_id;
         }
 
         var locationIds = [];
@@ -137,8 +137,8 @@ $(function () {
                     url = base_url + 'user/friends/inviters_events_list';
                     return false;
                 }
-                else if ($('#friends-page-type').val() === 'common_friends') {
-                    url = base_url + 'user/friends/common_users_list/' + user_id;
+                else if ($('#friends-page-type').val() === 'mutualn_friends') {
+                    url = base_url + 'user/friends/mutual_users_list/' + user_id;
                 }
 
                 var data = {

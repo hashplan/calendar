@@ -4,12 +4,12 @@ class Friends extends AuthController
 {
     protected $typesView = array(
         'friends' => 'friends_list',
+        'add_friends' => 'users_list',
+        'mutual_friends' => 'users_friends_list',
         'friends_invites' => 'invites_list',
         'events_invites' => 'events_invites_list',
         'invites_sent' => 'invites_list',
-        'add_friends' => 'users_list',
         'user_friends' => 'users_friends_list',
-        'common_friends' => 'users_friends_list',
     );
 
     public function __construct()
@@ -32,6 +32,9 @@ class Friends extends AuthController
         $this->data['user'] = $this->user;
     }
 
+    /**
+     * My friends list
+     */
     public function index()
     {
         Menu::setActive('user/friends/friends_current');
@@ -45,38 +48,52 @@ class Friends extends AuthController
         $this->_render_users_page($users);
     }
 
-    /*public function friend($user_id = null)
+    //ajax
+    public function friends_list($user_id = null)
     {
-        if ($user_id == $this->ion_auth->user()->row()->id) {
-            redirect('user/friends');
+        $post = $this->input->post();
+        $options = array();
+        if (!empty($post['name']) && strlen(trim($post['name']))) $options['name'] = trim($post['name']);
+        $options['location_ids'] = empty($post['location_ids']) ? array('all') : $post['location_ids'];
+        if (!empty($post['location_name'])) {
+            $options['location_name'] = $post['location_name'];
         }
-        Menu::setActive('user/friends/friends_current');
-        $this->data['page_class'] = 'friends';
-        $this->data['data']['page_title'] = 'Current friends';
-        $this->data['data']['page_type'] = 'user_friends';
-        $this->load->model('location_m');
-        $users = $this->users_m->get_friends(array('user_id' => $user_id));
-        $locations = $this->location_m->get_left_block_metro_areas();
-        $this->data['data']['left_block'] = $this->load->view('user/friends/locations_left_block', array('locations' => $locations, 'user_id' => $user_id), TRUE);
-        $this->_render_users_page($users);
-    }*/
+        if (!empty($post['offset'])) {
+            $options['offset'] = (int)$post['offset'];
+        }
+        if (!is_null($user_id)) {
+            $options['user_id'] = $user_id;
+        }
 
-    public function common_friends($user_id = null)
-    {
-        if ($user_id == $this->ion_auth->user()->row()->id) {
-            redirect('user/friends');
+        if ($this->user->id == $user_id) {
+            $user_all_friends_ids = $this->friends;
+        } else {
+            $user_all_friends = $this->users_m->get_friends(array('user_id' => $user_id), true);
+            $user_all_friends_ids = array();
+            if (!empty($user_all_friends)) {
+                foreach ($user_all_friends as $friend) {
+                    $user_all_friends_ids[] = $friend->id;
+                }
+            }
         }
-        Menu::setActive('user/friends/friends_current');
-        $this->data['page_class'] = 'friends';
-        $this->data['data']['page_title'] = 'Common friends';
-        $this->data['data']['page_type'] = 'common_friends';
-        $this->load->model('location_m');
-        $users = $this->users_m->get_common_friends_with(array('user_id' => $user_id));
-        $locations = $this->location_m->get_left_block_metro_areas();
-        $this->data['data']['left_block'] = $this->load->view('user/friends/locations_left_block', array('locations' => $locations, 'user_id' => $user_id), TRUE);
-        $this->_render_users_page($users);
+
+        $user_friends_after_filter = $this->users_m->get_friends($options);
+        $user_friends_ids_after_filter = array();
+        foreach ($user_friends_after_filter as $friend) {
+            $user_friends_ids_after_filter[] = $friend->id;
+        }
+
+        $user_mutual_friends_count = $this->users_m->get_mutual_friends_count($user_friends_ids_after_filter, $user_all_friends_ids);
+        foreach ($user_friends_after_filter as $friend) {
+            $friend->mutual_friends_count = !empty($user_mutual_friends_count[$friend->id]) ? $user_mutual_friends_count[$friend->id] : 0;
+        }
+
+        $this->load->view('user/friends/friends_list', array('people' => $user_friends_after_filter, 'page_type' => 'friends', 'current_user_id' => $user_id, 'my_friends' => $this->friends));
     }
 
+    /**
+     * General list of people
+     */
     public function add()
     {
         $user_id = $this->ion_auth->user()->row()->id;
@@ -91,6 +108,7 @@ class Friends extends AuthController
         $this->_render_users_page($users);
     }
 
+    //ajax
     public function users_list()
     {
         $post = $this->input->post();
@@ -117,7 +135,33 @@ class Friends extends AuthController
         $this->load->view('user/friends/users_list', array('people' => $users, 'page_type' => 'add_friends'));
     }
 
-    public function common_users_list($user_id = null)
+    /**
+     * List of common friends
+     *
+     * @param null $user_id
+     */
+    public function mutual_friends($user_id = null)
+    {
+        if ($user_id == $this->ion_auth->user()->row()->id) {
+            redirect('user/friends');
+        }
+        $friend = $this->ion_auth->user($user_id)->row();
+        if(empty($friend)){
+            show_404();
+        }
+
+        Menu::setActive('user/friends/friends_current');
+        $this->data['page_class'] = 'friends';
+        $this->data['data']['page_title'] = sprintf('Common friends with %s', $this->users_m->generate_full_name($friend));
+        $this->data['data']['page_type'] = 'mutual_friends';
+        $this->load->model('location_m');
+        $users = $this->users_m->get_mutual_friends_with(array('user_id' => $user_id));
+        $locations = $this->location_m->get_left_block_metro_areas();
+        $this->data['data']['left_block'] = $this->load->view('user/friends/locations_left_block', array('locations' => $locations, 'user_id' => $user_id), TRUE);
+        $this->_render_users_page($users);
+    }
+    //ajax
+    public function mutual_users_list($user_id = null)
     {
         $post = $this->input->post();
         $options = array();
@@ -130,7 +174,7 @@ class Friends extends AuthController
             $options['location_name'] = $post['location_name'];
         }
         $options['user_id'] = $user_id;
-        $users = $this->users_m->get_common_friends_with($options);
+        $users = $this->users_m->get_mutual_friends_with($options);
         $users_ids = array();
         foreach ($users as $user) {
             $users_ids[] = $user->id;
@@ -143,6 +187,24 @@ class Friends extends AuthController
 
         $this->load->view('user/friends/users_list', array('people' => $users, 'page_type' => 'add_friends'));
     }
+
+    /*public function friend($user_id = null)
+    {
+        if ($user_id == $this->ion_auth->user()->row()->id) {
+            redirect('user/friends');
+        }
+        Menu::setActive('user/friends/friends_current');
+        $this->data['page_class'] = 'friends';
+        $this->data['data']['page_title'] = 'Current friends';
+        $this->data['data']['page_type'] = 'user_friends';
+        $this->load->model('location_m');
+        $users = $this->users_m->get_friends(array('user_id' => $user_id));
+        $locations = $this->location_m->get_left_block_metro_areas();
+        $this->data['data']['left_block'] = $this->load->view('user/friends/locations_left_block', array('locations' => $locations, 'user_id' => $user_id), TRUE);
+        $this->_render_users_page($users);
+    }*/
+
+
 
     public function invites($invite_type = NULL)
     {
@@ -205,48 +267,6 @@ class Friends extends AuthController
         $this->data['data']['page_type'] = 'invites_sent';
         $this->data['data']['left_block'] = $this->load->view('user/friends/invites_left_block', array('counts' => $counts), TRUE);
         $this->_render_users_page($users);
-    }
-
-    public function friends_list($user_id = null)
-    {
-        $post = $this->input->post();
-        $options = array();
-        if (!empty($post['name']) && strlen(trim($post['name']))) $options['name'] = trim($post['name']);
-        $options['location_ids'] = empty($post['location_ids']) ? array('all') : $post['location_ids'];
-        if (!empty($post['location_name'])) {
-            $options['location_name'] = $post['location_name'];
-        }
-        if (!empty($post['offset'])) {
-            $options['offset'] = (int)$post['offset'];
-        }
-        if (!is_null($user_id)) {
-            $options['user_id'] = $user_id;
-        }
-
-        if ($this->user->id == $user_id) {
-            $user_all_friends_ids = $this->friends;
-        } else {
-            $user_all_friends = $this->users_m->get_friends(array('user_id' => $user_id), true);
-            $user_all_friends_ids = array();
-            if (!empty($user_all_friends)) {
-                foreach ($user_all_friends as $friend) {
-                    $user_all_friends_ids[] = $friend->id;
-                }
-            }
-        }
-
-        $user_friends_after_filter = $this->users_m->get_friends($options);
-        $user_friends_ids_after_filter = array();
-        foreach ($user_friends_after_filter as $friend) {
-            $user_friends_ids_after_filter[] = $friend->id;
-        }
-
-        $user_mutual_friends_count = $this->users_m->get_mutual_friends_count($user_friends_ids_after_filter, $user_all_friends_ids);
-        foreach ($user_friends_after_filter as $friend) {
-            $friend->mutual_friends_count = !empty($user_mutual_friends_count[$friend->id]) ? $user_mutual_friends_count[$friend->id] : 0;
-        }
-
-        $this->load->view('user/friends/friends_list', array('people' => $user_friends_after_filter, 'page_type' => 'friends', 'current_user_id' => $user_id, 'my_friends' => $this->friends));
     }
 
     public function inviters_list()

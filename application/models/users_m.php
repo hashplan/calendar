@@ -853,7 +853,7 @@ class Users_m extends MY_Model
         return $result;
     }
 
-    public function get_common_friends_with($options = array(), $get_all = false)
+    public function get_mutual_friends_with($options = array(), $get_all = false)
     {
         $result = array();
 

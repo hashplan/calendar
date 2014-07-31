@@ -63,17 +63,13 @@
                     </div>
                 <?php endforeach;
             else: ?>
-                <div class="row" style="background-color: yellow">No events found, try going to "All Events" and adding
-                    something
-                </div>
+                <div class="row" style="background-color: yellow">You don't have any plans. Try going to "Events" and adding something</div>
             <?php endif; ?>
         </div>
     </div>
     <div class="col-md-4">
         <h3>Calendar</h3>
-
-        <div class="datepicker">
-        </div>
+        <div class="datepicker"></div>
         <div class="mycal">
             <h3>calendar with static (for now) links to events on the day</h3>
             <?php if (isset($cal)): echo $cal; endif; ?>

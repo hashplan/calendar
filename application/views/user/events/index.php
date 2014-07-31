@@ -69,9 +69,7 @@
 			<div class="row no-events-row <?php echo ($has_events ? 'hidden' : 'shown') ?>">
 				<div class="col-md-12">
 					<div class="panel panel-warning">
-						<div class="panel-heading">
-							No events found, try going to "Events" and adding something
-						</div>
+						<div class="panel-heading">You don't have any plans. Try to go to the "Events" and add something</div>
 					</div>
 				</div>
 			</div>

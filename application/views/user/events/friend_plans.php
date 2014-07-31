@@ -65,9 +65,7 @@
 			<div class="row no-events-row <?=($has_events ? 'hidden' : 'shown') ?>">
 				<div class="col-md-12">
 					<div class="panel panel-warning">
-						<div class="panel-heading">
-							No events found, try going to "Events" and adding something
-						</div>
+						<div class="panel-heading">This user does not have any plans</div>
 					</div>
 				</div>
 			</div>
