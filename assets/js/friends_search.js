@@ -85,6 +85,9 @@ $(function () {
         else if ($('#friends-page-type').val() === 'mutual_friends') {
             url = base_url + 'user/friends/mutual_users_list/' + user_id;
         }
+        else if ($('#friends-page-type').val() === 'people_you_may_know') {
+            url = base_url + 'user/friends/people_you_may_know_list/';
+        }
 
         var locationIds = [];
         $('.' + page_class + ' #locations-left-block .left-block-location:checked').each(function () {
@@ -140,6 +143,9 @@ $(function () {
                 else if ($('#friends-page-type').val() === 'mutualn_friends') {
                     url = base_url + 'user/friends/mutual_users_list/' + user_id;
                 }
+                else if ($('#friends-page-type').val() === 'people_you_may_know') {
+                    url = base_url + 'user/friends/people_you_may_know_list/';
+                }
 
                 var data = {
                     name: $('#friends-name').val(),
@@ -154,6 +160,9 @@ $(function () {
                     type: 'POST',
                     data: data,
                     success: function (response) {
+                        if (window.console) {
+                            console.log(response);
+                        }
                         $(response).appendTo('#friends-list');
                     }
                 });

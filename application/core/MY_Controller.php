@@ -60,14 +60,14 @@ class MY_Controller extends CI_Controller
             $this->data['data'] = array();
         }
 
-        /*if(ENVIRONMENT == 'development'){
+        if(ENVIRONMENT == 'development'){
             if($this->input->is_ajax_request()){
                 $this->output->enable_profiler(FALSE);
             }
             else{
                 $this->output->enable_profiler(TRUE);
             }
-        }*/
+        }
 
         $this->load->library('carabiner');
         $this->_load_assets();
@@ -121,6 +121,7 @@ class AuthController extends MY_Controller
 {
     public $user = NULL;
     public $friends = NULL;
+    public $pymk = NULL;
 
     public function __construct()
     {
@@ -141,6 +142,7 @@ class AuthController extends MY_Controller
 
         $this->user = $this->ion_auth->user()->row();
         $this->friends = $this->update_friend_list();
+        $this->pymk = $this->update_people_you_may_know_list();
 
         $css = array(
             array('styles.css')
@@ -148,12 +150,18 @@ class AuthController extends MY_Controller
         $this->carabiner->group('page_css', array('css' => $css));
     }
 
-    protected function update_friend_list($force = false)
+    /**
+     * Cached full friend list
+     *
+     * @param bool $isForce
+     * @return string
+     */
+    protected function update_friend_list($isForce = false)
     {
         $friend_list_last_update = $this->session->userdata('friend_list_last_update');
         $friend_list_cache_expiry_time = $this->config->item('friend_list_cache_expiry_time');
 
-        if (!$friend_list_last_update || time() - $friend_list_cache_expiry_time > $friend_list_last_update || $force) {
+        if (!$friend_list_last_update || time() - $friend_list_cache_expiry_time > $friend_list_last_update || $isForce) {
             $this->load->model('users_m');
             $friends = $this->users_m->get_friends(array(), true);
             $friend_ids = array();
@@ -165,6 +173,29 @@ class AuthController extends MY_Controller
             $this->session->set_userdata(array('friend_ids' => $friend_ids, 'friend_list_last_update' => time()));
         }
         return $this->session->userdata('friend_ids');
+    }
+
+    /**
+     * Caching the list of People you may know
+     *
+     */
+    protected function update_people_you_may_know_list($isForce = false){
+        $pymk_list_last_update = $this->session->userdata('pymk_list_last_update');
+        $pymk_list_cache_expiry_time = $this->config->item('pymk_list_cache_expiry_time');
+
+        if (!$pymk_list_last_update || time() - $pymk_list_cache_expiry_time > $pymk_list_last_update || $isForce) {
+            $this->load->model('users_m');
+            $pymks = $this->users_m->get_people_user_may_know();
+            $pymk_ids = array();
+            if (!empty($pymks)) {
+                foreach ($pymks as $pymk) {
+                    $pymk_ids[] = $pymk->id;
+                }
+            }
+            $this->session->set_userdata(array('friend_ids' => $pymk_ids, 'friend_list_last_update' => time()));
+        }
+        return $this->session->userdata('friend_ids');
+
     }
 }
 

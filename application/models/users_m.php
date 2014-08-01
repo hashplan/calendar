@@ -193,7 +193,6 @@ class Users_m extends MY_Model
 
     public function get_people_user_may_know($options = array())
     {
-
         $people = array();
         $user_id = !empty($options['user_id']) && $this->user_id_is_correct($options['user_id'])
             ? $options['user_id']
@@ -807,6 +806,20 @@ class Users_m extends MY_Model
             $this->db->where('(u.first_name LIKE "%' . $this->db->escape_like_str($options['name']) . '%" OR u.last_name LIKE "%' . $this->db->escape_like_str($options['name']) . '%")');
         }
 
+        if (isset($options['uids']) && !empty($options['uids'])) {
+            $user_ids = array();
+            foreach ($options['uids'] as $user_id) {
+                $user_ids[] = (int)$user_id;
+                if (count($user_ids) == $options['limit'] && !$get_all) {
+                    break;
+                }
+            }
+            $this->db->where_in('u.id', $user_ids);
+            $this->db->_protect_identifiers = FALSE;
+            $this->db->order_by('FIELD(u.id, ' . join(',', $user_ids) . ')');
+            $this->db->_protect_identifiers = TRUE;
+        }
+
         $this->db
             ->select('u.id, u.username, u.first_name, u.last_name')
             ->from('users AS u')
@@ -817,7 +830,6 @@ class Users_m extends MY_Model
             $this->db->limit($options['limit'], $options['offset']);
         }
         $query = $this->db->get();
-
         if ($query->num_rows > 0) {
             foreach ($query->result() as $row) {
                 $row->name = $this->generate_full_name($row);

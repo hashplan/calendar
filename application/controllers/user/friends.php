@@ -10,6 +10,7 @@ class Friends extends AuthController
         'events_invites' => 'events_invites_list',
         'invites_sent' => 'invites_list',
         'user_friends' => 'users_friends_list',
+        'people_you_may_know' => 'people_you_may_know_list'
     );
 
     public function __construct()
@@ -146,7 +147,7 @@ class Friends extends AuthController
             redirect('user/friends');
         }
         $friend = $this->ion_auth->user($user_id)->row();
-        if(empty($friend)){
+        if (empty($friend)) {
             show_404();
         }
 
@@ -160,6 +161,7 @@ class Friends extends AuthController
         $this->data['data']['left_block'] = $this->load->view('user/friends/locations_left_block', array('locations' => $locations, 'user_id' => $user_id), TRUE);
         $this->_render_users_page($users);
     }
+
     //ajax
     public function mutual_users_list($user_id = null)
     {
@@ -188,6 +190,56 @@ class Friends extends AuthController
         $this->load->view('user/friends/users_list', array('people' => $users, 'page_type' => 'add_friends'));
     }
 
+    /**
+     * People you may know
+     */
+    public function people_you_may_know()
+    {
+        Menu::setActive('user/friends/friends_current');
+        $this->data['page_class'] = 'friends';
+        $this->data['data']['page_title'] = 'People you may know';
+        $this->data['data']['page_type'] = 'people_you_may_know';
+        $this->load->model('location_m');
+        $users = $this->users_m->get_unknown_users(array('uids' => $this->pymk));
+
+        $locations = $this->location_m->get_left_block_metro_areas();
+        $this->data['data']['left_block'] = $this->load->view('user/friends/locations_left_block', array('locations' => $locations, 'user_id' => $this->user->id), TRUE);
+        $this->_render_users_page($users);
+    }
+
+    //ajax
+    public function people_you_may_know_list()
+    {
+        $post = $this->input->post();
+        $options = array();
+        if (!empty($post['offset'])) {
+            $options['offset'] = (int)$post['offset'];
+        }
+        if (!empty($post['name']) && strlen(trim($post['name']))) $options['name'] = trim($post['name']);
+        $options['location_ids'] = empty($post['location_ids']) ? array('all') : $post['location_ids'];
+        if (!empty($post['location_name'])) {
+            $options['location_name'] = $post['location_name'];
+        }
+        $options['uids'] = $this->pymk;
+        $people_after_filter = $this->users_m->get_unknown_users($options);
+        $people_after_filter_ids = array();
+        foreach ($people_after_filter as $friend) {
+            $people_after_filter_ids[] = $friend->id;
+        }
+        $mutual_friends_count = $this->users_m->get_mutual_friends_count($people_after_filter_ids, $this->friends);
+        foreach ($people_after_filter as $friend) {
+            $friend->mutual_friends_count = !empty($mutual_friends_count[$friend->id]) ? $mutual_friends_count[$friend->id] : 0;
+        }
+
+        $this->load->view('user/friends/people_you_may_know_list', array('people' => $people_after_filter, 'page_type' => 'add_friends'));
+    }
+
+    public function people_you_may_know_block()
+    {
+        $people_you_may_know = $this->users_m->get_unknown_users(array('uids' => $this->pymk, 'limit' => 5));
+        $this->load->view('user/friends/people_you_may_know_block', array('people_you_may_know' => $people_you_may_know));
+    }
+
     /*public function friend($user_id = null)
     {
         if ($user_id == $this->ion_auth->user()->row()->id) {
@@ -203,7 +255,6 @@ class Friends extends AuthController
         $this->data['data']['left_block'] = $this->load->view('user/friends/locations_left_block', array('locations' => $locations, 'user_id' => $user_id), TRUE);
         $this->_render_users_page($users);
     }*/
-
 
 
     public function invites($invite_type = NULL)
@@ -347,42 +398,13 @@ class Friends extends AuthController
         $this->load->view('user/friends/friends_list', array('people' => $people, 'page_type' => 'invites_sent'));
     }
 
-    public function people_you_may_know_list()
-    {
-        $post = $this->input->post();
-        $options = array();
-        if (!empty($post['name']) && strlen(trim($post['name']))) $options['name'] = trim($post['name']);
-        $options['location_ids'] = empty($post['location_ids']) ? array('all') : $post['location_ids'];
-        if (!empty($post['location_name'])) {
-            $options['location_name'] = $post['location_name'];
-        }
-        $people_after_filter = $this->users_m->get_people_user_may_know($options);
-        $people_after_filter_ids = array();
-        foreach ($people_after_filter as $friend) {
-            $people_after_filter_ids[] = $friend->id;
-        }
-
-        $mutual_friends_count = $this->users_m->get_mutual_friends_count($people_after_filter_ids, $this->friends);
-        foreach ($people_after_filter as $friend) {
-            $friend->mutual_friends_count = !empty($mutual_friends_count[$friend->id]) ? $mutual_friends_count[$friend->id] : 0;
-        }
-
-        $this->load->view('user/friends/friends_list', array('people' => $people_after_filter, 'page_type' => 'add_friends'));
-    }
-
-    public function people_you_may_know_block()
-    {
-        $people_you_may_know = $this->users_m->get_people_user_may_know();
-        foreach ($people_you_may_know as $dude) {
-            $dude->name = $this->users_m->generate_full_name($dude);
-        }
-        $this->load->view('user/friends/people_you_may_know_block', array('people_you_may_know' => $people_you_may_know));
-    }
-
     public function remove_from_lists($user_id)
     {
         if ($this->users_m->user_id_is_correct($user_id)) {
-            $this->users_m->delete_connection_between_users($user_id, NULL);
+            if ($this->users_m->delete_connection_between_users($user_id, NULL)) {
+                $this->update_friend_list(true);
+                $this->update_people_you_may_know_list(true);
+            }
             $this->users_m->set_connection_between_users($user_id, NULL, NULL, 'removed');
             if (!$this->input->is_ajax_request()) {
                 redirect(base_url() . 'user/friends');
@@ -393,7 +415,10 @@ class Friends extends AuthController
     public function remove_from_contact($user_id)
     {
         if ($this->users_m->user_id_is_correct($user_id)) {
-            $this->users_m->delete_connection_between_users($user_id, NULL);
+            if ($this->users_m->delete_connection_between_users($user_id, NULL)) {
+                $this->update_friend_list(true);
+                $this->update_people_you_may_know_list(true);
+            }
             if (!$this->input->is_ajax_request()) {
                 redirect(base_url() . 'user/friends');
             }
@@ -413,6 +438,7 @@ class Friends extends AuthController
     {
         if ($this->users_m->set_connection_between_users($friend_id, NULL, 'friend_request', 'friend')) {
             $this->update_friend_list(true);
+            $this->update_people_you_may_know_list(true);
             $this->load->library('hashplans_mailer');
             $this->hashplans_mailer->send_friend_confirmed_email($this->user, $this->ion_auth->user($friend_id)->row());
         }
@@ -470,20 +496,18 @@ class Friends extends AuthController
         }
         $users_ids = array();
 
-        if(!empty($users)){
+        if (!empty($users)) {
             foreach ($users as $user) {
                 $users_ids[] = $user->id;
             }
-            $mutual_friends_count = $this->users_m->get_mutual_friends_count($users_ids, $this->friends);
+            $mutual_friends_count = $this->users_m->get_mutual_friends_count($users_ids, $this->data['data']['page_type'] == 'people_you_may_know_list' ? $this->pymk : $this->friends);
             foreach ($users as $user) {
                 $user->mutual_friends_count = !empty($mutual_friends_count[$user->id]) ? $mutual_friends_count[$user->id] : 0;
             }
         }
 
-        $people_you_may_know = $this->users_m->get_people_user_may_know();
-        foreach ($people_you_may_know as $dude) {
-            $dude->name = $this->users_m->generate_full_name($dude);
-        }
+        $people_you_may_know = $this->users_m->get_unknown_users(array('uids' => $this->pymk, 'limit' => 5));
+
         $this->data['data']['people_you_may_know_block'] = $this->load->view('user/friends/people_you_may_know_block', array('people_you_may_know' => $people_you_may_know), TRUE);
         $users_list = $this->load->view('user/friends/' . $this->typesView[$this->data['data']['page_type']], array('people' => $users, 'events' => $events, 'page_type' => $this->data['data']['page_type'], 'my_friends' => $this->friends), TRUE);
         $this->data['data']['users_list'] = $users_list;
