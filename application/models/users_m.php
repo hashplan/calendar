@@ -810,7 +810,7 @@ class Users_m extends MY_Model
             $user_ids = array();
             foreach ($options['uids'] as $user_id) {
                 $user_ids[] = (int)$user_id;
-                if (count($user_ids) == $options['limit'] && !$get_all) {
+                if (count($user_ids) == $options['limit']+$options['offset'] && !$get_all) {
                     break;
                 }
             }

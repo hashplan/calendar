@@ -60,14 +60,14 @@ class MY_Controller extends CI_Controller
             $this->data['data'] = array();
         }
 
-        if(ENVIRONMENT == 'development'){
+        /*if(ENVIRONMENT == 'development'){
             if($this->input->is_ajax_request()){
                 $this->output->enable_profiler(FALSE);
             }
             else{
                 $this->output->enable_profiler(TRUE);
             }
-        }
+        }*/
 
         $this->load->library('carabiner');
         $this->_load_assets();

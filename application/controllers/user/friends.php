@@ -500,7 +500,7 @@ class Friends extends AuthController
             foreach ($users as $user) {
                 $users_ids[] = $user->id;
             }
-            $mutual_friends_count = $this->users_m->get_mutual_friends_count($users_ids, $this->data['data']['page_type'] == 'people_you_may_know_list' ? $this->pymk : $this->friends);
+            $mutual_friends_count = $this->users_m->get_mutual_friends_count($users_ids, $this->friends);
             foreach ($users as $user) {
                 $user->mutual_friends_count = !empty($mutual_friends_count[$user->id]) ? $mutual_friends_count[$user->id] : 0;
             }
