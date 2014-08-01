@@ -47,8 +47,6 @@ $route['how-it-works'] = "page/howitworks";
 $route['faq'] = "page/faq";
 $route['contact-us'] = "page/contact_us";
 
-
-
 $route['user/events/(:num)'] = 'user/events/friends/$1';
 $route['user/friends/(:num)'] = 'user/friends/mutual_friends/$1';
 
@@ -56,7 +54,7 @@ $route['user'] = 'user/events';
 $route['user/settings'] = 'user/account_settings/index';
 $route['user/settings/avatar'] = 'user/account_settings/avatar_upload';
 
-
+$route['admin'] = 'admin/dashboard/index';
 
 $route['forgot_password'] = 'auth/forgot_password';
 $route['reset_password/(:any)'] = 'auth/reset_password/$1';

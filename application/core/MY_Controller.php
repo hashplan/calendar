@@ -220,6 +220,10 @@ class AuthController extends MY_Controller
 //Protocontroller for admin
 class AdminController extends AuthController
 {
+    private $counters = array(
+        'users' => 0,
+        'events' => 0,
+    );
 
     public function __construct()
     {
@@ -228,6 +232,32 @@ class AdminController extends AuthController
         if (!$this->ion_auth->in_group("admin")) {
             show_404();
         }
+        $this->data['sub_layout'] = 'layouts/admin_page';
+        $this->update_counters();
+    }
+
+    public function get_counters(){
+        return $this->counters;
+    }
+
+    /**
+     * Caching the list of People you may know
+     *
+     */
+    protected function update_counters($isForce = false){
+        $counters_last_update = $this->session->userdata('counters_last_update');
+        $counters_cache_expiry_time = $this->config->item('counters_cache_expiry_time');
+
+        if (!$counters_last_update || time() - $counters_cache_expiry_time > $counters_last_update || $isForce) {
+            $this->load->model('events_m');
+            $this->counters['users'] = $this->ion_auth->users()->num_rows();
+            $this->counters['events'] = $this->events_m->get_total_count();
+            $this->session->set_userdata(array('counters' => $this->counters, 'counters_last_update' => time()));
+        }
+        else{
+            $this->counters = $this->session->userdata('counters');
+        }
+
     }
 }
 

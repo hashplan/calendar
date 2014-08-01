@@ -2,15 +2,11 @@
 
 class Account_settings extends AuthController
 {
-
-    public $data = array(
-        'sub_layout' => 'layouts/user_page',
-    );
-
     public function __construct()
     {
         parent::__construct();
 		$this->load->model('account_settings_m');
+        $this->data['sub_layout'] = 'layouts/user_page';
     }
 
     public function index()

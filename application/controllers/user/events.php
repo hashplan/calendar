@@ -1,10 +1,6 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 class Events extends AuthController {
 
-	public $data = array(
-		'sub_layout' => 'layouts/user_page',
-	);
-	public $user = NULL;
 	protected $allowTypes = array('deleted', 'favourite', 'my', 'friends', 'all', 'trash');
 	protected $typesView = array(
 		'my' => 'index',
@@ -19,7 +15,9 @@ class Events extends AuthController {
 		parent::__construct();
 		$this->load->model('events_m');
         $this->load->model('users_m');
+
 		$this->data['user']->metro = $this->users_m->get_user_metro($this->get_user()->id);
+        $this->data['sub_layout'] = 'layouts/user_page';
 
         $js_assets = array(
             array('event_search.js'),

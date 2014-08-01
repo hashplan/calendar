@@ -2,6 +2,10 @@
 
 class Events_m extends MY_Model
 {
+    public function __construct(){
+        parent::__construct();
+        $this->table = 'events';
+    }
 
     public function get_all($options = array())
     {
@@ -467,5 +471,9 @@ class Events_m extends MY_Model
             $this->add_to_calendar($event_id);
         }
 
+    }
+
+    public function get_total_count(){
+        return $this->db->count_all_results($this->table);
     }
 }

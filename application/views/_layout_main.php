@@ -1,4 +1,4 @@
-<?php $this->load->view('components/page_head'); ?>
+<?php $this->load->view('components/header'); ?>
     <!--<h1> <?php echo anchor('', strtoupper(config_item('site_name'))); ?> Search, Schedule, Share, Enjoy</h1>-->
     <body onload="startTime()">
     <div class="navbar navbar-default navbar-fixed-top" role="navigation">
@@ -33,7 +33,7 @@
         <div class="row">
             <!--Main column-->
             <div class="col-md-12">
-                <?php $this->load->view($subview); ?>
+                <?php $this->load->view($sub_layout); ?>
             </div>
         </div>
     </div>

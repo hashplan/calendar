@@ -2,3 +2,4 @@
 
 $config['friend_list_cache_expiry_time'] = 30;
 $config['pymk_list_cache_expiry_time'] = 30;
+$config['counters_cache_expiry_time'] = 60;
