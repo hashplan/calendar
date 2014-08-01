@@ -119,9 +119,10 @@ class MY_Controller extends CI_Controller
 //Protocontroller for authorized users
 class AuthController extends MY_Controller
 {
-    public $user = NULL;
-    public $friends = NULL;
-    public $pymk = NULL;
+    private $user = NULL;
+    private $friends = NULL;
+    private $pymk = NULL;
+    public $user_name = NULL;
 
     public function __construct()
     {
@@ -141,8 +142,10 @@ class AuthController extends MY_Controller
         }
 
         $this->user = $this->ion_auth->user()->row();
-        $this->friends = $this->update_friend_list();
-        $this->pymk = $this->update_people_you_may_know_list();
+        $this->update_friend_list();
+        $this->update_people_you_may_know_list();
+        $this->data['user'] = $this->get_user();
+        $this->user_name = $this->get_user()->first_name;
 
         $css = array(
             array('styles.css')
@@ -150,11 +153,20 @@ class AuthController extends MY_Controller
         $this->carabiner->group('page_css', array('css' => $css));
     }
 
+    public function get_user(){
+        return $this->user;
+    }
+    public function get_friends(){
+        return $this->friends;
+    }
+    public function get_pymk(){
+        return $this->pymk;
+    }
+
     /**
      * Cached full friend list
      *
      * @param bool $isForce
-     * @return string
      */
     protected function update_friend_list($isForce = false)
     {
@@ -171,8 +183,11 @@ class AuthController extends MY_Controller
                 }
             }
             $this->session->set_userdata(array('friend_ids' => $friend_ids, 'friend_list_last_update' => time()));
+            $this->friends = $friend_ids;
         }
-        return $this->session->userdata('friend_ids');
+        else{
+            $this->friends = $this->session->userdata('friend_ids');
+        }
     }
 
     /**
@@ -192,9 +207,12 @@ class AuthController extends MY_Controller
                     $pymk_ids[] = $pymk->id;
                 }
             }
-            $this->session->set_userdata(array('friend_ids' => $pymk_ids, 'friend_list_last_update' => time()));
+            $this->pymk = $pymk_ids;
+            $this->session->set_userdata(array('pymk_ids' => $pymk_ids, 'pymk_list_last_update' => time()));
         }
-        return $this->session->userdata('friend_ids');
+        else{
+            $this->pymk = $this->session->userdata('pymk_ids');
+        }
 
     }
 }

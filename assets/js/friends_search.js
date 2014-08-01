@@ -160,9 +160,6 @@ $(function () {
                     type: 'POST',
                     data: data,
                     success: function (response) {
-                        if (window.console) {
-                            console.log(response);
-                        }
                         $(response).appendTo('#friends-list');
                     }
                 });

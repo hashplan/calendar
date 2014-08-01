@@ -6,7 +6,6 @@ class Event extends AuthController
     public function __construct()
     {
         parent::__construct();
-        $this->data['user'] = $this->ion_auth->user()->row();
     }
 
     public function add_to_favourites($event_id = NULL)
@@ -205,7 +204,7 @@ class Event extends AuthController
                     $this->load->library('hashplans_mailer');
                     $event = $this->events_m->get_event_by_id($this->input->post('event_id'));
                     $to_user = $this->ion_auth->user($this->input->post('uid'))->row();
-                    $this->hashplans_mailer->send_event_invite_email($this->user, $to_user, $event);
+                    $this->hashplans_mailer->send_event_invite_email($this->get_user(), $to_user, $event);
                     header('Content-Type: application/json');
                     echo json_encode(array('result' => 'success'));
                 }

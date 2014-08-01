@@ -10,7 +10,6 @@ class Account_settings extends AuthController
     public function __construct()
     {
         parent::__construct();
-        $this->data['user'] = $this->ion_auth->user()->row();
 		$this->load->model('account_settings_m');
     }
 
@@ -33,7 +32,7 @@ class Account_settings extends AuthController
         if ($this->form_validation->run() == TRUE) {
             $user_data = $this->input->post();
             unset($user_data['old_password'],$user_data['password'],$user_data['password_confirm']);
-            $user_data['id'] = $this->data['user']->id;
+            $user_data['id'] = $this->get_user()->id;
             $this->users_m->save_user($user_data);
             $this->account_settings_m->save('metroId',$this->input->post('metro_id'));
             $identity = $this->session->userdata($this->config->item('identity', 'ion_auth'));
@@ -56,7 +55,7 @@ class Account_settings extends AuthController
         $this->load->library('image_lib');
         $original_path = FCPATH . 'assets/uploads/users';
         $resized_path = FCPATH . 'assets/img/users';
-        $old_avatar = $this->data['user']->avatar_path;
+        $old_avatar = $this->get_user()->avatar_path;
         //config for original upload
         $config = array(
             'allowed_types' => 'jpg|jpeg|gif|png',
@@ -89,7 +88,7 @@ class Account_settings extends AuthController
             'avatar_path' => $image_data['file_name'],
         );
 
-        $this->db->where('id', $this->data['user']->id);
+        $this->db->where('id', $this->get_user()->id);
         if ($this->db->update('users', $data)) {
             unlink($original_path . '/' . $old_avatar);
             unlink($resized_path . '/' . $old_avatar);

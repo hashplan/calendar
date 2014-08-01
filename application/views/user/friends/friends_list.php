@@ -23,6 +23,7 @@
                 </div>
                 <div class="button-wrapper">
                     <?php if (isset($current_user_id)): ?>
+                        <?=11111;?>
                         <? if (in_array($friend->id, $my_friends)): ?>
                             <?= anchor('user/friends/remove_from_contact/' . $friend->id, 'Remove', array('class' => 'btn btn-danger')); ?>
                             <?= anchor('user/events/' . $friend->id, 'View plans', array('class' => 'btn btn-primary friend-view-plans-button')); ?>

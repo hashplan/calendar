@@ -100,9 +100,6 @@
                         },
                         dataType: 'json',
                         success: function (response) {
-                            if (window.console) {
-                                console.log(response);
-                            }
                             var friends = [];
                             for (var i in response) {
                                 var id = response[i].id;

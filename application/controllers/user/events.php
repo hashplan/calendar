@@ -19,8 +19,7 @@ class Events extends AuthController {
 		parent::__construct();
 		$this->load->model('events_m');
         $this->load->model('users_m');
-		$this->data['user'] = $this->user;
-		$this->data['user']->metro = $this->users_m->get_user_metro($this->data['user']->id);
+		$this->data['user']->metro = $this->users_m->get_user_metro($this->get_user()->id);
 
         $js_assets = array(
             array('event_search.js'),
@@ -49,7 +48,7 @@ class Events extends AuthController {
 		if(!$this->users_m->is_friend_of($user_id)){
 			redirect(base_url('user/events'));
 		}
-		$this->data['user'] = $this->db->where('id', $user_id)->get('users')->row();
+		$this->data['user'] = $this->ion_auth->user($user_id)->row();
         $fullname = $this->data['user']->first_name . " " . $this->data['user']->last_name;
         $fullname = trim($fullname);
 		$this->_render_events_list_page('friends', $fullname.' Events', $user_id);
@@ -104,7 +103,7 @@ class Events extends AuthController {
 		$this->load->model('categories_m');
 		$this->data['page_class'] = 'user-events';
 		$this->data['view'] = 'user/events/'.$this->typesView[$events_type];
-		$this->data['user_id'] = $this->users_m->user_id_is_correct($user_id) ? $user_id : $this->user->id;
+		$this->data['user_id'] = $this->users_m->user_id_is_correct($user_id) ? $user_id : $this->get_user()->id;
 
 		$events_search_params = array('events_type' => $events_type, 'user_id' => $user_id);
 		if ($default_location !== NULL) {

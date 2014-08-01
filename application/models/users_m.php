@@ -85,7 +85,6 @@ class Users_m extends MY_Model
 
 
         $friends_raw = $this->db->query($sql, array($user_id, $user_id, $current_user, $options['offset'], $options['limit']))->result();
-
         $friends = array();
         foreach ($friends_raw as $friend) {
             $friend->name = $this->generate_full_name($friend);
@@ -806,34 +805,35 @@ class Users_m extends MY_Model
             $this->db->where('(u.first_name LIKE "%' . $this->db->escape_like_str($options['name']) . '%" OR u.last_name LIKE "%' . $this->db->escape_like_str($options['name']) . '%")');
         }
 
-        if (isset($options['uids']) && !empty($options['uids'])) {
-            $user_ids = array();
-            foreach ($options['uids'] as $user_id) {
-                $user_ids[] = (int)$user_id;
-                if (count($user_ids) == $options['limit']+$options['offset'] && !$get_all) {
-                    break;
+        if (isset($options['uids'])) {
+            if(!empty($options['uids'])){
+                $user_ids = array();
+                foreach ($options['uids'] as $uid) {
+                    $user_ids[] = (int)$uid;
                 }
+                $this->db->where_in('u.id', $user_ids);
+                $this->db->_protect_identifiers = FALSE;
+                $this->db->order_by('FIELD(u.id, ' . join(',', $user_ids) . ')');
+                $this->db->_protect_identifiers = TRUE;
             }
-            $this->db->where_in('u.id', $user_ids);
-            $this->db->_protect_identifiers = FALSE;
-            $this->db->order_by('FIELD(u.id, ' . join(',', $user_ids) . ')');
-            $this->db->_protect_identifiers = TRUE;
         }
 
-        $this->db
-            ->select('u.id, u.username, u.first_name, u.last_name')
-            ->from('users AS u')
-            ->where('NOT EXISTS (SELECT 1 FROM user_connections uc WHERE (u.id = uc.userId AND uc.connectionUserId = ' . $user_id . ') OR (u.id=uc.connectionUserId AND uc.userId = ' . $user_id . '))', '', FALSE)
-            ->where(array('u.id !=' => $user_id, 'u.active' => 1))
-            ->order_by('u.first_name ASC, u.last_name ASC');
-        if (!$get_all) {
-            $this->db->limit($options['limit'], $options['offset']);
-        }
-        $query = $this->db->get();
-        if ($query->num_rows > 0) {
-            foreach ($query->result() as $row) {
-                $row->name = $this->generate_full_name($row);
-                $result[] = $row;
+        if (!isset($options['uids'])||!empty($options['uids'])){
+            $this->db
+                ->select('u.id, u.username, u.first_name, u.last_name')
+                ->from('users AS u')
+                ->where('NOT EXISTS (SELECT 1 FROM user_connections uc WHERE (u.id = uc.userId AND uc.connectionUserId = ' . $user_id . ') OR (u.id=uc.connectionUserId AND uc.userId = ' . $user_id . '))', '', FALSE)
+                ->where(array('u.id !=' => $user_id, 'u.active' => 1))
+                ->order_by('u.first_name ASC, u.last_name ASC');
+            if (!$get_all) {
+                $this->db->limit($options['limit'], $options['offset']);
+            }
+            $query = $this->db->get();
+            if ($query->num_rows > 0) {
+                foreach ($query->result() as $row) {
+                    $row->name = $this->generate_full_name($row);
+                    $result[] = $row;
+                }
             }
         }
 
