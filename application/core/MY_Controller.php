@@ -232,8 +232,17 @@ class AdminController extends AuthController
         if (!$this->ion_auth->in_group("admin")) {
             show_404();
         }
-        $this->data['sub_layout'] = 'layouts/admin_page';
         $this->update_counters();
+
+        /*$js_assets = array(
+
+        );*/
+        $css_assets = array(
+            array('admin/admin.css')
+        );
+        $this->carabiner->group('page_assets', array(/*'js' => $js_assets,*/ 'css' => $css_assets) );
+
+        $this->data['sub_layout'] = 'layouts/admin_page';
     }
 
     public function get_counters(){
@@ -261,6 +270,13 @@ class AdminController extends AuthController
         }
 
     }
+
+    protected function _render_page()
+    {
+        $this->data['counters'] = $this->get_counters();
+        parent::_render_page();
+    }
+
 }
 
 //Protocontroller for cron

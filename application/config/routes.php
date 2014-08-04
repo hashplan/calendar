@@ -47,6 +47,7 @@ $route['how-it-works'] = "page/howitworks";
 $route['faq'] = "page/faq";
 $route['contact-us'] = "page/contact_us";
 
+//users
 $route['user/events/(:num)'] = 'user/events/friends/$1';
 $route['user/friends/(:num)'] = 'user/friends/mutual_friends/$1';
 
@@ -54,8 +55,7 @@ $route['user'] = 'user/events';
 $route['user/settings'] = 'user/account_settings/index';
 $route['user/settings/avatar'] = 'user/account_settings/avatar_upload';
 
-$route['admin'] = 'admin/dashboard/index';
-
+//auth
 $route['forgot_password'] = 'auth/forgot_password';
 $route['reset_password/(:any)'] = 'auth/reset_password/$1';
 $route['fb_login'] = 'auth/facebook_login';
@@ -67,6 +67,12 @@ $route['logout'] = 'auth/logout';
 $route['signup'] = "auth/create_user";
 $route['activate/(:num)/(:any)'] = "auth/activate/$1/$2";
 $route['thankyou_page'] = "auth/registration_successful";
+
+//admin
+$route['admin/users/(:num)/(:num)'] = 'admin/users/index/$1/$2';
+$route['admin/users/(:num)'] = 'admin/users/index/$1';
+$route['admin'] = 'admin/dashboard/index';
+
 
 
 /* End of file routes.php */

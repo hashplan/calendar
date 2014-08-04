@@ -1,7 +1,14 @@
 <?php $this->load->view('admin/components/header_menu') ?>
+<div class="container">
+    <div class="row">
+        <div class="col-sm-12 col-md-12 main">
+            <h1 class="page-header">Dashboard</h1>
+            <?php $this->load->view('admin/components/counters_menu', $data) ?>
 
-<?php $this->load->view($view, $data) ?>
-
+            <?php $this->load->view($view, $data) ?>
+        </div>
+    </div>
+</div>
 <!--modal for event details-->
 <!-- Modal -->
 <div class="modal" id="event_modal" tabindex="-1" role="dialog" aria-labelledby="event_modal" aria-hidden="true">

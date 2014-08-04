@@ -22,7 +22,7 @@ class Dashboard extends AdminController
     public function index()
     {
         $this->data['view'] = 'admin/dashboard/index';
-        $this->data['counters'] = $this->get_counters();
+
         /*$counters = $this->get_counters();
         echo "<pre>";
         var_dump($counters);

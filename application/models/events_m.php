@@ -25,7 +25,6 @@ class Events_m extends MY_Model
 
         $is_deleted = !empty($options['events_type']) && $options['events_type'] === 'deleted' ? 1 : 0;
         $is_in_calendar = !empty($options['events_type']) && $options['events_type'] === 'my' ? 1 : 0;
-        $is_favorite = !empty($options['events_type']) && $options['events_type'] === 'favourite' ? 1 : 0;
 
         $this->db
             ->select('e.id, e.name, v.name as venue_name, e.datetime, DATE(e.datetime) AS date_only, e.ownerId AS event_owner_id')
@@ -58,6 +57,9 @@ class Events_m extends MY_Model
                 $this->db->join('user_events ue', 'e.id = ue.eventId', 'left');
                 $this->db->join('events_favourited AS ef', 'e.id = ef.eventId AND ef.userId = ' . $this->db->escape($user_id), 'left');
                 $this->db->group_by('id');
+            }
+            else if ($options['events_type'] === 'custom' && $is_admin_or_owner) {
+                $this->db->where('ownerId IS NOT NULL');
             }
             else {
                 // 403
