@@ -100,6 +100,9 @@ $config['lockout_time']               = 600;                 // The number of se
 $config['forgot_password_expiration'] = 0;                   // The number of milliseconds after which a forgot password request will expire. If set to 0, forgot password requests will not expire.
 
 
+$config['identity_cookie_name'] = 'identity';
+$config['remember_cookie_name'] = 'remember_code';
+
 /*
  | -------------------------------------------------------------------------
  | Email options.
