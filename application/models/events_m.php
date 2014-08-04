@@ -473,7 +473,13 @@ class Events_m extends MY_Model
 
     }
 
-    public function get_total_count(){
+    public function get_total_count($type = 'all'){
+        if($type == 'future_events'){
+            $this->db->where(array('datetime >='=>date('Y-m-d H:i:s')));
+        }
+        elseif($type == 'custom_events'){
+            $this->db->where('ownerId IS NOT NULL');
+        }
         return $this->db->count_all_results($this->table);
     }
 }

@@ -5,28 +5,44 @@
 
             <div class="row placeholders">
                 <div class="col-xs-6 col-sm-3 placeholder">
-                    <img data-src="holder.js/200x200/auto/sky" class="img-responsive" alt="200x200" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMDAiIGhlaWdodD0iMjAwIj48cmVjdCB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgZmlsbD0iIzBEOEZEQiIvPjx0ZXh0IHRleHQtYW5jaG9yPSJtaWRkbGUiIHg9IjEwMCIgeT0iMTAwIiBzdHlsZT0iZmlsbDojZmZmO2ZvbnQtd2VpZ2h0OmJvbGQ7Zm9udC1zaXplOjEzcHg7Zm9udC1mYW1pbHk6QXJpYWwsSGVsdmV0aWNhLHNhbnMtc2VyaWY7ZG9taW5hbnQtYmFzZWxpbmU6Y2VudHJhbCI+MjAweDIwMDwvdGV4dD48L3N2Zz4=">
-                    <h4>Users</h4>
-                    <span class="text-muted">Something else</span>
+                    <svg version="1.1" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px"
+                         width="200px" height="200px" viewBox="0 0 200 200" xml:space="preserve" class="svg-container">
+                        <circle fill="#0d8fdb" cx="100" cy="100" r="100"/>
+                        <a xlink:href="<?=site_url('admin/users')?>" class="counter" text-anchor="middle">
+                            <?$user_count=isset($counters['users'])?$counters['users']:0?>
+                            <text x="100" y="115" fill="#FFF"><?=$user_count?></text>
+                        </a>
+                        <h4>Users</h4>
+                        <span class="text-muted">all members</span>
+                    </svg>
                 </div>
                 <div class="col-xs-6 col-sm-3 placeholder">
-                    <img data-src="holder.js/200x200/auto/vine" class="img-responsive" alt="200x200" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMDAiIGhlaWdodD0iMjAwIj48cmVjdCB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgZmlsbD0iIzM5REJBQyIvPjx0ZXh0IHRleHQtYW5jaG9yPSJtaWRkbGUiIHg9IjEwMCIgeT0iMTAwIiBzdHlsZT0iZmlsbDojMUUyOTJDO2ZvbnQtd2VpZ2h0OmJvbGQ7Zm9udC1zaXplOjEzcHg7Zm9udC1mYW1pbHk6QXJpYWwsSGVsdmV0aWNhLHNhbnMtc2VyaWY7ZG9taW5hbnQtYmFzZWxpbmU6Y2VudHJhbCI+MjAweDIwMDwvdGV4dD48L3N2Zz4=">
-                    <h4>Events</h4>
-                    <span class="text-muted">Something else</span>
+                    <svg version="1.1" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px"
+                         width="200px" height="200px" viewBox="0 0 200 200" xml:space="preserve" class="svg-container">
+                        <circle fill="#39dbac" cx="100" cy="100" r="100"/>
+                        <a xlink:href="<?=site_url('admin/events')?>" class="counter" text-anchor="middle">
+                            <?$future_events=isset($counters['future_events'])?$counters['future_events']:0?>
+                            <text x="100" y="115" fill="#000"><?=$future_events?></text>
+                        </a>
+                        <h4>Events</h4>
+                        <span class="text-muted">future events</span>
+                    </svg>
                 </div>
                 <div class="col-xs-6 col-sm-3 placeholder">
-                    <img data-src="holder.js/200x200/auto/sky" class="img-responsive" alt="200x200" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMDAiIGhlaWdodD0iMjAwIj48cmVjdCB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgZmlsbD0iIzBEOEZEQiIvPjx0ZXh0IHRleHQtYW5jaG9yPSJtaWRkbGUiIHg9IjEwMCIgeT0iMTAwIiBzdHlsZT0iZmlsbDojZmZmO2ZvbnQtd2VpZ2h0OmJvbGQ7Zm9udC1zaXplOjEzcHg7Zm9udC1mYW1pbHk6QXJpYWwsSGVsdmV0aWNhLHNhbnMtc2VyaWY7ZG9taW5hbnQtYmFzZWxpbmU6Y2VudHJhbCI+MjAweDIwMDwvdGV4dD48L3N2Zz4=">
-                    <h4>Label</h4>
-                    <span class="text-muted">Something else</span>
-                </div>
-                <div class="col-xs-6 col-sm-3 placeholder">
-                    <img data-src="holder.js/200x200/auto/vine" class="img-responsive" alt="200x200" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMDAiIGhlaWdodD0iMjAwIj48cmVjdCB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgZmlsbD0iIzM5REJBQyIvPjx0ZXh0IHRleHQtYW5jaG9yPSJtaWRkbGUiIHg9IjEwMCIgeT0iMTAwIiBzdHlsZT0iZmlsbDojMUUyOTJDO2ZvbnQtd2VpZ2h0OmJvbGQ7Zm9udC1zaXplOjEzcHg7Zm9udC1mYW1pbHk6QXJpYWwsSGVsdmV0aWNhLHNhbnMtc2VyaWY7ZG9taW5hbnQtYmFzZWxpbmU6Y2VudHJhbCI+MjAweDIwMDwvdGV4dD48L3N2Zz4=">
-                    <h4>Label</h4>
-                    <span class="text-muted">Something else</span>
+                    <svg version="1.1" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px"
+                         width="200px" height="200px" viewBox="0 0 200 200" xml:space="preserve" class="svg-container">
+                        <circle fill="#0d8fdb" cx="100" cy="100" r="100"/>
+                        <a xlink:href="<?=site_url('admin/events')?>" class="counter" text-anchor="middle">
+                            <?$custom_events=isset($counters['custom_events'])?$counters['custom_events']:0?>
+                            <text x="100" y="115" fill="#000"><?=$custom_events?></text>
+                        </a>
+                        <h4>Events</h4>
+                        <span class="text-muted">custom events</span>
+                    </svg>
                 </div>
             </div>
-
             <h2 class="sub-header">Section title</h2>
+
             <div class="table-responsive">
                 <table class="table table-striped">
                     <thead>
