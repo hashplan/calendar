@@ -41,9 +41,12 @@ class Ion_auth_ext_model extends Ion_auth_model
         {
             //default selects
             $this->db->select(array(
-                $this->tables['users'].'.*',
                 $this->tables['users'].'.id as id',
-                $this->tables['users'].'.id as user_id'
+                $this->tables['users'].'.id as user_id',
+                $this->tables['users'].'.first_name as first_name',
+                $this->tables['users'].'.last_name as last_name',
+                $this->tables['users'].'.email as email',
+                $this->tables['users'].'.active as active'
             ));
         }
 

@@ -2,7 +2,8 @@
 
 class Events_m extends MY_Model
 {
-    public function __construct(){
+    public function __construct()
+    {
         parent::__construct();
         $this->table = 'events';
     }
@@ -41,27 +42,20 @@ class Events_m extends MY_Model
         if (!empty($options['events_type'])) {
             if ($options['events_type'] === 'deleted' && $is_admin_or_owner) {
                 $this->db->join('events_deleted AS ed', 'e.id = ed.eventId AND ed.userId = ' . $this->db->escape($user_id), 'inner');
-            }
-            else if ($options['events_type'] === 'favourite' && $is_admin_or_owner) {
+            } else if ($options['events_type'] === 'favourite' && $is_admin_or_owner) {
                 $this->db->join('events_favourited AS ef', 'e.id = ef.eventId AND ef.userId = ' . $this->db->escape($user_id), 'inner');
                 $this->db->where('NOT EXISTS (SELECT 1 FROM events_deleted ed WHERE e.id = ed.eventId AND ed.userId = ' . $this->db->escape($user_id) . ')', '', FALSE);
-            }
-            else if (($options['events_type'] === 'my' || $options['events_type'] === 'friends') && ($is_admin_or_owner || $is_friend_of)) {
+            } else if (($options['events_type'] === 'my' || $options['events_type'] === 'friends') && ($is_admin_or_owner || $is_friend_of)) {
                 $this->db->join('user_events AS ue', 'e.id = ue.eventId AND ue.userId = ' . $this->db->escape($user_id), 'inner');
                 $this->db->where('NOT EXISTS (SELECT 1 FROM events_deleted ed WHERE e.id = ed.eventId AND ed.userId = ' . $this->db->escape($user_id) . ')', '', FALSE);
-            }
-            else if ($options['events_type'] === 'all' && $is_admin_or_owner) {
+            } else if ($options['events_type'] === 'all' && $is_admin_or_owner) {
                 $this->db->select('IF(ue.eventId IS NOT NULL, 1, 0) AS is_in_calendar_all', FALSE);
                 $this->db->select('IF(ef.eventId IS NOT NULL, 1, 0) AS is_favourite_all', FALSE);
                 $this->db->where('NOT EXISTS (SELECT 1 FROM events_deleted ed WHERE e.id = ed.eventId AND ed.userId = ' . $this->db->escape($user_id) . ')', '', FALSE);
                 $this->db->join('user_events ue', 'e.id = ue.eventId', 'left');
                 $this->db->join('events_favourited AS ef', 'e.id = ef.eventId AND ef.userId = ' . $this->db->escape($user_id), 'left');
                 $this->db->group_by('id');
-            }
-            else if ($options['events_type'] === 'custom' && $is_admin_or_owner) {
-                $this->db->where('ownerId IS NOT NULL');
-            }
-            else {
+            } else {
                 // 403
             }
         }
@@ -475,13 +469,67 @@ class Events_m extends MY_Model
 
     }
 
-    public function get_total_count($type = 'all'){
-        if($type == 'future_events'){
-            $this->db->where(array('datetime >='=>date('Y-m-d H:i:s')));
+    public function get_total_count($type = 'all')
+    {
+        if ($type == 'future_events' || $type = 'custom_future_events') {
+            $this->db->where(array('datetime >=' => date('Y-m-d H:i:s')));
         }
-        elseif($type == 'custom_events'){
+        if ($type == 'custom_future_events') {
             $this->db->where('ownerId IS NOT NULL');
         }
         return $this->db->count_all_results($this->table);
+    }
+
+    public function list_of_events($options = array())
+    {
+        if (empty($options['limit'])) {
+            $options['limit'] = 50;
+        }
+
+        if (empty($options['offset'])) {
+            $options['offset'] = 0;
+        }
+
+        if (empty($options['sort'])) {
+            $options['sort'] = 'id';
+        }
+
+        if (empty($options['type'])) {
+            $options['type'] = 'ASC';
+        }
+
+        if (empty($options['events_type'])) {
+            $options['events_type'] = 'future_events';
+        }
+
+        $this->db
+            ->select('e.id, e.name, v.name as venue_name, e.datetime, DATE(e.datetime) AS date_only, e.ownerId AS event_owner_id')
+            ->from('events AS e')
+            ->join('venues AS v', 'e.venueId = v.id', 'left')
+            ->join('cities AS ci', 'v.cityId = ci.id', 'left')
+            ->join('metroareas AS ma', 'ci.metroId = ma.id', 'left')
+            ->order_by('e.datetime')
+            ->limit($options['limit'], $options['offset']);
+
+
+        if ($options['events_type'] == 'custom_future_events' || $options['events_type'] == 'future_events') {
+            if (!empty($options['specific_date'])) {
+                $date_range['start'] = $options['specific_date'] . ' 00:00:00';
+                $date_range['end'] = $options['specific_date'] . ' 23:59:59';
+            }
+            if (empty($options['specific_date']) && empty($options['preselects'])) {
+                $date_range['start'] = date('Y-m-d') . ' 00:00:00';
+                $date_range['end'] = date('Y-m-d', strtotime('+5 years')) . ' 23:59:59';
+            }
+            $this->db->where('e.datetime >=', $date_range['start']);
+            $this->db->where('e.datetime <=', $date_range['end']);
+        }
+
+
+        if ($options['events_type'] == 'custom_future_events') {
+            $this->db->where('e.ownerId IS NOT NULL');
+        }
+
+        return $this->db->get()->result();
     }
 }

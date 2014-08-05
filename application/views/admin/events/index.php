@@ -19,7 +19,7 @@
                     <td><?=$event->name?></td>
                     <td><?=$event->date_only?></td>
                     <td><?=$event->venue_name?></td>
-                    <td>edit|remove</td>
+                    <td><?=anchor('admin/events/edit/'.$event->id, 'edit')?> | <?=anchor('admin/events/remove/'.$event->id, 'remove')?></td>
                 </tr>
             <?endforeach?>
         <?else:?>

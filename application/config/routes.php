@@ -69,6 +69,8 @@ $route['activate/(:num)/(:any)'] = "auth/activate/$1/$2";
 $route['thankyou_page'] = "auth/registration_successful";
 
 //admin
+$route['admin/users/(:num)/(:num)/(id|first_name|last_name|email|group|status)/(ASC|DESC|asc|desc)'] = 'admin/users/index/$1/$2/$3/$4';
+$route['admin/users/(:num)/(:num)/(id|first_name|last_name|email|group|status)'] = 'admin/users/index/$1/$2/$3';
 $route['admin/users/(:num)/(:num)'] = 'admin/users/index/$1/$2';
 $route['admin/users/(:num)'] = 'admin/users/index/$1';
 $route['admin'] = 'admin/dashboard/index';
