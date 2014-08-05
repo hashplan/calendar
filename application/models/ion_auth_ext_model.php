@@ -4,7 +4,8 @@ class Ion_auth_ext_model extends Ion_auth_model
 {
 
     public function include_group_info(){
-        $this->db->select($this->tables['groups'].'.name AS user_group');
+        //$this->db->select($this->tables['groups'].'.name AS user_group');
+        $this->db->select('GROUP_CONCAT('.$this->tables['groups'].'.name SEPARATOR "/") AS user_group');
         $this->db->join(
             $this->tables['users_groups'],
             $this->tables['users_groups'].'.'.$this->join['users'].'='.$this->tables['users'].'.id',
@@ -15,6 +16,7 @@ class Ion_auth_ext_model extends Ion_auth_model
             $this->tables['users_groups'].'.'.$this->join['groups'].'='.$this->tables['groups'].'.id',
             'inner'
         );
+        $this->db->group_by($this->tables['users'].'.id');
         return $this;
     }
 

@@ -23,7 +23,7 @@
                     <td><?=$event->name?></td>
                     <td><?=$event->date_only?></td>
                     <td><?=$event->venue_name?></td>
-                    <td><?=anchor('admin/events/edit/'.$event->id, 'edit')?> | <?=anchor('admin/events/remove/'.$event->id, 'remove')?></td>
+                    <td><a href="<?=site_url('admin/events/edit/'.$user->id)?>"><span class="glyphicon glyphicon-edit"></span></a> | <a href="<?=site_url('admin/events/remove/'.$user->id)?>"><span class="glyphicon glyphicon-remove"></span></a></td>
                 </tr>
             <?endforeach?>
         <?else:?>

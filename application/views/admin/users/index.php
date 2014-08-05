@@ -23,11 +23,11 @@
                     <tr>
                         <td><?=$user->id?></td>
                         <td><?=$user->first_name?></td>
-                        <td><?=$user->first_name?></td>
+                        <td><?=$user->last_name?></td>
                         <td><?=$user->email?></td>
                         <td><?=$user->user_group?></td>
                         <td><?=$user->active?'Active':'Not Active'?></td>
-                        <td><?=anchor('admin/users/edit/'.$user->id, 'edit')?> | <?=anchor('admin/users/remove/'.$user->id, 'remove')?></td>
+                        <td><a href="<?=site_url('admin/users/edit/'.$user->id)?>"><span class="glyphicon glyphicon-edit"></span></a> | <a href="<?=site_url('admin/users/remove/'.$user->id)?>"><span class="glyphicon glyphicon-remove"></span></a></td>
                     </tr>
                 <?endforeach?>
             <?else:?>
