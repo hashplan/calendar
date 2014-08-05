@@ -1,5 +1,9 @@
 <h2 class="sub-header">Future Events</h2>
-
+<?if(isset($pagination)&&!empty($pagination)):?>
+    <div>
+        <?=$pagination?>
+    </div>
+<?endif?>
 <div class="table-responsive">
     <table class="table table-striped">
         <thead>
@@ -30,3 +34,8 @@
         </tbody>
     </table>
 </div>
+<?if(isset($pagination)&&!empty($pagination)):?>
+    <div>
+        <?=$pagination?>
+    </div>
+<?endif?>

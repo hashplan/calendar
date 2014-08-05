@@ -102,16 +102,49 @@ class MY_Controller extends CI_Controller
 
     protected function _render_page()
     {
-        if ($this->input->is_ajax_request()&&$this->input->post()) {
+        if ($this->input->is_ajax_request() && $this->input->post()) {
             ob_clean();
             header('Content-type: text/json');
             echo json_encode($this->data);
             die();
-        }
-        else
-        {
+        } else {
             $this->load->view($this->layout, $this->data);
         }
+    }
+
+    protected function get_paging($paged, $base_url = '')
+    {
+        $result = '';
+        if (isset($paged) && !empty($paged) && isset($base_url)) {
+            $result .= '<div class="text-center">';
+            if ($paged->total_rows != 0 && $paged->items_on_page != 0 && $paged->total_pages > 1) {
+                $result .= '<ul class="pagination">';
+                if ($paged->has_previous) {
+                    $result .= '<li><a href="' . base_url($base_url . $paged->previous_page) . '">&laquo;</a></li>';
+                }
+                if ($paged->current_page - 7 >= 1) {
+                    $result .= '<li><a href="' . base_url($base_url . '1') . '">1</a></li>';
+                    $result .= '<li><a href="' . base_url($base_url . ($paged->current_page - 6)) . '">...</a></li>';
+                }
+                $start_page = $paged->current_page - 6 <= 1 ? 1 : $paged->current_page - 5;
+                $end_page = $paged->current_page + 6 >= $paged->total_pages ? $paged->total_pages : $paged->current_page + 6;
+                for ($i = $start_page; $i <= $end_page; $i++) {
+                    $active = $paged->current_page == $i ? ' class="active"' : '';
+                    $result .= '<li' . $active . '><a href="' . base_url($base_url . $i) . '">' . $i . '</a></li>';
+                }
+                if ($paged->current_page + 7 <= $paged->total_pages) {
+                    $result .= '<li><a href="' . base_url($base_url . ($paged->current_page + 6)) . '">...</a></li>';
+                    $result .= '<li><a href="' . base_url($base_url . $paged->total_pages) . '">' . $paged->total_pages . '</a></li>';
+                }
+                if ($paged->has_next) {
+                    $result .= '<li><a href="' . base_url($base_url . $paged->next_page) . '">&raquo;</a></li>';
+                }
+                $result .= '</ul>';
+            }
+            $result .= '</div>';
+        }
+
+        return $result;
     }
 }
 
@@ -136,7 +169,7 @@ class AuthController extends MY_Controller
             redirect('auth/login', 'refresh');
         }
         $redirect_to = $this->session->userdata('redirect_to');
-        if($redirect_to){
+        if ($redirect_to) {
             $this->session->unset_userdata('redirect_to');
             redirect($redirect_to, 'refresh');
         }
@@ -153,13 +186,18 @@ class AuthController extends MY_Controller
         $this->carabiner->group('page_css', array('css' => $css));
     }
 
-    public function get_user(){
+    public function get_user()
+    {
         return $this->user;
     }
-    public function get_friends(){
+
+    public function get_friends()
+    {
         return $this->friends;
     }
-    public function get_pymk(){
+
+    public function get_pymk()
+    {
         return $this->pymk;
     }
 
@@ -184,8 +222,7 @@ class AuthController extends MY_Controller
             }
             $this->session->set_userdata(array('friend_ids' => $friend_ids, 'friend_list_last_update' => time()));
             $this->friends = $friend_ids;
-        }
-        else{
+        } else {
             $this->friends = $this->session->userdata('friend_ids');
         }
     }
@@ -194,7 +231,8 @@ class AuthController extends MY_Controller
      * Caching the list of People you may know
      *
      */
-    protected function update_people_you_may_know_list($isForce = false){
+    protected function update_people_you_may_know_list($isForce = false)
+    {
         $pymk_list_last_update = $this->session->userdata('pymk_list_last_update');
         $pymk_list_cache_expiry_time = $this->config->item('pymk_list_cache_expiry_time');
 
@@ -209,8 +247,7 @@ class AuthController extends MY_Controller
             }
             $this->pymk = $pymk_ids;
             $this->session->set_userdata(array('pymk_ids' => $pymk_ids, 'pymk_list_last_update' => time()));
-        }
-        else{
+        } else {
             $this->pymk = $this->session->userdata('pymk_ids');
         }
 
@@ -223,7 +260,7 @@ class AdminController extends AuthController
     private $counters = array(
         'users' => 0,
         'future_events' => 0,
-        'custom_events' => 0,
+        'custom_future_events' => 0,
     );
 
     public function __construct()
@@ -241,12 +278,14 @@ class AdminController extends AuthController
         $css_assets = array(
             array('admin/admin.css')
         );
-        $this->carabiner->group('page_assets', array(/*'js' => $js_assets,*/ 'css' => $css_assets) );
+        $this->carabiner->group('page_assets', array( /*'js' => $js_assets,*/
+            'css' => $css_assets));
 
         $this->data['sub_layout'] = 'layouts/admin_page';
     }
 
-    public function get_counters(){
+    public function get_counters()
+    {
         return $this->counters;
     }
 
@@ -254,7 +293,8 @@ class AdminController extends AuthController
      * Caching the list of People you may know
      *
      */
-    protected function update_counters($isForce = false){
+    protected function update_counters($isForce = false)
+    {
         $counters_last_update = $this->session->userdata('counters_last_update');
         $counters_cache_expiry_time = $this->config->item('counters_cache_expiry_time');
 
@@ -262,11 +302,10 @@ class AdminController extends AuthController
             $this->load->model('events_m');
             $this->counters['users'] = $this->ion_auth->users()->num_rows();
             $this->counters['future_events'] = $this->events_m->get_total_count('future_events');
-            $this->counters['custom_events'] = $this->events_m->get_total_count('custom_future_events');
+            $this->counters['custom_future_events'] = $this->events_m->get_total_count('custom_future_events');
 
             $this->session->set_userdata(array('counters' => $this->counters, 'counters_last_update' => time()));
-        }
-        else{
+        } else {
             $this->counters = $this->session->userdata('counters');
         }
 

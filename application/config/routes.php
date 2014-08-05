@@ -73,6 +73,12 @@ $route['admin/users/(:num)/(:num)/(id|first_name|last_name|email|group|status)/(
 $route['admin/users/(:num)/(:num)/(id|first_name|last_name|email|group|status)'] = 'admin/users/index/$1/$2/$3';
 $route['admin/users/(:num)/(:num)'] = 'admin/users/index/$1/$2';
 $route['admin/users/(:num)'] = 'admin/users/index/$1';
+
+$route['admin/events/(:num)/(:num)'] = 'admin/events/index/$1/$2';
+$route['admin/events/(:num)'] = 'admin/events/index/$1';
+$route['admin/events/custom/(:num)/(:num)'] = 'admin/events/index/$1/$2';
+$route['admin/events/custom/(:num)'] = 'admin/events/index/$1';
+
 $route['admin'] = 'admin/dashboard/index';
 
 

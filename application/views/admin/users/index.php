@@ -1,4 +1,9 @@
 <h2 class="sub-header">Users List</h2>
+<?if(isset($pagination)&&!empty($pagination)):?>
+    <div>
+        <?=$pagination?>
+    </div>
+<?endif?>
 <div class="table-responsive">
     <table class="table table-striped">
         <thead>
@@ -33,3 +38,8 @@
         </tbody>
     </table>
 </div>
+<?if(isset($pagination)&&!empty($pagination)):?>
+    <div>
+        <?=$pagination?>
+    </div>
+<?endif?>
