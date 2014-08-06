@@ -21,7 +21,6 @@
             clearTimeout(t_notification)
         }
 
-
         $('body .notification div').hover(clear_timeout, set_time_out);
 
         //contact form
@@ -52,5 +51,22 @@
             });
             return false;
         });
+
+        $('body').on('closed.bs.alert', '.message-banner', function () {
+            var message_banner_type = $(this).data('message_type');
+            $.ajax(base_url + 'user/account_settings/skip_banner', {
+                type: 'POST',
+                data: {message_banner_type: message_banner_type},
+                success: function (response) {
+                    if (typeof response.errors === 'undefined') {
+                        $('.contact_us-form-errors.form_error').hide();
+                        $('#contact_modal').modal('hide');
+                        return;
+                    }
+                    $('.contact_us-form-errors.form_error').html('<div class="alert alert-danger fade in" role="alert"><button type="button" class="close">×</button>' + response.errors + '</div>');
+                }
+            });
+        });
+
     });
 })(jQuery);

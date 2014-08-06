@@ -50,4 +50,9 @@ class MY_Model extends CI_Model {
 		parent::__construct();
 	}
 
+    public function getById($id){
+        return $this->db->where('id', $id)->get($this->table)->row();
+    }
+
+
 }

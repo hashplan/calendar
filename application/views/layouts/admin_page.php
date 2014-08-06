@@ -1,4 +1,4 @@
-<?php $this->load->view('admin/components/header_menu') ?>
+<?php $this->load->view('components/header_menu') ?>
 <div class="container">
     <div class="row">
         <div class="col-sm-12 col-md-12 main">

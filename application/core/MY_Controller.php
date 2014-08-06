@@ -107,7 +107,8 @@ class MY_Controller extends CI_Controller
             header('Content-type: text/json');
             echo json_encode($this->data);
             die();
-        } else {
+        }
+        else {
             $this->load->view($this->layout, $this->data);
         }
     }
@@ -178,11 +179,16 @@ class AuthController extends MY_Controller
     private $user = NULL;
     private $friends = NULL;
     private $pymk = NULL;
-    public $user_name = NULL;
+    private $my_name = NULL;
+    private  $my_settings = NULL;
+    private  $my_metroarea = NULL;
+    private  $banner = array();
 
     public function __construct()
     {
         parent::__construct();
+
+        $this->load->helper('cookie');
 
         $this->form_validation->set_error_delimiters($this->config->item('error_start_delimiter', 'ion_auth'), $this->config->item('error_end_delimiter', 'ion_auth'));
         $this->lang->load('auth');
@@ -197,7 +203,18 @@ class AuthController extends MY_Controller
             redirect($redirect_to, 'refresh');
         }
 
-        $this->user = $this->ion_auth->user()->row();
+        $this->user = $this->ion_auth->where('Active', 1)->user()->row();
+        if (empty($this->user)) {
+            $this->session->set_flashdata('flash_message', 'Your account has been deactivated');
+            redirect('logout', 'refresh');
+        }
+
+        $this->update_user_name();
+        $this->update_user_settings();
+        $this->update_user_location();
+
+        $this->fill_banners();
+
         $this->update_friend_list();
         $this->update_people_you_may_know_list();
         $this->data['user'] = $this->get_user();
@@ -209,23 +226,8 @@ class AuthController extends MY_Controller
         $this->carabiner->group('page_css', array('css' => $css));
     }
 
-    public function get_user()
-    {
-        return $this->user;
-    }
-
-    public function get_friends()
-    {
-        return $this->friends;
-    }
-
-    public function get_pymk()
-    {
-        return $this->pymk;
-    }
-
     /**
-     * Cached full friend list
+     * Cached and fill full friend list
      *
      * @param bool $isForce
      */
@@ -245,13 +247,14 @@ class AuthController extends MY_Controller
             }
             $this->session->set_userdata(array('friend_ids' => $friend_ids, 'friend_list_last_update' => time()));
             $this->friends = $friend_ids;
-        } else {
+        }
+        else {
             $this->friends = $this->session->userdata('friend_ids');
         }
     }
 
     /**
-     * Caching the list of People you may know
+     * Caching and fill the list of People you may know
      *
      */
     protected function update_people_you_may_know_list($isForce = false)
@@ -270,11 +273,133 @@ class AuthController extends MY_Controller
             }
             $this->pymk = $pymk_ids;
             $this->session->set_userdata(array('pymk_ids' => $pymk_ids, 'pymk_list_last_update' => time()));
-        } else {
+        }
+        else {
             $this->pymk = $this->session->userdata('pymk_ids');
         }
 
     }
+
+    /**
+     * Caching and fill user name
+     *
+     * @param bool $isForce
+     */
+    protected function update_user_name($isForce = false)
+    {
+        if (!$this->user) {
+            $this->user = $this->ion_auth->where('Active', 1)->user()->row();
+        }
+
+        if ($this->session->userdata('my_name') && !$isForce) {
+            $this->my_name = $this->session->userdata('user_name');
+        }
+        else {
+            $this->my_name = $this->user->first_name . " " . $this->user->last_name;
+            $this->session->set_userdata('my_name', $this->my_name);
+        }
+    }
+
+    /**
+     * Caching and fill user settings
+     *
+     * @param bool $isForce
+     */
+    protected function update_user_settings($isForce = false)
+    {
+
+        if ($this->session->userdata('my_settings') && !$isForce) {
+            $this->my_settings = $this->session->userdata('my_settings');
+        }
+        else {
+            $this->load->model('account_settings_m');
+            $this->my_settings = $this->account_settings_m->get_account_settings();
+            $this->session->set_userdata('my_settings', $this->my_settings);
+        }
+    }
+
+    /**
+     * Caching and fill user location
+     *
+     * @param bool $isForce
+     */
+    protected function update_user_location($isForce = false)
+    {
+        if (!$this->my_settings) {
+            $this->update_user_settings();
+        }
+
+        if ($this->session->userdata('my_metroarea') && !$isForce) {
+            $this->my_metroarea = $this->session->userdata('my_metroarea');
+        }
+        else {
+            if ($this->my_settings && isset($this->my_settings->metroId)) {
+                $this->load->model('location_m');
+                $metroarea = $this->location_m->getById($this->my_settings->metroId);
+                if ($metroarea) {
+                    $this->my_metroarea = $metroarea->city;
+                    $this->session->set_userdata('my_metroarea', $this->my_metroarea);
+                }
+            }
+        }
+    }
+
+    protected function fill_banners(){
+        if(!$this->my_metroarea && !$this->session->userdata('skip-banner:location')){
+            $this->banner['location'] = 'Please go to the <a href="'.site_url('user/account_settings').'">account settings</a> and select your location.';
+        }
+    }
+
+    protected function close_banner($type){
+        if($this->banner[$type]){
+            unset($this->banner[$type]);
+            $this->session->set_userdata('skip-banner:'.$type, true);
+        }
+    }
+
+    /**GETTERS*/
+    public function get_banner_messages()
+    {
+        return $this->banner;
+    }
+
+    public function get_my_name()
+    {
+        return $this->user_name;
+    }
+
+    public function get_my_settings()
+    {
+        return $this->user_settings;
+    }
+
+    public function get_my_location_name()
+    {
+        return $this->user_metroarea;
+    }
+
+    public function get_user()
+    {
+        return $this->user;
+    }
+
+    public function get_friends()
+    {
+        return $this->friends;
+    }
+
+    public function get_pymk()
+    {
+        return $this->pymk;
+    }
+    /**END GETTERS*/
+
+    protected function _render_page()
+    {
+        $this->data['messages_banner'] = $this->get_banner_messages();
+        parent::_render_page();
+    }
+
 }
 
 //Protocontroller for admin
@@ -328,7 +453,8 @@ class AdminController extends AuthController
             $this->counters['custom_future_events'] = $this->events_m->get_total_count('custom_future_events');
 
             $this->session->set_userdata(array('counters' => $this->counters, 'counters_last_update' => time()));
-        } else {
+        }
+        else {
             $this->counters = $this->session->userdata('counters');
         }
 

@@ -1,6 +1,8 @@
-<?php $this->load->view('user/components/header_menu') ?>
+<? $this->load->view('user/components/messages_banner') ?>
 
-<?php $this->load->view($view, $data) ?>
+<? $this->load->view('components/header_menu') ?>
+
+<? $this->load->view($view, $data) ?>
 
 <!--modal for event details-->
 <!-- Modal -->

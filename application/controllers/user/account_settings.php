@@ -5,7 +5,7 @@ class Account_settings extends AuthController
     public function __construct()
     {
         parent::__construct();
-		$this->load->model('account_settings_m');
+        $this->load->model('account_settings_m');
         $this->data['sub_layout'] = 'layouts/user_page';
     }
 
@@ -19,7 +19,7 @@ class Account_settings extends AuthController
         $this->form_validation->set_rules('first_name', 'First name', 'trim|required|xss_clean');
         $this->form_validation->set_rules('last_name', 'Last name', 'trim|required|xss_clean');
         $this->form_validation->set_rules('metro_id', 'Location', 'trim|required|integer');
-        if($this->input->post('old_password')||$this->input->post('password')||$this->input->post('password_confirm')){
+        if ($this->input->post('old_password') || $this->input->post('password') || $this->input->post('password_confirm')) {
             $this->form_validation->set_rules('old_password', 'Old Password', 'required');
             $this->form_validation->set_rules('password', 'Password', 'required|min_length[' . $this->config->item('min_password_length', 'ion_auth') . ']|max_length[' . $this->config->item('max_password_length', 'ion_auth') . ']|matches[password_confirm]');
             $this->form_validation->set_rules('password_confirm', 'Confirm password', 'required');
@@ -27,13 +27,14 @@ class Account_settings extends AuthController
 
         if ($this->form_validation->run() == TRUE) {
             $user_data = $this->input->post();
-            unset($user_data['old_password'],$user_data['password'],$user_data['password_confirm']);
+            unset($user_data['old_password'], $user_data['password'], $user_data['password_confirm']);
             $user_data['id'] = $this->get_user()->id;
             $this->users_m->save_user($user_data);
-            $this->account_settings_m->save('metroId',$this->input->post('metro_id'));
+            $this->account_settings_m->save('metroId', $this->input->post('metro_id'));
             $identity = $this->session->userdata($this->config->item('identity', 'ion_auth'));
             $change = $this->ion_auth->change_password($identity, $this->input->post('old_password'), $this->input->post('password'));
-            if($change){
+            if ($change) {
+                $this->update_user_location(true);
                 redirect('logout');
             }
             redirect('user/settings');
@@ -63,7 +64,8 @@ class Account_settings extends AuthController
         $this->load->library('upload', $config);
         if (!$this->upload->do_upload()) {
             $error = array('error' => $this->upload->display_errors());
-        } else {
+        }
+        else {
             $image_data = $this->upload->data();
         }
 
@@ -92,5 +94,15 @@ class Account_settings extends AuthController
         unlink($image_data['full_path']);
         redirect(base_url('user/account_settings'));
 
+    }
+
+    public function skip_banner()
+    {
+        if ($this->input->is_ajax_request()) {
+            $type = $this->input->post('message_banner_type');
+            if ($type) {
+                $this->close_banner($type);
+            }
+        }
     }
 }

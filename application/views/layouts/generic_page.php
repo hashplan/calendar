@@ -1,3 +1,4 @@
+<? $this->load->view('components/header_menu') ?>
 <div class="container">
     <div class="row">
         <!--Main column-->
