@@ -7,14 +7,23 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="<?= site_url(''); ?>"><img
-                    src="<?= site_url('/assets/img/logo/hashplan_150-28.png'); ?>" alt="Hashplan logo"></a>
+            <a class="navbar-brand" href="<?= site_url(''); ?>"><img src="<?= site_url('/assets/img/logo/hashplan_150-28.png');?>" alt="Hashplan logo"></a>
         </div>
         <div class="navbar-collapse collapse">
             <ul class="nav navbar-nav">
-                <li><a href="<?= site_url(); ?>">Home</a></li>
-                <li><a href="<?= site_url('about'); ?>">About</a></li>
+                <li class="<?= Menu::isActive('user/events/my');?>"><?= anchor('user/events/my', "Profile");?></li>
+                <li class="<?= Menu::isActive('user/events/all');?>"><?= anchor('user/events/all', 'Events'); ?></li>
+                <li class="dropdown <?= Menu::isActive('user/friends');?>">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">Friends <i class="caret"></i></a>
+                    <ul class="dropdown-menu">
+                        <li class="<?= Menu::isActive('user/friends/friends_current');?>"><?= anchor('user/friends', 'Current friends') ?></li>
+                        <li class="<?= Menu::isActive('user/friends/friends_add');?>"><?= anchor('user/friends/add', 'Add friends') ?></li>
+                    </ul>
+                </li>
+                <li class="<?php echo Menu::isActive('user/invites');?>"><?php echo anchor('user/friends/invites/', 'Invites');?></li>
             </ul>
+
+            <!--Side bar-->
             <ul class="nav navbar-nav navbar-right">
                 <? if (is_logged_in()): ?>
                     <li class="dropdown nav navbar-nav">

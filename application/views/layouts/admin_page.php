@@ -1,8 +1,7 @@
-<?php $this->load->view('components/header_menu') ?>
+<?php $this->load->view('admin/components/header_menu') ?>
 <div class="container">
     <div class="row">
         <div class="col-sm-12 col-md-12 main">
-            <h1 class="page-header">Dashboard</h1>
             <?php $this->load->view('admin/components/counters_menu', $data) ?>
 
             <?php $this->load->view($view, $data) ?>

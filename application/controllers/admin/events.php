@@ -17,6 +17,7 @@ class Events extends AdminController
 
     public function future($page = 1, $limit = 50)
     {
+        Menu::setActive('admin/events/future');
         $page || $page = 1;
         $offset = $limit * $page - $limit;
         $counters = $this->get_counters();
@@ -45,6 +46,7 @@ class Events extends AdminController
 
     public function custom($page = 1, $limit = 50)
     {
+        Menu::setActive('admin/events/custom');
         $page || $page = 1;
         $offset = $limit * $page - $limit;
         $counters = $this->get_counters();

@@ -12,8 +12,15 @@
         </div>
         <div class="navbar-collapse collapse">
             <ul class="nav navbar-nav">
-                <li><a href="<?= site_url(); ?>">Home</a></li>
-                <li><a href="<?= site_url('about'); ?>">About</a></li>
+                <li class="<?= Menu::isActive('admin/users');?>"><a href="<?= site_url('admin/users'); ?>">Users</a></li>
+                <li class="dropdown <?= Menu::isActive('admin/events');?>">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">Events <i class="caret"></i></a>
+                    <ul class="dropdown-menu">
+                        <li class="<?= Menu::isActive('admin/events/future');?>"><a href="<?= site_url('admin/events/future'); ?>">Future Events</a></li>
+                        <li class="<?= Menu::isActive('admin/events/custom');?>"><a href="<?= site_url('admin/events/custom'); ?>">Custom Events</a></li>
+                    </ul>
+                </li>
+                <li><a href="<?= site_url('admin/crawler'); ?>">Crawler</a></li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
                 <? if (is_logged_in()): ?>

@@ -6,6 +6,7 @@ class Users extends AdminController
     public function __construct()
     {
         parent::__construct();
+        Menu::setActive('admin/users');
     }
 
     public function index($page = 1, $limit = 50, $sort = 'id', $type = 'ASC')
@@ -100,36 +101,42 @@ class Users extends AdminController
         $this->data['groups'] = $groups;
         $this->data['currentGroups'] = $currentGroups;
 
-        $this->data['first_name'] = array(
-            'name' => 'first_name',
-            'id' => 'first_name',
-            'type' => 'text',
-            'value' => $this->form_validation->set_value('first_name', $user->first_name),
-        );
-        $this->data['last_name'] = array(
-            'name' => 'last_name',
-            'id' => 'last_name',
-            'type' => 'text',
-            'value' => $this->form_validation->set_value('last_name', $user->last_name),
-        );
-        $this->data['password'] = array(
-            'name' => 'password',
-            'id' => 'password',
-            'type' => 'password'
-        );
-        $this->data['password_confirm'] = array(
-            'name' => 'password_confirm',
-            'id' => 'password_confirm',
-            'type' => 'password'
-        );
-
         $this->_render_page();
     }
 
     public function add()
     {
-
+        //TODO
     }
 
+    public function deactivate($userId)
+    {
+        $this->data['view'] = 'admin/users/deactivate';
+        $id = $this->config->item('use_mongodb', 'ion_auth') ? (string)$userId : (int)$userId;
 
+        $this->load->library('form_validation');
+        $this->form_validation->set_rules('confirm', $this->lang->line('deactivate_validation_confirm_label'), 'required');
+        $this->form_validation->set_rules('id', $this->lang->line('deactivate_validation_user_id_label'), 'required|alpha_numeric');
+
+        if ($this->form_validation->run() == FALSE) {
+            $this->data['csrf'] = $this->_get_csrf_nonce();
+            $this->data['user'] = $this->ion_auth->user($userId)->row();
+
+            $this->_render_page();
+        }
+        else {
+            if ($this->input->post('confirm') == 'yes') {
+                if ($this->_valid_csrf_nonce() === FALSE || $id != $this->input->post('id')) {
+                    show_error($this->lang->line('error_csrf'));
+                }
+                $this->ion_auth->deactivate($id);
+            }
+            redirect('admin/users', 'refresh');
+        }
+    }
+
+    public function activate($id){
+        $this->ion_auth->activate($id);
+        redirect('admin/users', 'refresh');
+    }
 }

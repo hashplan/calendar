@@ -21,12 +21,9 @@ class Dashboard extends AdminController
 
     public function index()
     {
+        Menu::setActive('');
+        $this->data['title'] = 'Dashboard';
         $this->data['view'] = 'admin/dashboard/index';
-
-        /*$counters = $this->get_counters();
-        echo "<pre>";
-        var_dump($counters);
-        echo "</pre>";*/
         $this->_render_page();
     }
 
