@@ -42,20 +42,24 @@ class Events_m extends MY_Model
         if (!empty($options['events_type'])) {
             if ($options['events_type'] === 'deleted' && $is_admin_or_owner) {
                 $this->db->join('events_deleted AS ed', 'e.id = ed.eventId AND ed.userId = ' . $this->db->escape($user_id), 'inner');
-            } else if ($options['events_type'] === 'favourite' && $is_admin_or_owner) {
+            }
+            else if ($options['events_type'] === 'favourite' && $is_admin_or_owner) {
                 $this->db->join('events_favourited AS ef', 'e.id = ef.eventId AND ef.userId = ' . $this->db->escape($user_id), 'inner');
                 $this->db->where('NOT EXISTS (SELECT 1 FROM events_deleted ed WHERE e.id = ed.eventId AND ed.userId = ' . $this->db->escape($user_id) . ')', '', FALSE);
-            } else if (($options['events_type'] === 'my' || $options['events_type'] === 'friends') && ($is_admin_or_owner || $is_friend_of)) {
+            }
+            else if (($options['events_type'] === 'my' || $options['events_type'] === 'friends') && ($is_admin_or_owner || $is_friend_of)) {
                 $this->db->join('user_events AS ue', 'e.id = ue.eventId AND ue.userId = ' . $this->db->escape($user_id), 'inner');
                 $this->db->where('NOT EXISTS (SELECT 1 FROM events_deleted ed WHERE e.id = ed.eventId AND ed.userId = ' . $this->db->escape($user_id) . ')', '', FALSE);
-            } else if ($options['events_type'] === 'all' && $is_admin_or_owner) {
+            }
+            else if ($options['events_type'] === 'all' && $is_admin_or_owner) {
                 $this->db->select('IF(ue.eventId IS NOT NULL, 1, 0) AS is_in_calendar_all', FALSE);
                 $this->db->select('IF(ef.eventId IS NOT NULL, 1, 0) AS is_favourite_all', FALSE);
                 $this->db->where('NOT EXISTS (SELECT 1 FROM events_deleted ed WHERE e.id = ed.eventId AND ed.userId = ' . $this->db->escape($user_id) . ')', '', FALSE);
                 $this->db->join('user_events ue', 'e.id = ue.eventId', 'left');
                 $this->db->join('events_favourited AS ef', 'e.id = ef.eventId AND ef.userId = ' . $this->db->escape($user_id), 'left');
                 $this->db->group_by('id');
-            } else {
+            }
+            else {
                 // 403
             }
         }
@@ -63,6 +67,10 @@ class Events_m extends MY_Model
         //search by event name
         if (!empty($options['name'])) {
             $this->db->like('e.name', $options['name']);
+        }
+        //venue filter
+        if (isset($options['venue_id']) && !empty($options['venue_id'])) {
+            $this->db->like('v.id', $options['venue_id']);
         }
         //categories filter
         if (!empty($options['category'])) {
@@ -87,7 +95,8 @@ class Events_m extends MY_Model
                 $date_range['start'] = date('Y-m-d H:i:s', strtotime('next Friday'));
                 $date_range['end'] = date('Y-m-d H:i:s', strtotime('next Sunday'));
                 $date_range['end'] = str_replace('00:00:00', '23:59:59', $date_range['end']);
-            } else if (is_numeric($options['preselects'])) {
+            }
+            else if (is_numeric($options['preselects'])) {
                 $date_range['start'] = date('Y-m-d H:i:s', strtotime('today'));
                 $date_range['end'] = date('Y-m-d H:i:s', strtotime('+' . ($options['preselects'] - 1) . ' days midnight'));
                 $date_range['end'] = str_replace('00:00:00', '23:59:59', $date_range['end']);
@@ -229,7 +238,8 @@ class Events_m extends MY_Model
                 $already_favourite = count($this->get_favourite_events($event_id, $user_id)) === 1;
 
                 if ($already_favourite) {
-                } else if (!$already_favourite && $event_id_is_correct) {
+                }
+                else if (!$already_favourite && $event_id_is_correct) {
                     $this->db->delete('events_deleted', array(
                         'userId' => $user_id,
                         'eventId' => $event_id,
@@ -287,7 +297,8 @@ class Events_m extends MY_Model
                 $already_deleted = count($this->get_deleted_events($event_id, $user_id)) === 1;
 
                 if ($already_deleted) {
-                } else if (!$already_deleted && $event_id_is_correct) {
+                }
+                else if (!$already_deleted && $event_id_is_correct) {
                     $this->db->delete('events_favourited', array(
                         'userId' => $user_id,
                         'eventId' => $event_id,
@@ -529,6 +540,39 @@ class Events_m extends MY_Model
         if ($options['events_type'] == 'custom_future_events') {
             $this->db->where('e.ownerId IS NOT NULL');
         }
+
+        return $this->db->get()->result();
+    }
+
+    public function get_top_venues($options = array())
+    {
+        $this->db
+            ->select('v.id as venue_id, v.id as id, v.name as venue_name, v.address venue_address, v.city venue_city, count(e.id) events_count')
+            ->from('venues v')
+            ->join('events e', 'e.venueId = v.id');
+
+        if (!isset($options['past_days']) || empty($options['past_days'])) {
+            $options['past_days'] = 30;
+        }
+        $this->db
+            ->where('e.datetime between now() and (NOW() + INTERVAL ' . $this->db->escape($options['past_days']) . ' DAY)');
+
+        if (isset($options['metroarea']) && !empty($options['metroarea'])) {
+            $this->db
+                ->join('cities c', 'v.cityId = c.id')
+                ->join('metroareas m', 'c.metroId = m.id')
+                ->where('m.id', $options['metroarea']);
+
+        }
+
+        $this->db
+            ->group_by('e . venueId')
+            ->order_by('events_count', 'DESC');
+
+        if (!isset($options['limit']) || empty($options['limit'])) {
+            $options['limit'] = 5;
+        }
+        $this->db->limit($options['limit']);
 
         return $this->db->get()->result();
     }

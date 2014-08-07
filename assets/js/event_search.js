@@ -33,8 +33,11 @@
                     if ($('#event-categories').val() != 0) {
                         data.category = $('#event-categories').val();
                     }
+                    if($('.widget-top-venues .venue.active')){
+                        data.venue_id = $('.widget-top-venues .venue.active').data('venue_id');
+                    }
                     var eventsType = 'all';
-                    if (['favourite', 'deleted', 'my', 'friends'].indexOf($('#events-type').val()) !== -1) {
+                    if (['favourite', 'deleted', 'my', 'friends', 'trash'].indexOf($('#events-type').val()) !== -1) {
                         eventsType = $('#events-type').val();
                     }
                     data.events_type = eventsType;
@@ -63,6 +66,8 @@
             $('.metro-id').text(metroId);
             $('#event_cities').modal('hide');
             fetchEvents();
+            updateTopVenues();
+            $('.page-title').data('metro_name', metroName);
             changePageTitle(metroName);
         });
 
@@ -74,6 +79,16 @@
 
         // filter events by category
         $('.page-user-events #event-categories').on('change', fetchEvents);
+
+        //filter events by venue
+        $('.page-user-events .widget-top-venues').on('click', '.venue', function (e) {
+            e.preventDefault();
+            $('.widget-top-venues .venue').removeClass('active');
+            $(this).addClass('active');
+            var metroName = $('.page-title').data('metro_name');
+            changePageTitle(metroName);
+            fetchEvents();
+        });
 
         // reset events
         $('.page-user-events #event-reset').on('click', function () {
@@ -97,13 +112,15 @@
             if ($('#event-date').val().length > 0) {
                 data.specific_date = $('#event-date').val();
             }
-
             if ($('#event-categories').val() != 0) {
                 data.category = $('#event-categories').val();
             }
+            if($('.widget-top-venues .venue.active')){
+                data.venue_id = $('.widget-top-venues .venue.active').data('venue_id');
+            }
 
             var eventsType = 'all';
-            if (['favourite', 'deleted', 'my', 'friends'].indexOf($('#events-type').val()) !== -1) {
+            if (['favourite', 'deleted', 'my', 'friends', 'trash'].indexOf($('#events-type').val()) !== -1) {
                 eventsType = $('#events-type').val();
             }
             data.events_type = eventsType;
@@ -125,11 +142,27 @@
                     }
                 }
             });
+            $(document).scroll();
+        }
+
+        function updateTopVenues() {
+            var data = {};
+            if ($('.metro-id').text() > 0) {
+                data.metro_id = $('.metro-id').text();
+            }
+            $.ajax(base_url + 'user/events/top_venues_list', {
+                type: 'POST',
+                data: data,
+                success: function (response) {
+                    /*$('.widget-top-venues .panel-body').html(response);*/
+                    $('.widget-top-venues .list-group').html(response);
+                }
+            });
         }
 
         function changePageTitle(metroName) {
             var eventsType = null;
-            if (['favourite', 'deleted', 'my', 'all'].indexOf($('#events-type').val()) !== -1) {
+            if (['favourite', 'deleted', 'my', 'friend', 'all'].indexOf($('#events-type').val()) !== -1) {
                 eventsType = $('#events-type').val();
             }
             else {
@@ -150,6 +183,13 @@
                     text = metroName === "Doesn't matter" ? 'All deleted events' : 'Deleted events in ' + metroName;
                     break;
             }
+            if (window.console) {
+                console.log(metroName, $('.widget-top-venues .venue.active .venue-name').text());
+            }
+            if($('.widget-top-venues .venue.active .venue-name').text()){
+                text = text + ' - ' + $('.widget-top-venues .venue.active .venue-name').text();
+            }
+
             if (eventsType !== null) {
                 $('h2.page-title').text(text);
             }

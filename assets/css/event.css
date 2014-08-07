@@ -48,3 +48,19 @@
 #user_added_event_form .save-button {
     margin-right: 15px;
 }
+
+/*top venues widget*/
+.widget-top-venues {
+    margin-top: 20px;
+}
+@media (min-width: 768px) {
+    .widget-top-venues .row.venue {
+        margin-bottom: 20px;
+    }
+
+    .widget-top-venues .list-group-item {
+        padding-bottom: 20px;
+        padding-top: 30px;
+    }
+}
+

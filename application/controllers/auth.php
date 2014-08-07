@@ -43,7 +43,7 @@ class Auth extends MY_Controller
             $this->session->set_flashdata('message', $this->ion_auth->errors());
             $this->data['errors'] = validation_errors();
         }
-        $this->_render_page($this->layout, $this->data);
+        $this->_render_page();
     }
 
     //log the user out
