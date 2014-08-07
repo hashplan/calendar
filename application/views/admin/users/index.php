@@ -1,7 +1,9 @@
 <div class="panel panel-default">
-    <div class="panel-heading"><h2 class="sub-header">Users List</h2></div>
+    <div class="panel-heading">
+        <h2>Users List</h2>
+    </div>
     <div class="panel-body">
-
+        <a href="<?=site_url('admin/users/add')?>" class="btn bg-primary pull-right"><span class="glyphicon glyphicon-plus"></span> Add New</a>
         <? if (isset($pagination) && !empty($pagination)): ?>
             <div>
                 <?= $pagination ?>
