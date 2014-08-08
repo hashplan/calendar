@@ -551,11 +551,11 @@ class Events_m extends MY_Model
             ->from('venues v')
             ->join('events e', 'e.venueId = v.id');
 
-        if (!isset($options['past_days']) || empty($options['past_days'])) {
-            $options['past_days'] = 30;
+        if (!isset($options['next_days']) || empty($options['next_days'])) {
+            $options['next_days'] = 30;
         }
         $this->db
-            ->where('e.datetime between now() and (NOW() + INTERVAL ' . $this->db->escape($options['past_days']) . ' DAY)');
+            ->where('e.datetime between now() and (NOW() + INTERVAL ' . $this->db->escape($options['next_days']) . ' DAY)');
 
         if (isset($options['metroarea']) && !empty($options['metroarea'])) {
             $this->db

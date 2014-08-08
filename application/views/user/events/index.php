@@ -4,9 +4,9 @@
         <div class="col-md-2 col-sm-12">
             <div class="thumbnail user-avatar">
                 <? if ($user->avatar_path): ?>
-                    <img src="<?php echo site_url('/assets/img/users/' . $user->avatar_path); ?>", alt="" class = "img-responsive img-rounded">
+                    <img src="<?= site_url('/assets/img/users/' . $user->avatar_path); ?>", alt="" class = "img-responsive img-rounded">
 			    <? else: ?>
-                    <img src="<?php echo site_url('/assets/img/icons/no-image-100.png'); ?>", alt="" class = "img-responsive img-rounded">
+                    <img src="<?= site_url('/assets/img/icons/no-image-100.png'); ?>", alt="" class = "img-responsive img-rounded">
                 <?endif ?>
             </div>
             <hr>
@@ -86,7 +86,7 @@
         <div class="col-md-4 hidden-xs hidden-sm">
             <div class="panel panel-default widget-top-venues">
                 <div class="panel-heading">
-                    <div class="panel-title">Top Venues</div>
+                    <div class="panel-title"><h4><strong>Top Venues (30 Days)</strong></h4></div>
                 </div>
                 <?/*<div class="panel-body">
                     <?= $top_venues; ?>

@@ -73,14 +73,16 @@ class Events extends AdminController
         $this->_render_page();
     }
 
-    public function edit($userId)
+    public function edit($id)
     {
 
     }
 
     public function add()
     {
+        $this->data['view'] = 'admin/events/add';
 
+        $this->_render_page();
     }
 
 
