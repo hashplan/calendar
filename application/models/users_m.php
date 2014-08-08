@@ -199,7 +199,6 @@ class Users_m extends MY_Model
         $friends = $this->get_friends(array('user_id' => $user_id), true);
 
         if (!empty($friends)) {
-            $friends_count = empty($options['friends_count']) ? 2 : $options['friends_count'];
             $friends_ids = $placeholders = array();
             foreach ($friends as $friend) {
                 $friends_ids[] = $friend->id;
@@ -259,11 +258,10 @@ class Users_m extends MY_Model
             $sql .= '
                 AND u.id != ?
                 GROUP BY t.user_id
-                HAVING COUNT(t.friend_id) >= ?
                 ORDER BY metro_preference, friends_count DESC
             ';
 
-            $people_raw = $this->db->query($sql, array_merge($friends_ids, $friends_ids, $friends_ids, $friends_ids, array($user_id, $user_id, $user_id, $friends_count)))->result();
+            $people_raw = $this->db->query($sql, array_merge($friends_ids, $friends_ids, $friends_ids, $friends_ids, array($user_id, $user_id, $user_id)))->result();
 
             $people = array();
             foreach ($people_raw as $dude) {
