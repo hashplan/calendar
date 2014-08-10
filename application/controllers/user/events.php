@@ -122,7 +122,8 @@ class Events extends AuthController
             $this->data['metro_name'] = isset($default_location->city) ? $default_location->city : '';
         }
 
-        $top_venues = $this->events_m->get_top_venues($top_venues_params);
+        $this->load->model('venues_m');
+        $top_venues = $this->venues_m->get_top_venues($top_venues_params);
         $this->data['data']['top_venues'] = $this->load->view('user/events/top_venues_list', array('top_venues' => $top_venues), true);
 
         $events = $this->events_m->get_all($events_search_params);
@@ -141,10 +142,11 @@ class Events extends AuthController
 
     public function top_venues_list()
     {
+        $this->load->model('venues_m');
         $post = $this->input->post();
         $options = array();
         if (!empty($post['metro_id'])) $options['metroarea'] = $post['metro_id'];
-        $venues = $this->events_m->get_top_venues($options);
+        $venues = $this->venues_m->get_top_venues($options);
         $this->load->view('user/events/top_venues_list', array('top_venues' => $venues));
     }
 

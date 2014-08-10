@@ -7,7 +7,7 @@
         <div class="modal-body">
             <div class="alert alert-danger errors">
             </div>
-            <form>
+            <form action="<?=site_url('event/save')?>" role="form">
                 <div class="row">
                     <div class="col-md-12">
                         <input type="text" class="form-control event-name" name="name" placeholder="Event name"/>
@@ -41,7 +41,7 @@
                         </div>
                     </div>
                     <div class="col-md-6">
-                        <div class="bfh-timepicker"></div>
+                        <div class="bfh-timepicker" data-time="now"></div>
                     </div>
                 </div>
                 <div class="row">
@@ -61,8 +61,7 @@
                 </div>
                 <div class="row">
                     <div class="col-md-12">
-                        <button type="button" class="btn btn-default pull-right close-button" data-dismiss="modal"
-                                aria-hidden="true">Close
+                        <button type="button" class="btn btn-default pull-right close-button" data-dismiss="modal" aria-hidden="true">Close
                         </button>
                         <button type="button" class="btn btn-primary pull-right save-button">Save</button>
                     </div>
@@ -71,7 +70,7 @@
         </div>
     </div>
 </div>
-<script type="text/javascript">
+<script>
     $('#user_added_event_form .event-date').datepicker({
         format: 'yyyy-mm-dd'
     });
@@ -79,34 +78,5 @@
         time: null,
         align: 'right',
         name: 'time'
-    });
-
-    $('#user_added_event_form .save-button').on('click', function () {
-        var data = {};
-        data.name = $('#user_added_event_form [name="name"]').val();
-        data.address = $('#user_added_event_form [name="address"]').val();
-        data.location = $('#user_added_event_form [name="location"]').val();
-        data.date = $('#user_added_event_form [name="date"]').val();
-        data.time = $('#user_added_event_form [name="time"]').val();
-        data.description = $('#user_added_event_form [name="description"]').val();
-        data.private = $('#user_added_event_form [name="private"]:checked').val();
-        $.ajax(base_url + 'event/save', {
-            type: 'POST',
-            data: data,
-            success: function (response) {
-                if (typeof response.errors === 'undefined') {
-                    $('#user_added_event_form .errors').hide();
-                    $('#user_added_event_form').modal('hide');
-                    return;
-                }
-                $('#user_added_event_form .errors').html(response.errors).show();
-            }
-        });
-        return false;
-    });
-
-    // on hide modal - remove all data (this will force twbs to reload modal from remote url)
-    $('#user_added_event_form').on('hidden.bs.modal', function () {
-        $(this).removeData('bs.modal');
     });
 </script>

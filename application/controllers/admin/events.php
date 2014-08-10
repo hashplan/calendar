@@ -7,6 +7,12 @@ class Events extends AdminController
     {
         parent::__construct();
         $this->load->model('events_m');
+
+        $css_assets = array(
+            array('admin/events.css')
+        );
+        $this->carabiner->group('page_assets', array('css' => $css_assets));
+
     }
 
     public function index($page = 1, $limit = 50)
@@ -80,7 +86,24 @@ class Events extends AdminController
 
     public function add()
     {
+        $this->form_validation->set_rules('event_name', 'Event name', 'required|xss_clean')
+                                ->set_rules('event_desc', 'Event Description', 'xss_clean')
+                                ->set_rules('event_date', 'Event Date', 'required')
+                                ->set_rules('event_time', 'Event Date', 'required');
+
+        $this->load->model('location_m');
+        $this->load->model('venues_m');
+        Menu::setActive('admin/events/add');
         $this->data['view'] = 'admin/events/add';
+        $this->data['metros'] = $this->location_m->get_all_metro_areas();
+        $this->data['venues'] = $this->venues_m->get_venues();
+
+
+
+        $js_assets = array(
+            array('admin/create_new_event.js')
+        );
+        $this->carabiner->group('page_assets', array('js' => $js_assets));
 
         $this->_render_page();
     }

@@ -7,15 +7,15 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="<?= site_url(''); ?>"><img
-                    src="<?= site_url('/assets/img/logo/hashplan_150-28.png'); ?>" alt="Hashplan logo"></a>
+            <a class="navbar-brand" href="<?= site_url(''); ?>"><img src="<?= site_url('/assets/img/logo/hashplan_150-28.png'); ?>" alt="Hashplan logo"></a>
         </div>
         <div class="navbar-collapse collapse">
             <ul class="nav navbar-nav">
                 <li class="<?= Menu::isActive('admin/users');?>"><a href="<?= site_url('admin/users'); ?>">Users</a></li>
-                <li class="dropdown <?= Menu::isActive('admin/events');?>">
+                <li class="dropdown <?= Menu::isActive('admin/events/add');?> <?= Menu::isActive('admin/events/future');?> <?= Menu::isActive('admin/events/custom');?>">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">Events <i class="caret"></i></a>
                     <ul class="dropdown-menu">
+                        <li><a href="<?= site_url('admin/events/add'); ?>"><span class="glyphicon glyphicon-plus"></span> Add New</a></li>
                         <li class="<?= Menu::isActive('admin/events/future');?>"><a href="<?= site_url('admin/events/future'); ?>">Future Events</a></li>
                         <li class="<?= Menu::isActive('admin/events/custom');?>"><a href="<?= site_url('admin/events/custom'); ?>">Custom Events</a></li>
                     </ul>
@@ -25,9 +25,7 @@
             <ul class="nav navbar-nav navbar-right">
                 <? if (is_logged_in()): ?>
                     <li class="dropdown nav navbar-nav">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span
-                                class="glyphicon glyphicon-user">&nbsp </span><?= get_user_name() ?>
-                            <b class="caret"></b></a>
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-user">&nbsp </span><?= get_user_name() ?> <b class="caret"></b></a>
                         <ul class="dropdown-menu">
                             <? if (is_admin()): ?>
                                 <li><?= anchor('admin', '<span class="glyphicon glyphicon-eye-open">&nbsp </span>Administration'); ?></li>

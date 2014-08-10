@@ -14,6 +14,5 @@
 </div>
 <!--modal for private event form-->
 <!-- Modal -->
-<div class="modal" id="user_added_event_form" tabindex="-1" role="dialog" aria-labelledby="user_added_event_form"
-     aria-hidden="true">
+<div class="modal" id="user_added_event_form" tabindex="-1" role="dialog" aria-labelledby="user_added_event_form" aria-hidden="true">
 </div>

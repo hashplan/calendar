@@ -2,7 +2,7 @@
     <div class="panel-heading"><h2 class="sub-header">Create New Users</h2></div>
     <div class="panel-body">
         <?= validation_errors('<div class="form_error_notification errors alert alert-danger" role="alert">', '</div>') ?>
-        <form action="<?= site_url('admin/users/add') ?>" method="POST" id="signup_form" class="signup-form form-horizontal"
+        <form action="<?= site_url('admin/users/add') ?>" method="POST" class="form-horizontal"
               role="form">
             <div class="form-group">
                 <label for="first_name" class="col-md-3 control-label"><strong>First Name:</strong></label>

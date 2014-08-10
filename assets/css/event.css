@@ -53,7 +53,7 @@
 .widget-top-venues {
     margin-top: 20px;
 }
-@media (min-width: 768px) {
+@media (min-width: 992px) {
     .widget-top-venues .row.venue {
         margin-bottom: 20px;
     }
