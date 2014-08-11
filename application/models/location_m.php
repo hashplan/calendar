@@ -2,7 +2,7 @@
 
 class Location_m extends MY_Model
 {
-
+    private $allowed_countries = array(1,2,3,7);
     function __construct()
     {
         parent::__construct();
@@ -32,7 +32,7 @@ class Location_m extends MY_Model
         }
 
         $this->db
-            ->select('ma.* /* get_all_metro_areas() */', FALSE)
+            ->select('ma.*', FALSE)
             ->from($this->table . ' as ma')
             ->order_by('ma.city');
 
@@ -41,24 +41,28 @@ class Location_m extends MY_Model
             ->result();
     }
 
-    public function get_metro_areas_with_user_filter($users)
+    public function get_metro_areas($options = array())
     {
-        $this->load->model('users_m');
-        $user_ids = array();
-        foreach ($users as $user) {
-            $user_id = is_object($user) ? $user->id : $user['id'];
-            if (!$this->users_m->user_id_is_correct($user_id)) {
-                continue;
-            }
-            $user_ids[] = $this->db->escape($user_id);
+        if (!isset($options['limit']) || empty($options['limit'])) {
+            $options['limit'] = 50;
+        }
+        if (!isset($options['offset']) || empty($options['offset'])) {
+            $options['offset'] = 0;
+        }
+        if (!isset($options['sort']) || empty($options['sort'])) {
+            $options['sort'] = 'ma.city';
+        }
+        if (!isset($options['sort_type']) || empty($options['sort_type'])) {
+            $options['sort_type'] = 'ASC';
         }
 
         return $this->db
-            ->distinct()
-            ->select('ma.* /* get_metro_areas_with_user_filter() */', FALSE)
-            ->from($this->table . ' as ma')
-            ->join('user_settings as us', 'ma.id = us.metroId AND us.userId IN (' . join(', ', $user_ids) . ')')
-            ->order_by('ma.city')
+            ->select('ma.*, COUNT(s.id) cities_count')
+            ->from($this->table . ' ma')
+            ->join('cities s', 's.metroId = ma.id')
+            ->order_by($options['sort'], $options['sort_type'])
+            ->limit($options['limit'], $options['offset'])
+            ->group_by('ma.id')
             ->get()
             ->result();
     }
@@ -91,6 +95,57 @@ class Location_m extends MY_Model
             $result = $query->row();
         }
         return $result;
+    }
+
+    public function get_metroareas_total_count()
+    {
+        return $this->db->count_all_results($this->table);
+    }
+
+    public function getMetroById($id)
+    {
+        return $this->db
+            ->select('ma.*, ma.PollstarID pollstar_id, s.id state_id, s.countryId country_id, s.state state_name, c.country country_name')
+            ->from($this->table . ' ma')
+            ->join('states s', 's.id = ma.stateId')
+            ->join('countries c', 'c.id = s.countryId')
+            ->where('ma.id', $id)
+            ->get()
+            ->row();
+    }
+
+    public function save_metro($data){
+        $metro = array(
+            'city' => $data['city'],
+            'stateid' => $data['state_id'],
+            'PollstarID' => $data['pollstar_id'],
+        );
+        if(isset($data['id'])&&!empty($data['id'])){
+            $result = $this->db->update($this->table, $metro, array('id'=>$data['id']));
+        }
+        else{
+            $result = $this->db->insert($this->table, $metro);
+        }
+        return $result;
+    }
+
+    public function get_states($options = array())
+    {
+        $this->db
+            ->select('id, state')
+            ->from('states');
+        if (isset($options['country_id']) && !empty($options['country_id'])) {
+            $this->db->where('countryId', $options['country_id']);
+        }
+        return $this->db->get()->result();
+    }
+
+    public function get_countries(){
+        return $this->db
+            ->from('countries')
+            ->where_in('id', $this->allowed_countries)
+            ->get()
+            ->result();
     }
 
 } 

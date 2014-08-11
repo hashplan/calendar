@@ -32,7 +32,7 @@ class Events extends AdminController
         $paged->current_page = $page;
         $paged->total_pages = ceil($counters['future_events'] / $limit);
         $paged->items_on_page = $limit;
-        $paged->has_previous = $page - 1 > 0;
+        $paged->has_previous = $page > 1;
         $paged->previous_page = $paged->has_previous ? $page - 1 : $page;
         $paged->total_rows = $counters['future_events'];
         $paged->has_next = $paged->total_pages > $page;
@@ -61,7 +61,7 @@ class Events extends AdminController
         $paged->current_page = $page;
         $paged->total_pages = ceil($counters['custom_future_events'] / $limit);
         $paged->items_on_page = $limit;
-        $paged->has_previous = $page > 0;
+        $paged->has_previous = $page > 1;
         $paged->previous_page = $paged->has_previous ? $page - 1 : $page;
         $paged->total_rows = $counters['custom_future_events'];
         $paged->has_next = $paged->total_pages > $page;
@@ -96,6 +96,7 @@ class Events extends AdminController
             $post['insert_by'] = $this->get_user()->id;
             $this->load->model('events_m');
             $this->events_m->save($post);
+            $this->update_counters(true);
             redirect('admin/events');
         }
 

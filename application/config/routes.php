@@ -79,6 +79,11 @@ $route['admin/events/(:num)'] = 'admin/events/index/$1';
 $route['admin/events/custom/(:num)/(:num)'] = 'admin/events/index/$1/$2';
 $route['admin/events/custom/(:num)'] = 'admin/events/index/$1';
 
+$route['admin/locations/(:num)/(:num)'] = 'admin/locations/index/$1/$2';
+$route['admin/locations/(:num)'] = 'admin/locations/index/$1';
+$route['admin/locations/metroarea/edit/(:num)'] = 'admin/locations/metro_edit/$1';
+$route['admin/locations/metroarea/remove/(:num)'] = 'admin/locations/metro_remove/$1';
+
 $route['admin'] = 'admin/dashboard/index';
 
 

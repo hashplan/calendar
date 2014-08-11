@@ -409,6 +409,7 @@ class AdminController extends AuthController
         'users' => 0,
         'future_events' => 0,
         'custom_future_events' => 0,
+        'metroareas' => 0
     );
 
     public function __construct()
@@ -448,9 +449,11 @@ class AdminController extends AuthController
 
         if (!$counters_last_update || time() - $counters_cache_expiry_time > $counters_last_update || $isForce) {
             $this->load->model('events_m');
+            $this->load->model('location_m');
             $this->counters['users'] = $this->ion_auth->users()->num_rows();
             $this->counters['future_events'] = $this->events_m->get_total_count('future_events');
             $this->counters['custom_future_events'] = $this->events_m->get_total_count('custom_future_events');
+            $this->counters['metroareas'] = $this->location_m->get_metroareas_total_count();
 
             $this->session->set_userdata(array('counters' => $this->counters, 'counters_last_update' => time()));
         }

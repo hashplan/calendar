@@ -519,8 +519,8 @@ class Events_m extends MY_Model
             $options['sort'] = 'id';
         }
 
-        if (empty($options['type'])) {
-            $options['type'] = 'ASC';
+        if (empty($options['sort_type'])) {
+            $options['sort_type'] = 'ASC';
         }
 
         if (empty($options['events_type'])) {
