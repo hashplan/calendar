@@ -8,16 +8,16 @@
                 <label for="event_name" class="col-md-3 control-label"><strong>Event Name:</strong></label>
 
                 <div class="col-md-9">
-                    <input type="text" class="form-control" name="event_name" id="event_name" placeholder="Event Name"
-                           value="<?= set_value('event_name') ?>">
+                    <input type="text" class="form-control" name="name" id="event_name" placeholder="Event Name"
+                           value="<?= set_value('name') ?>">
                 </div>
             </div>
             <div class="form-group">
                 <label for="event_desc" class="col-md-3 control-label"><strong>Description:</strong></label>
 
                 <div class="col-md-9">
-                    <textarea cols="30" rows="10" class="form-control event-description" name="event_desc"
-                              placeholder="Description"><?= set_value('event_desc') ?></textarea>
+                    <textarea cols="30" rows="10" class="form-control event-description" name="description"
+                              placeholder="Description"><?= set_value('description') ?></textarea>
                 </div>
             </div>
             <br>
@@ -26,11 +26,11 @@
                 <label for="event_date_time" class="col-md-3 control-label"><strong>Event Date/Time:</strong></label>
 
                 <div class="col-md-5">
-                    <div class="bfh-datepicker event-date" data-date="today" data-min="today" data-name="event_date"
+                    <div class="bfh-datepicker event-date" data-date="<?=set_value('date','today')?>" data-min="today" data-name="date"
                          data-format="y-m-d"></div>
                 </div>
                 <div class="col-md-4">
-                    <div class="bfh-timepicker event-time" data-time="now" data-name="vent_time"></div>
+                    <div class="bfh-timepicker event-time" data-time="<?=set_value('time','now')?>" data-name="time"></div>
                 </div>
             </div>
 
@@ -51,7 +51,7 @@
 
                     <div class="col-md-9">
                         <div class="input-group">
-                            <select name="venue" class="form-control venue" id="venue">
+                            <select name="venue_id" class="form-control venue" id="venue">
                                 <? foreach ($venues as $venue): ?>
                                     <option
                                         value="<?= $venue->id ?>"><?= html_escape($venue->venue_name . ' (' . $venue->venue_city . ')') ?></option>

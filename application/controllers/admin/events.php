@@ -86,10 +86,18 @@ class Events extends AdminController
 
     public function add()
     {
-        $this->form_validation->set_rules('event_name', 'Event name', 'required|xss_clean')
-                                ->set_rules('event_desc', 'Event Description', 'xss_clean')
-                                ->set_rules('event_date', 'Event Date', 'required')
-                                ->set_rules('event_time', 'Event Date', 'required');
+        $this->form_validation->set_rules('name', 'Event name', 'trim|required|xss_clean')
+                              ->set_rules('description', 'Event Description', 'trim|required|xss_clean')
+                              ->set_rules('date', 'Event Date', 'required')
+                              ->set_rules('venue_id', 'Venue', 'required')
+                              ->set_rules('time', 'Event Time', 'required');
+        if ($this->form_validation->run()) {
+            $post = $this->input->post();
+            $post['insert_by'] = $this->get_user()->id;
+            $this->load->model('events_m');
+            $this->events_m->save($post);
+            redirect('admin/events');
+        }
 
         $this->load->model('location_m');
         $this->load->model('venues_m');
@@ -97,7 +105,6 @@ class Events extends AdminController
         $this->data['view'] = 'admin/events/add';
         $this->data['metros'] = $this->location_m->get_all_metro_areas();
         $this->data['venues'] = $this->venues_m->get_venues();
-
 
 
         $js_assets = array(

@@ -109,6 +109,7 @@ class Event extends AuthController
             } else {
                 $post['city'] = null;
             }
+            $post['insert_by'] = $post['owner_id'] = $this->get_user()->id;
 
             $this->load->model('events_m');
             $this->events_m->save($post);

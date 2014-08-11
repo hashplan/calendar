@@ -19,5 +19,16 @@
                 updateListOfVenues($(this).val());
             }
         });
+        
+        $('.create-new-event-form').on('show.bfhtimepicker', '.event-time', function () {
+            if($('.event-date').hasClass('open')){
+                $('.event-date').bfhdatepicker('toggle');
+            }
+        });
+        $('.create-new-event-form').on('show.bfhdatepicker', '.event-date', function () {
+            if($('.event-time').hasClass('open')){
+                $('.event-time').bfhtimepicker('toggle');
+            }
+        });
     });
 })(jQuery);

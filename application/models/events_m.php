@@ -439,25 +439,37 @@ class Events_m extends MY_Model
 
     public function save($data)
     {
-        $user_id = $this->ion_auth->user()->row()->id;
+        $owner_id = NULL;
+        $is_public = NULL;
+        if (isset($data['owner_id']) && !empty($data['owner_id'])) {
+            $owner_id = $data['owner_id'];
+            if (!isset($data['private']) || empty($data['private'])) {
+                $data['private'] = FALSE;
+            }
+        }
         $is_new = empty($data['id']);
-        if (empty($data['private'])) {
-            $data['private'] = FALSE;
+        $stubhub_url = NULL;
+        if (isset($data['event_booking_link']) && !empty($data['event_booking_link'])) {
+            $stubhub_url = $data['event_booking_link'];
         }
         if ($is_new) {
-
-            $venue_data = array(
-                'address' => $data['address']
-            );
-            if ($data['city']) {
-                $venue_data['cityId'] = $data['city']->id;
-                $venue_data['city'] = $data['city']->city;
-                $venue_data['stateId'] = $data['city']->stateId;
-                $venue_data['name'] = $data['address'];
-            }
             $venue_id = NULL;
-            if ($this->db->insert('venues', $venue_data)) {
-                $venue_id = $this->db->insert_id();
+            if (isset($data['venue_id']) && !empty($data['venue_id'])) {
+                $venue_id = $data['venue_id'];
+            }
+            else {
+                $venue_data = array(
+                    'address' => $data['address']
+                );
+                if (isset($data['city']) && !empty($data['city'])) {
+                    $venue_data['cityId'] = $data['city']->id;
+                    $venue_data['city'] = $data['city']->city;
+                    $venue_data['stateId'] = $data['city']->stateId;
+                    $venue_data['name'] = $data['address'];
+                }
+                if ($this->db->insert('venues', $venue_data)) {
+                    $venue_id = $this->db->insert_id();
+                }
             }
 
             $this->db->insert('events', array(
@@ -466,16 +478,18 @@ class Events_m extends MY_Model
                 'typeId' => NULL,
                 'datetime' => $data['date'] . ' ' . $data['time'],
                 'venueId' => $venue_id,
-                'stubhub_url' => NULL,
-                'insertedon' => NULL,
+                'stubhub_url' => $stubhub_url,
+                'insertedon' => date('Y-m-d H:i:s'),
                 'insertedby' => NULL,
                 'updatedon' => NULL,
                 'updatedby' => NULL,
                 'is_public' => !((bool)$data['private']),
-                'ownerId' => $user_id,
+                'ownerId' => $owner_id,
             ));
             $event_id = $this->db->insert_id();
-            $this->add_to_calendar($event_id);
+            if($owner_id){
+                $this->add_to_calendar($event_id);
+            }
         }
 
     }
@@ -543,7 +557,6 @@ class Events_m extends MY_Model
 
         return $this->db->get()->result();
     }
-
 
 
 }
