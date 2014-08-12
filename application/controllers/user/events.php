@@ -5,11 +5,11 @@ class Events extends AuthController
 
     protected $allowTypes = array('deleted', 'favourite', 'my', 'friends', 'all', 'trash');
     protected $typesView = array(
-        'my' => 'index',
-        'favourite' => 'index',
+        'my' => 'profile',
+        'favourite' => 'profile',
         'all' => 'index',
-        'deleted' => 'index',
-        'trash' => 'index',
+        'deleted' => 'profile',
+        'trash' => 'profile',
         'friends' => 'friend_plans',
     );
 

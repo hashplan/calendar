@@ -1,18 +1,21 @@
 <div class="container">
     <div class="row">
-        <div class="col-md-3 hidden-xs hidden-sm">
-            <div class="panel panel-default widget-top-venues">
-                <div class="panel-heading">
-                    <div class="panel-title"><h4><strong>Top Venues</strong></h4></div>
-                </div>
-                <?/*<div class="panel-body">
-                    <?= $top_venues; ?>
-                </div>*/?>
-                <div class="list-group">
-                    <?= $top_venues; ?>
-                </div>
+
+        <div class="col-md-2 col-sm-12">
+            <div class="thumbnail user-avatar">
+                <? if ($user->avatar_path): ?>
+                    <img src="<?= site_url('/assets/img/users/' . $user->avatar_path); ?>", alt="" class = "img-responsive img-rounded">
+			    <? else: ?>
+                    <img src="<?= site_url('/assets/img/icons/no-image-100.png'); ?>", alt="" class = "img-responsive img-rounded">
+                <?endif ?>
             </div>
+            <hr>
+            <!-- Single button -->
+            <?= anchor('event/add', "ADD EVENT", 'class = "btn btn-primary btn-block" data-toggle = "modal" data-target = "#user_added_event_form"'); ?>
+            <?= anchor('user/events/favourite', "<span class='glyphicon glyphicon-thumbs-up'> &nbsp</span>Favourites", 'class = "btn btn-default btn-block button-favourites ' . Menu::isActive('user/events/favourite') . '"'); ?>
+            <?= anchor('user/events/trash', "<span class='glyphicon glyphicon-trash'> &nbsp</span>Trash", 'class = "btn btn-default btn-block button-trash ' . Menu::isActive('user/events/trash') . '"'); ?>
         </div>
+
         <div class="col-md-9 col-sm-12">
 
             <h2 class="page-title" data-metro_name="<?=(!empty($metro_name) ? $metro_name : 'Any') ?>"><?= $page_title ?></h2>
@@ -79,7 +82,5 @@
             </div>
 
         </div>
-
-
     </div>
 </div>
