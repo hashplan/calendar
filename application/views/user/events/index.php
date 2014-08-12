@@ -16,7 +16,7 @@
             <?= anchor('user/events/trash', "<span class='glyphicon glyphicon-trash'> &nbsp</span>Trash", 'class = "btn btn-default btn-block button-trash ' . Menu::isActive('user/events/trash') . '"'); ?>
         </div>
 
-        <div class="col-md-6 col-sm-12">
+        <div class="col-md-7 col-sm-12">
 
             <h2 class="page-title" data-metro_name="<?=(!empty($metro_name) ? $metro_name : 'Any') ?>"><?= $page_title ?></h2>
             <br>
@@ -83,10 +83,10 @@
 
         </div>
 
-        <div class="col-md-4 hidden-xs hidden-sm">
+        <div class="col-md-3 hidden-xs hidden-sm">
             <div class="panel panel-default widget-top-venues">
                 <div class="panel-heading">
-                    <div class="panel-title"><h4><strong>Top Venues (30 Days)</strong></h4></div>
+                    <div class="panel-title"><h4><strong>Top Venues</strong></h4></div>
                 </div>
                 <?/*<div class="panel-body">
                     <?= $top_venues; ?>
