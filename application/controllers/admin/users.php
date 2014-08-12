@@ -14,6 +14,19 @@ class Users extends AdminController
         $this->load->model('ion_auth_ext_model');
         $page || $page = 1;
         $offset = $limit * $page - $limit;
+        $counters = $this->get_counters();
+
+        $paged = new stdClass();
+        $paged->current_page = $page;
+        $paged->total_pages = ceil($counters['users'] / $limit);
+        $paged->items_on_page = $limit;
+        $paged->has_previous = $page > 1;
+        $paged->previous_page = $paged->has_previous ? $page - 1 : $page;
+        $paged->total_rows = $counters['users'];
+        $paged->has_next = $paged->total_pages > $page;
+        $paged->next_page = $paged->has_next ? $page + 1 : $page;
+        $this->data['pagination'] = $this->get_paging($paged, 'admin/users/');
+
         $this->data['users'] = $this->ion_auth_ext_model
             ->limit($limit)
             ->offset($offset)

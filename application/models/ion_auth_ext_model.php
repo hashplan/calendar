@@ -9,12 +9,12 @@ class Ion_auth_ext_model extends Ion_auth_model
         $this->db->join(
             $this->tables['users_groups'],
             $this->tables['users_groups'].'.'.$this->join['users'].'='.$this->tables['users'].'.id',
-            'inner'
+            'left'
         );
         $this->db->join(
             $this->tables['groups'],
             $this->tables['users_groups'].'.'.$this->join['groups'].'='.$this->tables['groups'].'.id',
-            'inner'
+            'left'
         );
         $this->db->group_by($this->tables['users'].'.id');
         return $this;
