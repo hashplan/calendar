@@ -60,7 +60,7 @@ class Venues_m extends MY_Model
             $options['limit'] = 5;
         }
         if (!isset($options['offset']) || empty($options['offset'])) {
-            $options['offset'] = 100;
+            $options['offset'] = 0;
         }
         $this->db->limit($options['limit'], $options['offset']);
 
