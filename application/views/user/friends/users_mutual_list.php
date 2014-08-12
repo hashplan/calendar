@@ -1,4 +1,4 @@
-<?foreach($people as $dude):?>
+<? foreach ($people as $dude): ?>
     <div class="panel panel-default friend-row">
         <div class="panel-body">
             <div class="left-section">
@@ -7,17 +7,17 @@
             <div class="right-section">
                 <div class="friend-name"><?= $dude->name ?></div>
                 <div class="friend-mutual-count">
-                    <?=html_escape($dude->mutual_friends_count) ." shared connections";?>
+                    <a href="<?= site_url('user/friends/' . $dude->id) ?>"><?= html_escape($dude->mutual_friends_count) . " shared connections"; ?></a>
                 </div>
                 <div class="button-wrapper">
-                    <?if(in_array($dude->id, $my_friends)):?>
-                        <?=anchor('user/friends/remove_from_contact/'. $dude->id, 'Remove', array('class' => 'btn btn-danger'));?>
-                        <?=anchor('user/events/'. $dude->id, 'View plans', array('class' => 'btn btn-primary friend-view-plans-button'));?>
-                    <?else:?>
-                        <?=anchor('user/friends/friend_request/'. $dude->id, 'Connect', array('class' => 'btn btn-primary friend-view-plans-button'));?>
-                    <?endif?>
+                    <? if (in_array($dude->id, $my_friends)): ?>
+                        <?= anchor('user/friends/remove_from_contact/' . $dude->id, 'Remove', array('class' => 'btn btn-danger')); ?>
+                        <?= anchor('user/events/' . $dude->id, 'View plans', array('class' => 'btn btn-primary friend-view-plans-button')); ?>
+                    <? else: ?>
+                        <?= anchor('user/friends/friend_request/' . $dude->id, 'Connect', array('class' => 'btn btn-primary friend-view-plans-button')); ?>
+                    <?endif ?>
                 </div>
             </div>
         </div>
     </div>
-<?endforeach?>
+<? endforeach ?>
