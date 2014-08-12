@@ -21,10 +21,6 @@
             <h2 class="page-title" data-metro_name="<?=(!empty($metro_name) ? $metro_name : 'Any') ?>"><?= $page_title ?></h2>
             <br>
 
-            <div class="metro-id" style="display:none"><?=(!empty($metro_id) ? $metro_id : '0') ?></div>
-            <h5 class="metro-name">Location: <?=(!empty($metro_name) ? $metro_name : 'Any') ?></h5>
-
-            <p><?= anchor('user/events/choose_metro', 'Change Location<span class="caret"></span>', 'data-toggle="modal" data-target="#event_cities"'); ?></p>
             <h5>Upcoming Events:</h5>
             <input type="hidden" id="user-id" value="<?= $user_id ?>">
             <input type="hidden" id="events-type" value="<?= $events_type ?>">
