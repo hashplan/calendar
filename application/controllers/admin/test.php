@@ -12,15 +12,28 @@ class Test extends AdminController
     public function index($type = '')
     {
         $this->layout = '_layout_email';
-        $this->data['view'] = 'email/activate.tpl.php';
-        $this->data['id'] = 123;
-        $this->data['activation'] = '2j34hg32kuyg23k4tg32ug23g42g34uo5';
-        $this->data['identity'] = 'Roma S';
+        $this->data['view'] = 'email/friend_invite.tpl.php';
+        $this->data['id'] = 123123;
+        $this->data['activation'] = 'test$test$test$test$test$test$test$';
+        $this->data['identity'] = 'User';
+
+        $this->data['password'] = 'autopassword';
+
+        $this->data['user_name'] = 'test user name';
+        $this->data['user_email'] = 'test@test.test';
+        $this->data['contact_description'] = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc non auctor mi, sit amet egestas lacus. Nulla ultrices sodales leo, sit amet consequat lectus lacinia ut. Mauris ac interdum urna. Donec dignissim, turpis ac tincidunt interdum, lectus orci ultricies tellus, a sodales leo mi sed felis. Mauris tincidunt facilisis ornare. Curabitur a sapien ut nisl eleifend bibendum ut quis mauris. Nunc et arcu fermentum, pharetra neque ut, tincidunt nisi. Suspendisse feugiat accumsan nulla eu accumsan. Sed id molestie mi, pharetra vehicula risus.';
+
+        $this->data['from_name'] = 'YOUR FRIEND';
+        $this->data['event_name'] = 'SUPER MEGA EVENT';
+
+        $this->data['forgotten_password_code'] = 'test$test$test$test$test$test$test$';
+
+        $this->data['new_password'] = 'test$test$test$test$test$test$test$';
 
         if($type == 'email'){
             $this->load->config('ion_auth', TRUE);
 
-            $message = $this->load->view('email/activate.tpl.php', $this->data, true);
+            $message = $this->load->view('email/event_invite.tpl.php', $this->data, true);
 
             $this->email->clear();
             $this->email->from('noreply@hashplans.com');
