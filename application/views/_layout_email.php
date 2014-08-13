@@ -5,7 +5,7 @@
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     </head>
     <body>
-        <table width="100%" bgcolor="#ffffff">
+        <table width="100%" bgcolor="#ffffff" style="max-width: 600px;" border="0" cellspacing="0" cellpadding="0">
             <div class="content">
                 <? $this->load->view($view, $data); ?>
             </div>

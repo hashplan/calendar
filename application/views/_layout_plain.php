@@ -18,7 +18,7 @@
 		</div>
 	</div>
 </div>
-<div class="row" style = "background-image: url('../assets/img/homepage/Beer Garden with Boat.jpg'); height: 660px; width: 800px; margin-top: 50px; margin-left: 350px; padding-right: 225px; background-repeat: no-repeat">	
+<div class="row" style = "background-image: url('../assets/img/homepage/beer_garden_with_boat.jpg'); height: 660px; width: 800px; margin-top: 50px; margin-left: 350px; padding-right: 225px; background-repeat: no-repeat">
 	<div class = "row">
 				<?php $this->load->view($sub_layout);?>
 	</div>
