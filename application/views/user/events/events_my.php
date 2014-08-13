@@ -19,9 +19,7 @@
             <!-- Button trigger modal -->
             <h4><?= anchor('event/modal_details/' . $event->id, $event->name, 'data-toggle="modal" data-target="#event_modal"'); ?></h4>
 
-            <p>
-
-            <?= html_escape($event->venue_name) ?><p>
+            <p><?= html_escape($event->venue_name) ?><?if($event->venue_city):?>, <?=$event->venue_city?><?endif?><p>
             <? $d = strtotime($event->datetime); ?>
 
             <p><?= date("l, F jS, Y @ g:ia", $d) ?></p>

@@ -335,7 +335,8 @@ class Users_m extends MY_Model
         }
         $where = array(
             'eventId' => $eventId,
-            'connectionUserId' => $userId
+            'connectionUserId' => $userId,
+            'type' => 'event_invite'
         );
         return $this->db
             ->join('users', 'users.id = user_connections.userId', 'INNER')

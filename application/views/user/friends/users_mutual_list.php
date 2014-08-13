@@ -7,7 +7,11 @@
             <div class="right-section">
                 <div class="friend-name"><?= $dude->name ?></div>
                 <div class="friend-mutual-count">
-                    <a href="<?= site_url('user/friends/' . $dude->id) ?>"><?= html_escape($dude->mutual_friends_count) . " shared connections"; ?></a>
+                    <? if ($dude->mutual_friends_count > 0): ?>
+                        <?= anchor('user/friends/' . $dude->id, "<span class='glyphicon glyphicon-play'></span> " . html_escape($dude->mutual_friends_count) . " shared connections"); ?>
+                    <? else: ?>
+                        <?= html_escape($dude->mutual_friends_count) . " shared connections"; ?>
+                    <?endif ?>
                 </div>
                 <div class="button-wrapper">
                     <? if (in_array($dude->id, $my_friends)): ?>

@@ -24,9 +24,7 @@
             <? if ($event->is_favourite_all): ?>
                 <span class="label label-success">In favorites</span>
             <? endif ?>
-            <p>
-
-            <?= html_escape($event->venue_name) ?><p>
+            <p><?= html_escape($event->venue_name) ?><?if($event->venue_city):?>, <?=$event->venue_city?><?endif?><p>
             <? $d = strtotime($event->datetime); ?>
 
             <p><?= date("l, F jS, Y @ g:ia", $d) ?></p>
