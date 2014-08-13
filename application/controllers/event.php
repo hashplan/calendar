@@ -71,7 +71,7 @@ class Event extends AuthController
         }
         $this->load->model('events_m');
         $this->events_m->delete_from_calendar($event_id);
-        redirect(base_url('user/events'));
+        redirect(base_url('user/events/my'));
     }
 
     // should rename it later to smth like add_event or add_user_event

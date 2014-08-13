@@ -42,14 +42,13 @@ class Events extends AuthController
     public function my()
     {
         Menu::setActive('user/events/my');
-        $user_id = $this->ion_auth->user()->row()->id;
-        $this->_render_events_list_page('my', 'All my events', $user_id);
+        $this->_render_events_list_page('my', 'All my events');
     }
 
     public function friends($user_id)
     {
         if (!$this->users_m->is_friend_of($user_id)) {
-            redirect(base_url('user/events'));
+            show_404();
         }
         $this->data['user'] = $this->ion_auth->user($user_id)->row();
         $fullname = $this->data['user']->first_name . " " . $this->data['user']->last_name;
@@ -61,8 +60,7 @@ class Events extends AuthController
     {
         Menu::setActive('user/events/all');
         $default_location = $this->get_user()->metro;
-        $user_id = $this->ion_auth->user()->row()->id;
-        $this->_render_events_list_page('all', isset($default_location->city) ? 'Events in ' . $default_location->city : '', $user_id, $default_location);
+        $this->_render_events_list_page('all', isset($default_location->city) ? 'Events in ' . $default_location->city : '', NULL, $default_location);
     }
 
     public function trash()

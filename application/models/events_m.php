@@ -13,8 +13,6 @@ class Events_m extends MY_Model
         $current_user_id = $this->ion_auth->user()->row()->id;
         $this->load->model('users_m');
         $user_id = !empty($options['user_id']) && $this->users_m->user_id_is_correct($options['user_id']) ? $options['user_id'] : $current_user_id;
-        $is_admin_or_owner = $this->users_m->is_admin_or_owner($user_id);
-        $is_friend_of = $this->users_m->is_friend_of($user_id);
 
         if (empty($options['limit'])) {
             $options['limit'] = 5;
@@ -40,22 +38,22 @@ class Events_m extends MY_Model
             ->limit($options['limit'], $options['offset']);
 
         if (!empty($options['events_type'])) {
-            if ($options['events_type'] === 'deleted' && $is_admin_or_owner) {
+            if ($options['events_type'] === 'deleted') {
                 $this->db->join('events_deleted AS ed', 'e.id = ed.eventId AND ed.userId = ' . $this->db->escape($user_id), 'inner');
             }
-            else if ($options['events_type'] === 'favourite' && $is_admin_or_owner) {
+            else if ($options['events_type'] === 'favourite') {
                 $this->db->join('events_favourited AS ef', 'e.id = ef.eventId AND ef.userId = ' . $this->db->escape($user_id), 'inner');
                 $this->db->where('NOT EXISTS (SELECT 1 FROM events_deleted ed WHERE e.id = ed.eventId AND ed.userId = ' . $this->db->escape($user_id) . ')', '', FALSE);
             }
-            else if (($options['events_type'] === 'my' || $options['events_type'] === 'friends') && ($is_admin_or_owner || $is_friend_of)) {
+            else if ($options['events_type'] === 'my' || $options['events_type'] === 'friends') {
                 $this->db->join('user_events AS ue', 'e.id = ue.eventId AND ue.userId = ' . $this->db->escape($user_id), 'inner');
                 $this->db->where('NOT EXISTS (SELECT 1 FROM events_deleted ed WHERE e.id = ed.eventId AND ed.userId = ' . $this->db->escape($user_id) . ')', '', FALSE);
             }
-            else if ($options['events_type'] === 'all' && $is_admin_or_owner) {
+            else if ($options['events_type'] === 'all') {
                 $this->db->select('IF(ue.eventId IS NOT NULL, 1, 0) AS is_in_calendar_all', FALSE);
                 $this->db->select('IF(ef.eventId IS NOT NULL, 1, 0) AS is_favourite_all', FALSE);
                 $this->db->where('NOT EXISTS (SELECT 1 FROM events_deleted ed WHERE e.id = ed.eventId AND ed.userId = ' . $this->db->escape($user_id) . ')', '', FALSE);
-                $this->db->join('user_events ue', 'e.id = ue.eventId', 'left');
+                $this->db->join('user_events ue', 'e.id = ue.eventId AND ue.userId = ' . $this->db->escape($user_id), 'left');
                 $this->db->join('events_favourited AS ef', 'e.id = ef.eventId AND ef.userId = ' . $this->db->escape($user_id), 'left');
                 $this->db->group_by('id');
             }
@@ -406,10 +404,10 @@ class Events_m extends MY_Model
             if (!$user_id_is_correct) {
                 $user_id = $this->ion_auth->user()->row()->id;
             }
+            $this->db->where('(ownerId IS NULL OR ownerId != '.$user_id.')');
             $result = $this->db->delete('user_events', array(
                 'userId' => $user_id,
-                'eventId' => $event_id,
-                'ownerId !=' => $user_id
+                'eventId' => $event_id
             ));
         }
 

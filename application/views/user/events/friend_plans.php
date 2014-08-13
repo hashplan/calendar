@@ -12,15 +12,9 @@
             <hr>
         </div>
 
-        <div class="col-md-6">
-
+        <div class="col-md-10">
             <h2><?= (string)$user->first_name . " " . (string)$user->last_name; ?></h2>
             <br>
-
-            <div class="city-id" style="display:none">0</div>
-            <h5 class="city-name">Location: Any</h5>
-
-            <p><?= anchor('user/events/choose_metro', 'Change Location<span class="caret"></span>', 'data-toggle="modal" data-target="#event_cities"'); ?></p>
             <h5>Upcoming Events:</h5>
             <input type="hidden" id="user-id" value="<?= $user_id ?>">
             <input type="hidden" id="events-type" value="<?= $events_type ?>">
@@ -74,21 +68,6 @@
                 </div>
             </div>
 
-        </div>
-
-        <div class="col-md-4 hidden-xs hidden-sm">
-            <div class="panel panel-default widget-top-venues">
-                <div class="panel-heading">
-                    <div class="panel-title"><h4><strong>Top Venues (30 Days)</strong></h4></div>
-                </div>
-                <? /*<div class="panel-body">
-                    <?= $top_venues; ?>
-                </div>*/
-                ?>
-                <div class="list-group">
-                    <?= $top_venues; ?>
-                </div>
-            </div>
         </div>
     </div>
 </div>
