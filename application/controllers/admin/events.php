@@ -43,7 +43,8 @@ class Events extends AdminController
         $options = array(
             'events_type' => 'future_events',
             'offset' => $offset,
-            'limit' => $limit
+            'limit' => $limit,
+            'sort_type' => 'DESC'
         );
         $this->data['events'] = $this->events_m->list_of_events($options);
         $this->data['view'] = 'admin/events/future_events';
@@ -84,7 +85,7 @@ class Events extends AdminController
 
     }
 
-    public function add()
+    public function add($event_id = false)
     {
         $this->form_validation->set_rules('name', 'Event name', 'trim|required|xss_clean')
                               ->set_rules('description', 'Event Description', 'trim|required|xss_clean')
@@ -94,6 +95,7 @@ class Events extends AdminController
         if ($this->form_validation->run()) {
             $post = $this->input->post();
             $post['insert_by'] = $this->get_user()->id;
+            $post['event_id'] = $event_id;
             $this->load->model('events_m');
             $this->events_m->save($post);
             $this->update_counters(true);
@@ -102,11 +104,27 @@ class Events extends AdminController
 
         $this->load->model('location_m');
         $this->load->model('venues_m');
-        Menu::setActive('admin/events/add');
+        
+        if (empty($event_id))
+        {
+            Menu::setActive('admin/events/add');
+            $this->data['title'] = 'Create New Event';
+            $this->data['save_button_name'] = 'Create';
+        }
+        else {
+            Menu::setActive('admin/events/edit');
+            $this->data = array_merge($this->data, $this->getDataFromDb($event_id));
+            $this->data['title'] = 'Edit Event';
+            $this->data['save_button_name'] = 'Update';
+            $this->data['event_id'] = $event_id;
+        }
         $this->data['view'] = 'admin/events/add';
         $this->data['metros'] = $this->location_m->get_all_metro_areas();
-        $this->data['venues'] = $this->venues_m->get_venues();
-
+        $venues = $this->venues_m->get_venues();
+        foreach ($venues as $venue)
+        {
+            $this->data['venues'][$venue->venue_id] = $venue->venue_name;
+        }
 
         $js_assets = array(
             array('admin/create_new_event.js')
@@ -116,5 +134,34 @@ class Events extends AdminController
         $this->_render_page();
     }
 
+    private function getDataFromDb($eventID) {
+        $data = $this->events_m->get_event_by_id($eventID);
+           $dbData = array(
+            'name' => $data->event_name,
+            'vanue_id' => $data->venue_id,
+            'description' => $data->event_description,
+            'typeId' => $data->event_typeId,
+            'datetime' => $data->event_datetime,
+            'date' => date('Y-m-d',strtotime($data->event_datetime)),
+            'time' => date('H:i:s',strtotime($data->event_datetime)),
+            'venue_id' => $data->venue_id,
+            'booking_link' => $data->event_booking_link,
+            'insertedon' => $data->event_insertedon,
+            'insertedby' => $data->event_insertedby,
+            'updatedon' => $data->event_updatedon,
+            'updatedby' => $data->event_updatedby,
+            'is_public' => $data->event_is_public,
+            'ownerId' => $data->event_owner_id,
+            'status' => $data->event_status
+        );
 
+           return $dbData;
+    }
+
+    public function remove($eventId)
+    {
+        $res = $this->events_m->changeStatus($eventId, 'cancelled');
+        var_dump($res);die("333333");
+        redirect('admin/events');
+    }
 }

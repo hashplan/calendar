@@ -65,7 +65,10 @@ class Locations extends AdminController
 
     public function metro_edit($id){
 
+        if (!empty($id))
+            $this->metroareaId = $id;
         $metro = $this->location_m->getMetroById($id);
+
         if(empty($metro)){
             show_404();
         }
@@ -108,6 +111,60 @@ class Locations extends AdminController
             echo json_encode($states_list);
             die();
         }
+    }
+
+    public function metroarea_upload()
+    {
+
+        $metroareaId = $this->input->post('metro_id');
+        $metro = $this->location_m->getMetroById($metroareaId);
+
+        $this->load->library('image_lib');
+        $original_path = FCPATH . 'assets/uploads/metroareas';
+        $resized_path = FCPATH . 'assets/img/metroareas';
+
+        $old_picture = $metro->picture_path;
+        //config for original upload
+        $config = array(
+            'allowed_types' => 'jpg|jpeg|gif|png',
+            'max_size' => 20000, //2MB max
+            'upload_path' => $original_path
+        );
+
+        //upload the image
+        $this->load->library('upload', $config);
+        if (!$this->upload->do_upload('metroareafile')) {
+            $error = array('error' => $this->upload->display_errors());
+        }
+        else {
+            $image_data = $this->upload->data();
+        }
+
+        //config for resize()
+        $config = array(
+            'source_image' => $image_data['full_path'],
+            'new_image' => $resized_path,
+            'maintain_ratio' => true,
+            'width' => 1360,
+            'height' => 350
+        );
+
+        //resize the image
+        $this->image_lib->initialize($config);
+        $this->image_lib->crop();
+
+        $data = array(
+            'picture_path' => $image_data['file_name'],
+        );
+
+        $this->db->where('id', $metro->id);
+        if ($this->db->update('metroareas', $data)) {
+            unlink($original_path . '/' . $old_avatar);
+            unlink($resized_path . '/' . $old_avatar);
+        }
+        unlink($image_data['full_path']);
+        redirect(base_url('admin/locations'));
+
     }
 
 

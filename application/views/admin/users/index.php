@@ -10,7 +10,7 @@
             </div>
         <? endif ?>
         <div class="table-responsive">
-            <table class="table table-striped">
+            <table class="table table-striped sortable">
                 <thead>
                 <tr>
                     <th data-field="id" data-align="right" data-sortable="true">#</th>

@@ -14,6 +14,7 @@
                     <th>Event Name</th>
                     <th>DateTime</th>
                     <th>Venue Name</th>
+                    <th>Status</th>
                     <th>Actions</th>
                 </tr>
                 </thead>
@@ -25,9 +26,10 @@
                             <td><?= $event->name ?></td>
                             <td><?= $event->date_only ?></td>
                             <td><?= $event->venue_name ?></td>
+                            <td><?= $event->status ?></td>
                             <td>
-                                <a href="<?= site_url('admin/events/edit/' . $user->id) ?>"><span class="glyphicon glyphicon-edit"></span></a> |
-                                <a href="<?= site_url('admin/events/remove/' . $user->id) ?>"><span class="glyphicon glyphicon-remove"></span></a>
+                                <a href="<?= site_url('admin/events/add/' . $event->id) ?>"><span class="glyphicon glyphicon-edit"></span></a> |
+                                <a href="<?= site_url('admin/events/remove/' . $event->id) ?>" onclick="return confirm('Are you sure you want to remove this event?')"><span class="glyphicon glyphicon-remove"></span></a>
                             </td>
                         </tr>
                     <? endforeach ?>

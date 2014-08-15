@@ -2,6 +2,30 @@
     <div class="panel-heading"><h2 class="sub-header">Edit Metroarea #<?=$metro->id?></h2></div>
     <div class="panel-body">
         <?= validation_errors('<div class="form_error_notification errors alert alert-danger" role="alert">', '</div>') ?>
+            <div class="" id="metroarea-upload">
+                <h4>Change Metroarea picture:</h4>
+                <div class="thumbnail user-avatar">
+                    <? if (isset($metro->picture_path) && !empty($metro->picture_path)): ?>
+                        <img src="<?php echo site_url('/assets/img/metroareas/' . $metro->picture_path); ?>" alt=""
+                             class="img-responsive img-rounded">
+                    <? else: ?>
+                        <img src="<?php echo site_url('/assets/img/icons/no-image-100.png'); ?>" alt=""
+                             class="img-responsive img-rounded">
+                    <?endif ?>
+                </div>
+                <div id="uploader-file-selector" class="pull-right">
+                    <form action="<?= site_url('admin/locations/metroarea_upload') ?>" method="POST"
+                          enctype="multipart/form-data" role="form" class="form-inline">
+                        <input type="hidden" name="metro_id" value="<?= $metro->id;?>"/>
+                        <div class="form-group">
+                            <label for="metroareafile" class="sr-only">Metroarea Picture</label>
+                            <input id="metroareafile" type="file" name="metroareafile" value="">
+                        </div>
+                        
+                        <button type="submit" name="upload" class="btn btn-primary">Upload</button>
+                    </form>
+                </div>
+            </div>
         <form action="<?= site_url('admin/locations/metro_edit/' . $metro->id) ?>" method="POST" class="form-horizontal edit-metroarea-form"
               role="form">
             <div class="form-group">
@@ -47,6 +71,7 @@
                            value="<?= set_value('pollstar_id', $metro->pollstar_id) ?>">
                 </div>
             </div>
+
             <hr>
             <div class="row">
                 <div class="col-md-offset-6 col-md-6 text-right">

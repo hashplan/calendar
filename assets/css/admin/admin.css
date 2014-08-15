@@ -44,3 +44,6 @@
     font-weight: bold;
     text-decoration: none;
 }
+#metroarea-upload {
+    margin-bottom: 20px; padding: 20px; width: 70%;margin: 0 auto; margin-bottom: 20px;
+}
