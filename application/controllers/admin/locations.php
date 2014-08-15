@@ -159,8 +159,8 @@ class Locations extends AdminController
 
         $this->db->where('id', $metro->id);
         if ($this->db->update('metroareas', $data)) {
-            unlink($original_path . '/' . $old_avatar);
-            unlink($resized_path . '/' . $old_avatar);
+            unlink($original_path . '/' . $old_picture);
+            unlink($resized_path . '/' . $old_picture);
         }
         unlink($image_data['full_path']);
         redirect(base_url('admin/locations'));

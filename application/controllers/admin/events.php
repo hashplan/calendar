@@ -80,11 +80,6 @@ class Events extends AdminController
         $this->_render_page();
     }
 
-    public function edit($id)
-    {
-
-    }
-
     public function add($event_id = false)
     {
         $this->form_validation->set_rules('name', 'Event name', 'trim|required|xss_clean')
@@ -113,7 +108,13 @@ class Events extends AdminController
         }
         else {
             Menu::setActive('admin/events/edit');
-            $this->data = array_merge($this->data, $this->getDataFromDb($event_id));
+            $this->data['event'] = $this->events_m->get_event_by_id($event_id);
+            if(empty($this->data['event'])){
+                show_404();
+            }
+            $this->data['event']->date = date('Y-m-d',strtotime($this->data['event']->event_datetime));
+            $this->data['event']->time = date('H:i:s',strtotime($this->data['event']->event_datetime));
+
             $this->data['title'] = 'Edit Event';
             $this->data['save_button_name'] = 'Update';
             $this->data['event_id'] = $event_id;
@@ -134,34 +135,9 @@ class Events extends AdminController
         $this->_render_page();
     }
 
-    private function getDataFromDb($eventID) {
-        $data = $this->events_m->get_event_by_id($eventID);
-           $dbData = array(
-            'name' => $data->event_name,
-            'vanue_id' => $data->venue_id,
-            'description' => $data->event_description,
-            'typeId' => $data->event_typeId,
-            'datetime' => $data->event_datetime,
-            'date' => date('Y-m-d',strtotime($data->event_datetime)),
-            'time' => date('H:i:s',strtotime($data->event_datetime)),
-            'venue_id' => $data->venue_id,
-            'booking_link' => $data->event_booking_link,
-            'insertedon' => $data->event_insertedon,
-            'insertedby' => $data->event_insertedby,
-            'updatedon' => $data->event_updatedon,
-            'updatedby' => $data->event_updatedby,
-            'is_public' => $data->event_is_public,
-            'ownerId' => $data->event_owner_id,
-            'status' => $data->event_status
-        );
-
-           return $dbData;
-    }
-
     public function remove($eventId)
     {
-        $res = $this->events_m->changeStatus($eventId, 'cancelled');
-        var_dump($res);die("333333");
+        $this->events_m->changeStatus($eventId, 'cancelled');
         redirect('admin/events');
     }
 }
