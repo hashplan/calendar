@@ -129,12 +129,14 @@ class Events_m extends MY_Model
 				e.typeId AS event_typeId,
 				e.datetime AS event_datetime,
 				e.venueId AS event_venueId,
-				e.stubhub_url AS event_stubhub_url,
+				e.booking_link AS event_booking_link,
 				e.insertedon AS event_insertedon,
 				e.insertedby AS event_insertedby,
 				e.updatedon AS event_updatedon,
 				e.updatedby AS event_updatedby,
 				e.ownerId AS event_owner_id,
+                e.is_public AS event_is_public,
+                e.status AS event_status,
 				v.id AS venue_id,
 				v.name AS venue_name,
 				v.address AS venue_address,
@@ -171,7 +173,7 @@ class Events_m extends MY_Model
         $user_added_event->typeId = '';
         $user_added_event->datetime = '';
         $user_added_event->venueId = '';
-        $user_added_event->stubhub_url = '';
+        $user_added_event->booking_link = '';
         $user_added_event->insertedon = '';
         $user_added_event->insertedby = '';
         $user_added_event->updatedon = '';
@@ -437,6 +439,7 @@ class Events_m extends MY_Model
 
     public function save($data)
     {
+
         $owner_id = NULL;
         $is_public = NULL;
         if (isset($data['owner_id']) && !empty($data['owner_id'])) {
@@ -445,50 +448,58 @@ class Events_m extends MY_Model
                 $data['private'] = FALSE;
             }
         }
-        $is_new = empty($data['id']);
-        $stubhub_url = NULL;
-        if (isset($data['event_booking_link']) && !empty($data['event_booking_link'])) {
-            $stubhub_url = $data['event_booking_link'];
-        }
-        if ($is_new) {
-            $venue_id = NULL;
-            if (isset($data['venue_id']) && !empty($data['venue_id'])) {
-                $venue_id = $data['venue_id'];
-            }
-            else {
-                $venue_data = array(
-                    'address' => $data['address']
-                );
-                if (isset($data['city']) && !empty($data['city'])) {
-                    $venue_data['cityId'] = $data['city']->id;
-                    $venue_data['city'] = $data['city']->city;
-                    $venue_data['stateId'] = $data['city']->stateId;
-                    $venue_data['name'] = $data['address'];
-                }
-                if ($this->db->insert('venues', $venue_data)) {
-                    $venue_id = $this->db->insert_id();
-                }
-            }
+        $is_new = empty($data['event_id']);
 
-            $this->db->insert('events', array(
-                'name' => $data['name'],
-                'description' => $data['description'],
-                'typeId' => NULL,
-                'datetime' => $data['date'] . ' ' . $data['time'],
-                'venueId' => $venue_id,
-                'stubhub_url' => $stubhub_url,
-                'insertedon' => date('Y-m-d H:i:s'),
-                'insertedby' => NULL,
-                'updatedon' => NULL,
-                'updatedby' => NULL,
-                'is_public' => !((bool)$data['private']),
-                'ownerId' => $owner_id,
-            ));
-            $event_id = $this->db->insert_id();
-            if($owner_id){
-                $this->add_to_calendar($event_id);
+        $booking_link = NULL;
+        if (isset($data['event_booking_link']) && !empty($data['event_booking_link'])) {
+            $booking_link = $data['event_booking_link'];
+        }
+
+        $venue_id = NULL;
+        if (isset($data['venue_id']) && !empty($data['venue_id'])) {
+            $venue_id = $data['venue_id'];
+        }
+        else {
+            $venue_data = array(
+                'address' => $data['address']
+            );
+            if (isset($data['city']) && !empty($data['city'])) {
+                $venue_data['cityId'] = $data['city']->id;
+                $venue_data['city'] = $data['city']->city;
+                $venue_data['stateId'] = $data['city']->stateId;
+                $venue_data['name'] = $data['address'];
+            }
+            if ($this->db->insert('venues', $venue_data)) {
+                $venue_id = $this->db->insert_id();
             }
         }
+        $storedData = array(
+            'name' => $data['name'],
+            'description' => $data['description'],
+            'typeId' => NULL,
+            'datetime' => $data['date'] . ' ' . $data['time'],
+            'venueId' => $venue_id,
+            'booking_link' => $booking_link,
+            'insertedon' => date('Y-m-d H:i:s'),
+            'insertedby' => NULL,
+            'updatedon' => NULL,
+            'updatedby' => NULL,
+            'is_public' => !((bool)$data['private']),
+            'ownerId' => $owner_id,
+        );
+        if ($is_new) {
+            if (empty($eventId)) {
+                $this->db->insert('events', $storedData);
+                $event_id = $this->db->insert_id();
+                if($owner_id){
+            $this->add_to_calendar($event_id);
+        }
+            } 
+        } else {
+            $this->db->where('id', $data['event_id']);
+            $this->db->update('events', $storedData);
+        }
+        
 
     }
 
@@ -526,7 +537,7 @@ class Events_m extends MY_Model
         }
 
         $this->db
-            ->select('e.id, e.name, v.name as venue_name, e.datetime, DATE(e.datetime) AS date_only, e.ownerId AS event_owner_id')
+            ->select('e.id, e.name, v.name as venue_name, e.datetime, DATE(e.datetime) AS date_only, e.ownerId AS event_owner_id, e.status')
             ->from('events AS e')
             ->join('venues AS v', 'e.venueId = v.id', 'left')
             ->join('cities AS ci', 'v.cityId = ci.id', 'left')
@@ -556,5 +567,16 @@ class Events_m extends MY_Model
         return $this->db->get()->result();
     }
 
+    public function delete_event($eventId) {
+
+    }
+
+    public function changeStatus($eventId, $status) {
+        $storedData = array(
+            'status' => $status
+        );
+        $this->db->where('id', $eventId);
+        return $this->db->update('events', $storedData);
+    }
 
 }
