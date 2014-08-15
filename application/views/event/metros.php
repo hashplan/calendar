@@ -16,7 +16,7 @@
 				<?php foreach($metros as $metro) { ?>
 					<div class="col-md-4 col-sm-12">
 						<div class="item-metro-id" style="display: none"><?php echo html_escape($metro->id) ?></div>
-						<a href="#" class="item-metro-name" aria-hidden="true"><?php echo html_escape($metro->city) ?></a>
+						<a href="#" class="item-metro-name" aria-hidden="true" data-picture_path="<?=site_url('assets/img/metroareas/'. (isset($metro->picture_path) &&!empty($metro->picture_path) ? $metro->picture_path : 'Nashville_Skyline_-_Cropped_Format.jpg'));?>"><?php echo html_escape($metro->city) ?></a>
 						<?php if (!$hide_events) { ?>
 							<span class = "badge"><?php echo $metro->count ?></span>
 						<?php } ?>

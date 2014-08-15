@@ -12,7 +12,7 @@ class Location_m extends MY_Model
     public function get_event_metro_areas()
     {
         return $this->db
-            ->select('ma.id, ma.city, count(v.Id) as count /* get_event_metro_areas() */', FALSE)
+            ->select('ma.id, ma.city, ma.picture_path, count(v.Id) as count /* get_event_metro_areas() */', FALSE)
             ->from($this->table . ' as ma')
             ->join('cities as c', 'ma.id = c.metroId')
             ->join('venues as v', 'v.cityId  = c.id', 'inner')

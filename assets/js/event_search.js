@@ -62,12 +62,15 @@
             e.preventDefault();
             var metroName = $(this).text();
             var metroId = $(this).siblings('.item-metro-id').text();
-            $('h5.metro-name').text('Location: ' + metroName);
+            $('h5.metro-name').text(metroName);
             $('.metro-id').text(metroId);
             $('#event_cities').modal('hide');
             fetchEvents();
             updateTopVenues();
             $('.page-title').data('metro_name', metroName);
+            $('.metro-image').css('background-image', 'url(' + $(this).data('picture_path') + ')');
+            
+
             changePageTitle(metroName);
         });
 
@@ -194,5 +197,12 @@
                 $('h2.page-title').text(text);
             }
         }
+        var picture_path = $('.metro-image').data('user_location_image');
+
+        if (picture_path != '')
+        {
+            $('.metro-image').css('background-image', 'url(' + base_url+picture_path + ')');
+        }
+
     });
 })(jQuery);

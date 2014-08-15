@@ -108,6 +108,7 @@ class Events extends AuthController
 
     protected function _render_events_list_page($events_type, $page_title, $user_id = NULL, $default_location = NULL)
     {
+
         $this->load->model('categories_m');
         $this->data['page_class'] = 'user-events';
         $this->data['view'] = 'user/events/' . $this->typesView[$events_type];
@@ -118,6 +119,10 @@ class Events extends AuthController
         if ($default_location !== NULL) {
             $top_venues_params['metroarea'] = $events_search_params['metro_id'] = $this->data['metro_id'] = isset($default_location->metroId) ? $default_location->metroId : '';
             $this->data['metro_name'] = isset($default_location->city) ? $default_location->city : '';
+            $this->data['picture_path'] = 'assets/img/metroareas/'. (isset($default_location->picture_path) ? $default_location->picture_path : 'Nashville_Skyline_-_Cropped_Format.jpg');
+        }
+        else{
+            $this->data['picture_path'] = 'assets/img/metroareas/Nashville_Skyline_-_Cropped_Format.jpg';
         }
 
         $this->load->model('venues_m');
@@ -135,6 +140,7 @@ class Events extends AuthController
         $this->data['data']['has_events'] = count($events) > 0;
         $this->data['data']['events_type'] = $events_type;
         $this->data['data']['page_title'] = $page_title;
+
         $this->_render_page();
     }
 

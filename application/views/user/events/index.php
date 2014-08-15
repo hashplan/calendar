@@ -1,4 +1,58 @@
-<div class="container">
+<div class="metro-image" data-user_location_image="<?= isset($picture_path) && !empty($picture_path)?$picture_path:'';?>">
+    
+</div>
+
+
+            <div class="container">
+            <div class="row change-location">
+            <div calss="col-md-2"></div>
+                <div calss="col-md-8">
+                    <h5 class="metro-name"><?=(!empty($metro_name) ? $metro_name : 'Any') ?></h5>
+                    <p><?= anchor('user/events/choose_metro', 'Change Location<span class="caret"></span>', 'data-toggle="modal" data-target="#event_cities" class="metro-link"'); ?></p>
+                </div>
+                <div calss="col-md-2"></div>
+                </div>
+            <div class="row" style="margin-top: 20px;">
+            <div class="col-md-2"></div>
+                <div class="col-md-5" style="width: 46%!important;">
+                    <input type="text" id="event_list" class="form-control" placeholder="Search for events...">
+                </div>
+                <div class="col-md-1">
+                    <button type="button" class="btn btn-primary" id="event-reset">Reset search</button>
+                </div>
+                <div class="col-md-1"></div>
+            </div>
+            <br>
+
+            <div class="row">
+            <div class="col-md-2"></div>
+                <div class="col-md-2">
+                    <label for="event-preselects">Categories</label>
+                    <select name="categories" id="event-categories" class="form-control">
+                        <option value="0">All</option>
+                        <? foreach ($categories as $category): ?>
+                            <option
+                                value="<?= $category->id ?>"><?= html_escape($category->name) ?></option>
+                        <? endforeach ?>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label for="event-preselects">Day Preselects</label>
+                    <select name="preselects" id="event-preselects" class="form-control">
+                        <option value="0">All</option>
+                        <option value="7">Next 7 days</option>
+                        <option value="3">Next 3 days</option>
+                        <option value="weekend">Upcoming Weekend</option>
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <input type="hidden" name="specific_date" id="date-hidden"/>
+                    <label for="event-date">Choose specific date</label>
+                    <input type="text" class="form-control" id="event-date"/>
+                </div>
+                <div class="col-md-1"></div>
+            </div>
+            
     <div class="row">
 
         <div class="col-md-2 col-sm-12">
@@ -18,54 +72,15 @@
 
         <div class="col-md-7 col-sm-12">
 
-            <h2 class="page-title" data-metro_name="<?=(!empty($metro_name) ? $metro_name : 'Any') ?>"><?= $page_title ?></h2>
-            <br>
-
+             <h2 style="display: none;" class="page-title" data-metro_name="<?=(!empty($metro_name) ? $metro_name : 'Any') ?>"><?= $page_title ?></h2>
+           
             <div class="metro-id" style="display:none"><?=(!empty($metro_id) ? $metro_id : '0') ?></div>
-            <h5 class="metro-name">Location: <?=(!empty($metro_name) ? $metro_name : 'Any') ?></h5>
-
-            <p><?= anchor('user/events/choose_metro', 'Change Location<span class="caret"></span>', 'data-toggle="modal" data-target="#event_cities"'); ?></p>
-            <h5>Upcoming Events:</h5>
+            
+            <!-- <h5>Upcoming Events:</h5> -->
             <input type="hidden" id="user-id" value="<?= $user_id ?>">
             <input type="hidden" id="events-type" value="<?= $events_type ?>">
 
-            <div class="row">
-                <div class="col-md-8">
-                    <input type="text" id="event_list" class="form-control" placeholder="Search for events...">
-                </div>
-                <div class="col-md-4">
-                    <button type="button" class="btn btn-primary" id="event-reset">Reset search</button>
-                </div>
-            </div>
-            <br>
-
-            <div class="row">
-                <div class="col-md-4">
-                    <label for="event-preselects">Categories</label>
-                    <select name="categories" id="event-categories" class="form-control">
-                        <option value="0">All</option>
-                        <? foreach ($categories as $category): ?>
-                            <option
-                                value="<?= $category->id ?>"><?= html_escape($category->name) ?></option>
-                        <? endforeach ?>
-                    </select>
-                </div>
-                <div class="col-md-4">
-                    <label for="event-preselects">Day Preselects</label>
-                    <select name="preselects" id="event-preselects" class="form-control">
-                        <option value="0">All</option>
-                        <option value="7">Next 7 days</option>
-                        <option value="3">Next 3 days</option>
-                        <option value="weekend">Upcoming Weekend</option>
-                    </select>
-                </div>
-                <div class="col-md-4">
-                    <input type="hidden" name="specific_date" id="date-hidden"/>
-                    <label for="event-date">Choose specific date</label>
-                    <input type="text" class="form-control" id="event-date"/>
-                </div>
-            </div>
-            <hr>
+           &nbsp;
             <div class="row">
                 <div class="col-md-12" id="search_result">
                     <?= $events ?>
