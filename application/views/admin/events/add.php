@@ -52,7 +52,7 @@
 
                     <div class="col-md-9">
                         <div class="input-group">
-                            <?= form_dropdown('venue_id', (array)$venues, isset($venue_id) && !empty($venue_id)?$venue_id:'', 'class="form-control"');?>
+                            <?= form_dropdown('venue_id', (array)$venues, isset($venue_id) && !empty($venue_id)?$venue_id:'', 'id="venue" class="form-control"');?>
                             <? if (isset($metros) && !empty($metros)): ?>
                                 <span class="input-group-btn">
                                     <select class="metro_area btn" id="metro_area_filter">
