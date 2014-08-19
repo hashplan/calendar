@@ -457,6 +457,7 @@ class Friends extends AuthController
                 $this->hashplans_mailer->send_event_refused_email($this->get_user(), $user, $event);
             }
             $this->users_m->refused_event_invite($event_id);
+            redirect('user/friends/invites/events');
         }
     }
 
