@@ -5,7 +5,12 @@
         <? $eventId = isset($event->event_id) && !empty($event->event_id)?$event->event_id:'';?>
         <form action="<?= site_url('admin/events/add/'.$eventId) ?>" method="POST" class="form-horizontal create-new-event-form"
               role="form">
+              <input type="hidden" name="country_selected" id="country_selected" value="<?= isset($country_id) && !empty($country_id) ? $country_id : '';?>">
+              <input type="hidden" name="state_selected" id="state_selected" value="<?= isset($venue_state_id) &&!empty($venue_state_id)?$venue_state_id:'';?>">
+              <input type="hidden" name="city_selected" id="city_selected" value="<?= isset($venue_city_id) &&!empty($venue_city_id) ? $venue_city_id: '';?>">
+
             <div class="form-group">
+
                 <label for="event_name" class="col-md-3 control-label"><strong>Event Name:</strong></label>
 
                 <div class="col-md-9">
@@ -48,11 +53,21 @@
             <? if (isset($venues) && !empty($venues)): ?>
                 <hr>
                 <div class="form-group">
+                    <div class="col-lg-offset-3 col-lg-9">
+                        <div class="checkbox">
+                            <label>
+                                <input type="checkbox" name="new_venue" id="new_venue" value="1" <?= isset($new_venue) && !empty($new_venue) ? 'checked="checked"' : '';?>> <strong>New Venue</strong>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group" id="autosuggest-venue">
+
                     <label for="venue" class="col-md-3 control-label"><strong>Event venue:</strong></label>
 
                     <div class="col-md-9">
                         <div class="input-group">
-                            <?= form_dropdown('venue_id', (array)$venues, isset($venue_id) && !empty($venue_id)?$venue_id:'', 'id="venue" class="form-control"');?>
+                            <?= form_dropdown('venue_id', (array)$venues, isset($event->venue_id) && !empty($event->venue_id)?$event->venue_id:'', 'id="venue" class="form-control"');?>
                             <? if (isset($metros) && !empty($metros)): ?>
                                 <span class="input-group-btn">
                                     <select class="metro_area btn" id="metro_area_filter">
@@ -63,9 +78,44 @@
                                     </select>
                                 </span>
                             <? endif ?>
-
+                            <button id="toggle">Show underlying select</button>
                         </div>
                     </div>
+                </div>
+
+                <div id="new-venue-block">
+                    <div class="from-group">
+                        <label for="countries" class="col-md-3 control-label"><strong>Country:</strong> </label>
+                        <div class="col-md-9" id="countries">
+                            <? if (isset($countries) && !empty($countries)): ?>
+                                <?= form_dropdown('country_id', $countries, isset($country_id) && !empty($country_id)?$country_id:'', 'id="country_id" class="metro_area btn"');?>
+                            <? endif ?>
+                        </div>
+                    </div>
+                    <div class="from-group state-block">
+                        <label for="states" class="col-md-3 control-label"><strong>State:</strong> </label>
+                        <div class="col-md-9" id="states">
+                        </div>
+                    </div>
+                    <div class="from-group city-block">
+                        <label for="city" class="col-md-3 control-label"><strong>City:</strong> </label>
+                        <div class="col-md-9" id="cities">
+                        </div>
+                    </div>   
+                    <div class="from-group name-block">
+                        <label for="venue_name" class="col-md-3 control-label"><strong>Venue Name:</strong> </label>
+                        <div class="col-md-9" id="venue_name">
+                        <input type="text" class="form-control" name="venue_name" id="venue_name" placeholder="Venue Name"
+                           value="<?= set_value('venue_name', '') ?>">
+                        </div>
+                    </div>                    
+                    <div class="from-group address-block">
+                        <label for="venue_address" class="col-md-3 control-label"><strong>Venue Address:</strong> </label>
+                        <div class="col-md-9" id="address">
+                        <input type="text" class="form-control" name="venue_address" id="venue_address" placeholder="Venue Address"
+                           value="<?= set_value('venue_address', '') ?>">
+                        </div>
+                    </div>                 
                 </div>
             <? endif ?>
             <hr>
