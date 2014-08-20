@@ -6,3 +6,36 @@
     padding-bottom: 7px;
 }
 
+.custom-combobox {
+position: relative;
+display: inline-block;
+}
+.custom-combobox-toggle {
+position: absolute;
+top: 0;
+bottom: 0;
+margin-left: -1px;
+padding: 0;
+}
+.custom-combobox-input {
+margin: 0;
+padding: 5px 10px;
+width: 520px;
+border-radius: 4px !important;
+box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset;
+width: 520px !important;
+}
+#toggle
+{
+	display: none;
+}
+
+#new-venue-block
+{
+	display: none;
+}
+
+.state-block, .city-block, .address-block, .name-block {
+	display: none;
+	height: 34px;
+}

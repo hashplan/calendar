@@ -16,7 +16,7 @@
             <input type="hidden" class="event-name-hidden" value="<?= urlencode($event->event_name) ?>"/>
             <input type="hidden" class="event-venue-hidden" value="<?= urlencode($event->venue_name) ?>"/>
             <input type="hidden" class="event-city-hidden"
-                   value="<?= urlencode(($event->city_city ? $event->city_city : $event->venue_city)) ?>"/>
+                   value="<?= urlencode((isset($event->city_city) && !empty($event->city_city) ? $event->city_city : $event->venue_city)) ?>"/>
             <input type="hidden" class="event-address-hidden"
                    value="<?= urlencode(($event->venue_address ? $event->venue_address : $event->venue_city)) ?>"/>
             <input type="hidden" class="event-owner-id-hidden" value="<?= urlencode($event->event_owner_id) ?>"/>

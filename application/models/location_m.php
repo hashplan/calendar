@@ -97,6 +97,16 @@ class Location_m extends MY_Model
         return $result;
     }
 
+    public function get_city_name_by_id($city_id = '')
+    {
+        $result = array();
+        $query = $this->db->like('id', $city_id)->limit(1)->get('cities');
+        if ($query->num_rows() > 0) {
+            $result = $query->row();
+        }
+        return !empty($result)?$result->city : false;
+    }
+
     public function get_metroareas_total_count()
     {
         return $this->db->count_all_results($this->table);
@@ -146,6 +156,22 @@ class Location_m extends MY_Model
             ->where_in('id', $this->allowed_countries)
             ->get()
             ->result();
+    }
+
+    public function getCities($stateId = false) {
+        if (!empty($stateId))
+            $this->db->where('stateId', $stateId);
+        $res = $this->db->select('id, city')
+                        ->from('cities c')
+                        ->get()
+                        ->result();
+        
+        $cities[''] = 'Select City';
+        foreach ($res as $city)
+        {
+            $cities[$city->id] = $city->city;
+        }
+        return $cities;
     }
 
 } 

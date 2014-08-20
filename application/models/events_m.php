@@ -152,13 +152,16 @@ class Events_m extends MY_Model
 				v.insertedby AS venue_insertedby,
 				v.updatedon AS venue_updatedon,
 				v.updatedby AS venue_updatedby,
-				ma.id AS city_id,
+				c.id AS city_id,
+                s.countryid AS country_id,
 				ma.city AS city_city,
 				ma.stateId AS city_state_id
 			')
             ->from('events AS e')
             ->join('venues AS v', 'e.venueId = v.id', 'left')
-            ->join('metroareas AS ma', 'v.cityId = ma.id', 'left')
+            ->join('cities c', 'c.id = v.cityId', 'left')
+            ->join('states s', 'c.stateId = s.id', 'left')
+            ->join('metroareas AS ma', 'c.metroId = ma.id', 'left')
             ->where('e.id', $id)
             ->where('(e.ownerId IS NULL OR e.ownerId = ' . $this->db->escape($user_id) . ' OR (e.ownerId IS NOT NULL AND (e.is_public = 1 OR EXISTS (SELECT 1 FROM user_connections uc WHERE e.id = uc.eventId AND uc.connectionUserId = ' . $this->db->escape($user_id) . '))))')
             ->get()
@@ -446,7 +449,10 @@ class Events_m extends MY_Model
             $owner_id = $data['owner_id'];
             if (!isset($data['private']) || empty($data['private'])) {
                 $data['private'] = FALSE;
+                $is_public = true;
             }
+        } else {
+            $is_public = false;
         }
         $is_new = empty($data['event_id']);
 
@@ -454,25 +460,41 @@ class Events_m extends MY_Model
         if (isset($data['event_booking_link']) && !empty($data['event_booking_link'])) {
             $booking_link = $data['event_booking_link'];
         }
+        if (!$data['new_venue'])
+        {
+            $venue_id = NULL;
+            if (isset($data['venue_id']) && !empty($data['venue_id'])) {
+                $venue_id = $data['venue_id'];
+            }
+            else {
+                $venue_data = array(
+                    'address' => $data['address']
+                );
+                if (isset($data['city']) && !empty($data['city'])) {
+                    $venue_data['cityId'] = $data['city']->id;
+                    $venue_data['city'] = $data['city']->city;
+                    $venue_data['stateId'] = $data['city']->stateId;
+                    $venue_data['name'] = $data['address'];
+                }
+                if ($this->db->insert('venues', $venue_data)) {
+                    $venue_id = $this->db->insert_id();
+                }
+            }
+        } else {
+            if (isset($data['venue_city_id']) && !empty($data['venue_city_id'])) {
+                $venue_data['cityId'] = $data['venue_city_id'];
+                $venue_data['city'] = $this->location_m->get_city_name_by_id($data['venue_city_id']);
+                $venue_data['stateId'] = $data['venue_state_id'];
+                $venue_data['name'] = $data['venue_name'];
+                $venue_data['address'] = $data['venue_address'];
+                $venue_data['insertedon'] = date('Y-m-d H:i:s');
+                $venue_data['insertedby'] = $this->ion_auth->user()->row()->id;
+                if ($this->db->insert('venues', $venue_data)) {
+                        $venue_id = $this->db->insert_id();
+                }
+            }
+        }
 
-        $venue_id = NULL;
-        if (isset($data['venue_id']) && !empty($data['venue_id'])) {
-            $venue_id = $data['venue_id'];
-        }
-        else {
-            $venue_data = array(
-                'address' => $data['address']
-            );
-            if (isset($data['city']) && !empty($data['city'])) {
-                $venue_data['cityId'] = $data['city']->id;
-                $venue_data['city'] = $data['city']->city;
-                $venue_data['stateId'] = $data['city']->stateId;
-                $venue_data['name'] = $data['address'];
-            }
-            if ($this->db->insert('venues', $venue_data)) {
-                $venue_id = $this->db->insert_id();
-            }
-        }
         $storedData = array(
             'name' => $data['name'],
             'description' => $data['description'],
@@ -484,7 +506,7 @@ class Events_m extends MY_Model
             'insertedby' => NULL,
             'updatedon' => NULL,
             'updatedby' => NULL,
-            'is_public' => !((bool)$data['private']),
+            'is_public' => $is_public,
             'ownerId' => $owner_id,
         );
         if ($is_new) {
@@ -492,8 +514,8 @@ class Events_m extends MY_Model
                 $this->db->insert('events', $storedData);
                 $event_id = $this->db->insert_id();
                 if($owner_id){
-            $this->add_to_calendar($event_id);
-        }
+                    $this->add_to_calendar($event_id);
+                }
             } 
         } else {
             $this->db->where('id', $data['event_id']);
