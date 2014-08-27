@@ -409,7 +409,8 @@ class AdminController extends AuthController
         'users' => 0,
         'future_events' => 0,
         'custom_future_events' => 0,
-        'metroareas' => 0
+        'metroareas' => 0,
+        'venues_list' => 0
     );
 
     public function __construct()

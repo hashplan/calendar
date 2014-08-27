@@ -28,6 +28,13 @@
                         <li class="<?= Menu::isActive('admin/events/custom');?>"><a href="<?= site_url('admin/events/custom'); ?>">Custom Events</a></li>
                     </ul>
                 </li>
+                <li class="dropdown <?= Menu::isActive('admin/venues');?> <?= Menu::isActive('admin/venues/venues_list');?> <?= Menu::isActive('admin/venues/venues_list');?>">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">Venues <i class="caret"></i></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="<?= site_url('admin/venues/add'); ?>"><span class="glyphicon glyphicon-plus"></span> Add New</a></li>
+                        <li class="<?= Menu::isActive('admin/venues/venues_list');?>"><a href="<?= site_url('admin/venues/venues_list'); ?>">Venues</a></li>
+                    </ul>
+                </li>                
                 <li><a href="<?= site_url('admin/crawler'); ?>">Crawler</a></li>
             </ul>
             <ul class="nav navbar-nav navbar-right">

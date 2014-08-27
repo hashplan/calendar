@@ -22,7 +22,7 @@ class Venues_m extends MY_Model
                 ->where('m.id', $options['metroarea']);
 
         }
-
+        
         if (isset($options['limit']) && !empty($options['limit'])) {
             $this->db->limit($options['limit']);
         }
@@ -30,7 +30,29 @@ class Venues_m extends MY_Model
         return $this->db->get()->result();
     }
 
+  public function get_venues_list($options = array())
+    {
+        $this->db
+            ->select('v.id as venue_id, v.id as id, v.name as venue_name, v.address venue_address, v.city venue_city, co.country as venue_country, s.state as venue_state')
+            ->from($this->table . ' v');
 
+            $this->db
+                ->join('cities c', 'v.cityId = c.id', 'left')
+                ->join('states s', 'v.stateId = s.id', 'left')
+                ->join('countries co', 's.countryid = co.id', 'left');
+        
+        if (isset($options['venues_type']) && !empty($options['venues_type'])) {
+            $this->db->where('v.typeId', $options['venues_type']);
+        }
+
+        if (isset($options['limit']) && !empty($options['limit'])) {
+            $this->db->limit($options['limit']);
+        }
+
+        return $this->db->get()->result();
+    }
+    
+    
     public function get_top_venues($options = array())
     {
         $this->db
@@ -66,5 +88,39 @@ class Venues_m extends MY_Model
 
         return $this->db->get()->result();
     }
+    
+    public function delete($venueId)
+    {
+        $this->db->where('id', $venueId);
+        return $this->db->delete('venues');
+    }
+    
+    public function get_venue_by_id($venueId)
+    {
+        if (!$venueId)
+        {
+            return false;
+        }
+        $this->db
+            ->select('v.id as venue_id, v.id as id, v.name, v.address, v.website, v.city city, v.description, v.phone, v.zip, co.country as country, s.state as state, s.id as stateId, co.id as country_id, c.id as cityId')
+            ->from($this->table . ' v');
 
-} 
+            $this->db
+                ->join('cities c', 'v.cityId = c.id', 'left')
+                ->join('states s', 'v.stateId = s.id', 'left')
+                ->join('countries co', 's.countryid = co.id', 'left');
+            $this->db->where('v.id', $venueId);
+        return $this->db->get()->row();
+    }
+    
+    public function save($data, $venueId = 0)
+    {
+        if ($venueId) {
+            $this->db->where('id', $venueId);
+            $res = $this->db->update('venues', $data);
+        } else {
+            $res = $this->db->insert('venues', $data);
+        }
+        return $res;
+    }
+}
