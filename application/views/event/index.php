@@ -24,7 +24,7 @@
                 <li class="active"><a href="#event" data-toggle="tab">Overview</a></li>
                 <li><a href="#venue" data-toggle="tab">Venue</a></li>
                 <? if (isset($can_invite) && $can_invite): ?>
-                    <li><a href="#attendees" data-toggle="tab">Visitors</a></li>
+                    <li><a href="#attendees" data-toggle="tab">Attendees</a></li>
                 <? endif ?>
             </ul>
 

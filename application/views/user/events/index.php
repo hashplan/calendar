@@ -1,8 +1,5 @@
-<div class="metro-image" data-user_location_image="<?= isset($picture_path) && !empty($picture_path)?$picture_path:'';?>">
-    
+<div class="metro-image" data-user_location_image="<?= isset($picture_path) && !empty($picture_path)?$picture_path:'';?>">    
 </div>
-
-
             <div class="container">
             <div class="row change-location">
             <div calss="col-md-2"></div>
@@ -15,7 +12,7 @@
             <div class="row" style="margin-top: 20px;">
             <div class="col-md-2"></div>
                 <div class="col-md-5" style="width: 46%!important;">
-                    <input type="text" id="event_list" class="form-control" placeholder="Search for events...">
+                    <input type="text" id="event_list" class="form-control" placeholder="Yankees, U2, thursday, stadium...">
                 </div>
                 <div class="col-md-1">
                     <button type="button" class="btn btn-primary" id="event-reset">Reset search</button>
@@ -27,9 +24,8 @@
             <div class="row">
             <div class="col-md-2"></div>
                 <div class="col-md-2">
-                    <label for="event-preselects">Categories</label>
                     <select name="categories" id="event-categories" class="form-control">
-                        <option value="0">All</option>
+                        <option value="0">All Categories</option>
                         <? foreach ($categories as $category): ?>
                             <option
                                 value="<?= $category->id ?>"><?= html_escape($category->name) ?></option>
@@ -37,9 +33,8 @@
                     </select>
                 </div>
                 <div class="col-md-3">
-                    <label for="event-preselects">Day Preselects</label>
                     <select name="preselects" id="event-preselects" class="form-control">
-                        <option value="0">All</option>
+                        <option value="0">All Day Preselects</option>
                         <option value="7">Next 7 days</option>
                         <option value="3">Next 3 days</option>
                         <option value="weekend">Upcoming Weekend</option>
@@ -47,8 +42,7 @@
                 </div>
                 <div class="col-md-2">
                     <input type="hidden" name="specific_date" id="date-hidden"/>
-                    <label for="event-date">Choose specific date</label>
-                    <input type="text" class="form-control" id="event-date"/>
+                    <input type="text" class="form-control" id="event-date" value = "Pick Date"/>
                 </div>
                 <div class="col-md-1"></div>
             </div>
@@ -75,8 +69,6 @@
              <h2 style="display: none;" class="page-title" data-metro_name="<?=(!empty($metro_name) ? $metro_name : 'Any') ?>"><?= $page_title ?></h2>
            
             <div class="metro-id" style="display:none"><?=(!empty($metro_id) ? $metro_id : '0') ?></div>
-            
-            <!-- <h5>Upcoming Events:</h5> -->
             <input type="hidden" id="user-id" value="<?= $user_id ?>">
             <input type="hidden" id="events-type" value="<?= $events_type ?>">
 

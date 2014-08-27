@@ -13,7 +13,7 @@
         <div class="form-group">
             <label class="control-label sr-only" for="user_name">Name</label>
             <textarea class="form-control" name="contact_description" id="contact_description" rows="3"
-                      placeholder="What is troubling you?" value="<?= set_value('contact_description'); ?>"></textarea>
+                      placeholder="How may we help?" value="<?= set_value('contact_description'); ?>"></textarea>
         </div>
         <div class="form-group">
             <button type="submit" class="btn btn-primary btn-sm">Submit</button>

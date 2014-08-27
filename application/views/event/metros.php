@@ -9,7 +9,7 @@
 				<?php if (!$hide_events) { ?>
 					<div class="col-md-12">
 						<div class="item-metro-id" style="display: none">0</div>
-						<a href="#" class="item-metro-name" aria-hidden="true">Doesn't matter</a>
+						<a href="#" class="item-metro-name" aria-hidden="true">Any</a>
 						<span class="badge">all</span>
 					</div>
 				<?php } ?>
