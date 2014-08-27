@@ -95,8 +95,8 @@
 
         // reset events
         $('.page-user-events #event-reset').on('click', function () {
-            $('.metro-id').text('0');
-            $('h5.metro-name').text("Location: Doesn't matter");
+            //$('.metro-id').text('0');
+            //$('h5.metro-name').text("Location: Doesn't matter");
             $('#event-preselects').val(0);
             $('#event-date').val('');
             $('#event-categories').val(0);

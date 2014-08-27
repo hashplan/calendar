@@ -2,50 +2,103 @@
 
 class StubhubDrv extends CrawlerDrv
 {
+    private $processed_events;
+
     public function __construct()
     {
         parent::__construct();
+        $this->processed_events = 0;
         $this->formatUrl = 'www.stubhub.com/search/doSearch?searchStr=%s&searchMode=event&rows=100&start=%s&nS=0&ae=1&sp=Date&sd=1';
     }
 
     public function start()
     {
-        $result = $this->CI->db
-            ->select('city')
-            ->get('metroareas')
-            ->result();
-        foreach ($result as $cities) {
-            $this->process($cities->city);
-            sleep(30);
-        }
+        $this->get_total_event_count();
 
+        $resultCrawl = $this->CI->db
+            ->select('id,city')
+            ->where('crawler','stubhub')
+            ->where('DATE(datetime) = DATE((SELECT MAX(datetime) FROM crawlstatus))')
+            ->where('DATEDIFF(DATE(NOW()), DATE(datetime)) <= 7')
+            ->where('processed_events < total_event')
+            ->get('crawlstatus');
+
+        foreach ($resultCrawl->result() as $city) {
+            //echo "<h1>".$city->city."</h1></br>";
+            $this->process($city);
+            sleep(10);
+        }
         $this->CI->db
             ->join('cities AS c', 'v.city = c.city AND v.stateId = c.stateId')
             ->update('venues AS v', array('v.cityid' => 'c.id'), array('v.cityId' => 0));
     }
 
+    protected function get_total_event_count(){
+        ini_set('max_execution_time', 0);
+        $resultCrawl = $this->CI->db
+            ->select('city')
+            ->where('crawler','stubhub')
+            ->where('DATE(datetime) = DATE((SELECT MAX(datetime) FROM crawlstatus))')
+            ->where('DATEDIFF(DATE(NOW()), DATE(datetime)) <= 7')
+            ->get('crawlstatus');
+
+        $excludeCity = array();
+        foreach ($resultCrawl->result() as $city) {
+            $excludeCity[] = $city->city;
+        }
+
+        $this->CI->db->select('id,city');
+        if(!empty($excludeCity)){
+            $this->CI->db->where_not_in('city', $excludeCity);
+        }
+        $result = $this->CI->db->get('metroareas');
+
+        foreach ($result->result() as $city) {
+            $dom = $this->curl(sprintf($this->formatUrl, $city->city, 0));
+            $html = new simple_html_dom();
+            $html->Load($dom);
+            $resultRed = $html->find('span[@class="resultRed"]', 0);
+            $insert_data = array(
+                'crawler' => 'stubhub',
+                'city' => $city->city,
+                'total_event' => 0,
+                'processed_events' => 0
+            );
+            if ($resultRed) {
+                $totalCount = (int)$resultRed->innertext;
+                $insert_data['total_event'] = $totalCount;
+            }
+            $this->CI->db->insert('crawlstatus', $insert_data);
+            sleep(2);
+        }
+    }
+
     protected function process($city)
     {
-        $dom = $this->curl(sprintf($this->formatUrl, $city, 0));
+        ini_set('max_execution_time', 0);
+        $dom = $this->curl(sprintf($this->formatUrl, $city->city, 0));
         $html = new simple_html_dom();
         $html->Load($dom);
         $resultRed = $html->find('span[@class="resultRed"]', 0);
+        //echo "<strong>".$resultRed->innertext."</strong></br>";
+
         if ($resultRed) {
-            $totalCount = $resultRed->innertext;
+            $totalCount = (int)$resultRed->innertext;
             if ($totalCount > 0) {
                 for ($i = 0; $i <= $totalCount; $i = $i + 100) {
-                    $this->scraping(sprintf($this->formatUrl, $city, $i));
+                    $this->scraping(sprintf($this->formatUrl, $city->city, $i));
                 }
+                $this->CI->db->update('crawlstatus',array('processed_events'=>$this->processed_events),array('id'=>$city->id));
+                $this->processed_events = 0;
             }
         }
     }
 
     protected function scraping($url)
     {
-        $isFirst = true;
         $dom = $this->curl($url);
         $html = new simple_html_dom();
-        $r = $html->load($dom);
+        $html->load($dom);
         // get count
         $ret['count'] = $html->find('span.resultRed', 0)->innertext;
 
@@ -55,10 +108,11 @@ class StubhubDrv extends CrawlerDrv
             if (sizeof($tr->find('th', 0))) {
                 continue;
             }
+            $this->processed_events++;
 
             $title = $tr->find('td.eventName a', 0);
             $eventName = trim($title->title);
-            if(!$eventName){
+            if (!$eventName) {
                 continue;
             }
             $eventLink = $title->href;
@@ -68,11 +122,12 @@ class StubhubDrv extends CrawlerDrv
             if (!is_null($tr->find('td.eventDate span#tticketEventYear', 0))) {
                 $year = $tr->find('td.eventDate span#tticketEventYear', 0)->innertext;
 
-            } else {
+            }
+            else {
                 $year = date('Y');
             }
             $year = trim($year);
-            if(!$day || !$month  || !$year){
+            if (!$day || !$month || !$year) {
                 continue;
             }
 
@@ -87,11 +142,6 @@ class StubhubDrv extends CrawlerDrv
 
             $date = date_parse($year . "-" . date('m', strtotime($month)) . "-" . $day . " " . $time);
             $datetime = $date["year"] . "-" . sprintf("%02d", $date["month"]) . "-" . sprintf("%02d", $date["day"]) . " " . sprintf("%02d", $date["hour"]) . ":" . sprintf("%02d", $date["minute"]);
-
-            if ($isFirst == true) {
-                $this->CI->db->query("insert into crawlstatus(crawler, city) values('stubhub', '" . $city . "');");
-                $isFirst = false;
-            }
 
             $sql = "call " . $this->CI->db->database . ".InsertEvent('" . addslashes($eventName) . "','" . $datetime . "','" .
                 addslashes($venueName) . "','" . $city .

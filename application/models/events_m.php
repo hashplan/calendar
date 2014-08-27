@@ -65,6 +65,8 @@ class Events_m extends MY_Model
         //search by event name
         if (!empty($options['name'])) {
             $this->db->like('e.name', $options['name']);
+            $this->db->or_like('v.name', $options['name']);
+            $this->db->or_like('date_format(e.datetime,"%W")', $options['name']);
         }
         //venue filter
         if (isset($options['venue_id']) && !empty($options['venue_id'])) {
