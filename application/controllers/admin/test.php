@@ -1,5 +1,5 @@
 <?php if (!defined('BASEPATH')) exit('No direct script access allowed');
-
+require_once(APPPATH . 'libraries/crawler/autoload.php');
 class Test extends AdminController
 {
     //TODO: simply has been moved method from auth controller and views
@@ -60,5 +60,11 @@ class Test extends AdminController
         $this->_render_page();
     }
 
-
+    
+    public function scrapUrl($city)
+    {
+        $StubhubDrv = new StubhubDrv();
+        $StubhubDrv->scrap_test($city);
+        
+    }
 }
