@@ -24,8 +24,6 @@
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">Locations <i class="caret"></i></a>
                     <ul class="dropdown-menu">
                         <li><a href="<?= site_url('admin/locations'); ?>">Metroareas</a></li>
-                        <li class="<?= Menu::isActive('admin/events/future');?>"><a href="<?= site_url('admin/events/future'); ?>">Future Events</a></li>
-                        <li class="<?= Menu::isActive('admin/events/custom');?>"><a href="<?= site_url('admin/events/custom'); ?>">Custom Events</a></li>
                     </ul>
                 </li>
                 <li class="dropdown <?= Menu::isActive('admin/venues');?> <?= Menu::isActive('admin/venues/venues_list');?> <?= Menu::isActive('admin/venues/venues_list');?>">
