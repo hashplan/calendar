@@ -59,7 +59,7 @@ class Location_m extends MY_Model
         return $this->db
             ->select('ma.*, COUNT(s.id) cities_count')
             ->from($this->table . ' ma')
-            ->join('cities s', 's.metroId = ma.id')
+            ->join('cities s', 's.metroId = ma.id', 'left')
             ->order_by($options['sort'], $options['sort_type'])
             ->limit($options['limit'], $options['offset'])
             ->group_by('ma.id')
@@ -125,15 +125,31 @@ class Location_m extends MY_Model
     }
 
     public function save_metro($data){
+
         $metro = array(
             'city' => $data['city'],
             'stateid' => $data['state_id'],
             'PollstarID' => $data['pollstar_id'],
+            'picture_path' => isset($data['picture_path']) && !empty($data['picture_path']) ? $data['picture_path'] : '',
         );
-        if(isset($data['id'])&&!empty($data['id'])){
-            $result = $this->db->update($this->table, $metro, array('id'=>$data['id']));
+        if(isset($data['metro_id'])&&!empty($data['metro_id'])){
+            $result = $this->db->update($this->table, $metro, array('id'=>$data['metro_id']));
         }
         else{
+            $metro = array(
+                'city' => $data['city'],
+                'stateid' => $data['state_id'],
+                'PollstarID' => $data['pollstar_id'],
+                'Crawl' => 0,
+                'picture_path' => isset($data['picture_path']) && !empty($data['picture_path']) ? $data['picture_path'] : '',
+            );
+
+            $lastId = $this->db->select('max(id) as id')
+                            ->from($this->table)
+                            ->get()
+                            ->row()->id;
+
+            $metro['id'] = $lastId+1;
             $result = $this->db->insert($this->table, $metro);
         }
         return $result;
@@ -174,4 +190,17 @@ class Location_m extends MY_Model
         return $cities;
     }
 
+    public function checkUniqueMetroName($name, $id = false) {
+        if (!empty($id))
+        {
+            $this->db->where('m.id != ', $id);
+        }
+        $res = $this->db->select('id')
+                        ->from('metroareas m')
+                        ->where('m.city', $name)
+                        ->get()
+                        ->row();
+        return isset($res->id) && !empty($res->id) ? false : true;
+    }
+    
 } 

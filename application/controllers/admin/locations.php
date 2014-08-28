@@ -63,29 +63,45 @@ class Locations extends AdminController
         $this->_render_page();
     }
 
-    public function metro_edit($id){
+    public function metro_edit($id = false){
 
-        if (!empty($id))
+        if (!empty($id)) {
             $this->metroareaId = $id;
-        $metro = $this->location_m->getMetroById($id);
-
-        if(empty($metro)){
-            show_404();
+            $metro = $this->location_m->getMetroById($id);
+            $this->data['title'] = 'Edit Metroarea #'.$this->metroareaId;
+        } else {
+            $this->metroareaId = 0;
+            $this->data['title'] = 'Add Metroarea';
+            $metro = new stdClass();
+            $metro->city = '';
+            $metro->stateid = 0;
+            $metro->PollstarID = 0;
+            $metro->Crawl = 0;
+            $metro->picture_path = '';
+            $metro->pollstar_id = 0;
+            $metro->state_id = 0;
+            $metro->state_name = '';
+            $metro->country_id = 0;
+            $metro->country_name = '';
         }
 
         $this->form_validation
-            ->set_rules('city', 'Metroarea name', 'trim|required|xss_clean')
+            ->set_rules('city', 'Metroarea name', "trim|required|xss_clean||callback_check_unique_city_name[$id]")
             ->set_rules('state', 'State', 'trim|reuqired|integer')
             ->set_rules('pollstar_id', 'Pollstar Id', 'trim|integer');
 
         if($this->form_validation->run() == true){
             $post = $this->input->post();
             $post['id'] = $id;
-            $this->location_m->save_metro($post);
-            redirect('admin/locations');
-        }
 
+            $this->metroarea_upload($post);
+            redirect('admin/locations');
+        } else {
+            //validation_errors();
+            //die("1111");
+        }
         $this->data['metro'] = $metro;
+
         $options = array(
             'country_id' => $metro->country_id
         );
@@ -113,17 +129,21 @@ class Locations extends AdminController
         }
     }
 
-    public function metroarea_upload()
+    public function metroarea_upload($data)
     {
-
-        $metroareaId = $this->input->post('metro_id');
-        $metro = $this->location_m->getMetroById($metroareaId);
-
+//        $metroareaId = $this->metroareaId;
+//        $metro = $this->location_m->getMetroById($metroareaId);
         $this->load->library('image_lib');
         $original_path = FCPATH . 'assets/uploads/metroareas';
         $resized_path = FCPATH . 'assets/img/metroareas';
+        $old_picture = '';
+        if (isset($data['id']) && !empty($data['id']))
+        {
+            $metro = $this->location_m->getMetroById($data['id']);
+            $old_picture = $metro->picture_path;
+        }
 
-        $old_picture = $metro->picture_path;
+        
         //config for original upload
         $config = array(
             'allowed_types' => 'jpg|jpeg|gif|png',
@@ -140,32 +160,47 @@ class Locations extends AdminController
             $image_data = $this->upload->data();
         }
 
-        //config for resize()
-        $config = array(
-            'source_image' => $image_data['full_path'],
-            'new_image' => $resized_path,
-            'maintain_ratio' => true,
-            'width' => 1360,
-            'height' => 350
-        );
+        if (isset($image_data) && !empty($image_data)) {
+            //config for resize()
+            $config = array(
+                'source_image' => $image_data['full_path'],
+                'new_image' => $resized_path,
+                'maintain_ratio' => true,
+                'width' => 1360,
+                'height' => 350
+            );
 
-        //resize the image
-        $this->image_lib->initialize($config);
-        $this->image_lib->crop();
+            //resize the image
+            $this->image_lib->initialize($config);
+            $this->image_lib->crop();
 
-        $data = array(
-            'picture_path' => $image_data['file_name'],
-        );
-
-        $this->db->where('id', $metro->id);
-        if ($this->db->update('metroareas', $data)) {
-            unlink($original_path . '/' . $old_picture);
-            unlink($resized_path . '/' . $old_picture);
+            $data['picture_path'] = $image_data['file_name'];
+            var_dump($data);
+            $res = $this->location_m->save_metro($data);
+            if ($res) {
+                if (!empty($old_picture))
+                {
+                    unlink($original_path . '/' . $old_picture);
+                    unlink($resized_path . '/' . $old_picture);
+                }
+                unlink($image_data['full_path']);
+            }
+        } else {
+            $res = $this->location_m->save_metro($data);
+            redirect(base_url('admin/locations'));
         }
-        unlink($image_data['full_path']);
-        redirect(base_url('admin/locations'));
 
     }
 
+    public function check_unique_city_name($name, $id)
+    {
+        $result = $this->location_m->checkUniqueMetroName($name, $id);
+        if (!$result) {
+            $this->form_validation->set_message('check_unique_city_name', 'Metroarea with name "'.$name.'" is already exist.');
+            return FALSE;
+        }
+        
+        return TRUE;
+    }
 
 }

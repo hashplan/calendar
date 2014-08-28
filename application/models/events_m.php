@@ -64,9 +64,9 @@ class Events_m extends MY_Model
 
         //search by event name
         if (!empty($options['name'])) {
-            $this->db->like('e.name', $options['name']);
-            $this->db->or_like('v.name', $options['name']);
-            $this->db->or_like('date_format(e.datetime,"%W")', $options['name']);
+            $this->db->where('(e.name LIKE "%'.$options['name'].
+                    '%" OR v.name LIKE "%'.$options['name'].
+                    '%" OR date_format(e.datetime,"%W") LIKE "%'.$options['name'].'%")');
         }
         //venue filter
         if (isset($options['venue_id']) && !empty($options['venue_id'])) {
@@ -88,7 +88,8 @@ class Events_m extends MY_Model
         if (!empty($options['metro_id'])) {
             $this->db->where('ma.id', $options['metro_id']);
         }
-        //preselected filter
+       //preselected filter
+
         if (!empty($options['preselects'])) {
             $date_range = array();
             if ($options['preselects'] == 'weekend') {
@@ -103,11 +104,11 @@ class Events_m extends MY_Model
             }
         }
         //date filter
-        if (!empty($options['specific_date'])) {
+        if (!empty($options['specific_date']) && $options['specific_date'] != 'Pick Date') {
             $date_range['start'] = $options['specific_date'] . ' 00:00:00';
             $date_range['end'] = $options['specific_date'] . ' 23:59:59';
         }
-        if (empty($options['specific_date']) && empty($options['preselects'])) {
+        if ((empty($options['specific_date']) || $options['specific_date'] == 'Pick Date' ) && empty($options['preselects'])) {
             $date_range['start'] = date('Y-m-d') . ' 00:00:00';
             $date_range['end'] = date('Y-m-d', strtotime('+5 years')) . ' 23:59:59';
         }

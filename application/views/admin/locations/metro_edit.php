@@ -1,7 +1,10 @@
 <div class="panel panel-default">
-    <div class="panel-heading"><h2 class="sub-header">Edit Metroarea #<?=$metro->id?></h2></div>
+    
+    <div class="panel-heading"><h2 class="sub-header"><?=$title?></h2></div>
     <div class="panel-body">
         <?= validation_errors('<div class="form_error_notification errors alert alert-danger" role="alert">', '</div>') ?>
+            <form action="<?= site_url('admin/locations/metro_edit/' . (isset($metro->id) &&!empty($metro->id) ? $metro->id:'')); ?>" method="POST" class="form-horizontal edit-metroarea-form"
+              enctype="multipart/form-data" role="form">
             <div class="" id="metroarea-upload">
                 <h4>Change Metroarea picture:</h4>
                 <div class="thumbnail user-avatar">
@@ -14,20 +17,16 @@
                     <?endif ?>
                 </div>
                 <div id="uploader-file-selector" class="pull-right">
-                    <form action="<?= site_url('admin/locations/metroarea_upload') ?>" method="POST"
-                          enctype="multipart/form-data" role="form" class="form-inline">
-                        <input type="hidden" name="metro_id" value="<?= $metro->id;?>"/>
+
+                        <input type="hidden" name="metro_id" value="<?= isset($metro->id) &&!empty($metro->id) ? $metro->id:'';?>"/>
                         <div class="form-group">
                             <label for="metroareafile" class="sr-only">Metroarea Picture</label>
                             <input id="metroareafile" type="file" name="metroareafile" value="">
                         </div>
                         
-                        <button type="submit" name="upload" class="btn btn-primary">Upload</button>
-                    </form>
                 </div>
             </div>
-        <form action="<?= site_url('admin/locations/metro_edit/' . $metro->id) ?>" method="POST" class="form-horizontal edit-metroarea-form"
-              role="form">
+        
             <div class="form-group">
                 <label for="city" class="col-md-4 col-sm-2 control-label"><strong>Name:</strong></label>
 

@@ -23,6 +23,7 @@
                 <li class="dropdown <?= Menu::isActive('admin/locations');?> <?= Menu::isActive('admin/events/future');?> <?= Menu::isActive('admin/events/custom');?>">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">Locations <i class="caret"></i></a>
                     <ul class="dropdown-menu">
+                        <li><a href="<?= site_url('admin/locations/metro_edit'); ?>"><span class="glyphicon glyphicon-plus"></span> Add New Metro</a></li>
                         <li><a href="<?= site_url('admin/locations'); ?>">Metroareas</a></li>
                     </ul>
                 </li>
