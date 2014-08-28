@@ -203,4 +203,25 @@ class Location_m extends MY_Model
         return isset($res->id) && !empty($res->id) ? false : true;
     }
     
+    public function delete_metroarea($id)
+    {
+        if (empty($id))
+        {
+            return false;
+        }
+        
+        $this->db->where('id', $id);
+        return $this->db->delete('metroareas');
+    }
+    
+    public function checkCitiesAssignedToMetroarea($metroId)
+    {
+        $res = $this->db->select('id')
+                        ->from('cities c')
+                        ->where('metroId', $metroId)
+                        ->get()
+                        ->result();
+        return empty($res)?false : true;
+    }
+    
 } 

@@ -25,7 +25,7 @@
                             <td><a href="#"><?= $metro->cities_count ?></a></td>
                             <td>
                                 <a href="<?= site_url('admin/locations/metroarea/edit/' . $metro->id) ?>"><span class="glyphicon glyphicon-edit"></span></a> |
-                                <a href="<?= site_url('admin/locations/metroarea/remove/' . $metro->id) ?>"><span class="glyphicon glyphicon-remove"></span></a>
+                                <a href="<?= site_url('admin/locations/metroarea/remove/' . $metro->id) ?>" onclick="return confirm('Are you sure you want to remove this Metroarea?')"><span class="glyphicon glyphicon-remove"></span></a>
                             </td>
                         </tr>
                     <? endforeach ?>

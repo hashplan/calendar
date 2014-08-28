@@ -175,7 +175,7 @@ class Locations extends AdminController
             $this->image_lib->crop();
 
             $data['picture_path'] = $image_data['file_name'];
-            var_dump($data);
+
             $res = $this->location_m->save_metro($data);
             if ($res) {
                 if (!empty($old_picture))
@@ -201,6 +201,24 @@ class Locations extends AdminController
         }
         
         return TRUE;
+    }
+    
+    public function metro_remove($metroId) {
+        $assignedCitiesExist = $this->location_m->checkCitiesAssignedToMetroarea($metroId);
+
+        if ($assignedCitiesExist) {
+            $this->session->set_flashdata('flash_message_type', 'error');
+            $this->session->set_flashdata('flash_message', "Can't delete metroarea. Metroarea have assigned cities");
+        } else {
+            $res = $this->location_m->delete_metroarea($metroId);
+            if ($res) {
+                $this->session->set_flashdata('flash_message', "Metroarea deleted successfully");
+            } else {
+                $this->session->set_flashdata('flash_message', "Metroarea not deleted");
+            }
+        }
+        
+        redirect(base_url('admin/locations'));
     }
 
 }
