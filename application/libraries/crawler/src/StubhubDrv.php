@@ -22,7 +22,7 @@ class StubhubDrv extends CrawlerDrv
             ->where('DATEDIFF(DATE(NOW()), DATE(datetime)) <= 7')
             ->where('processed_events < total_event')
             ->get('crawlstatus')->row();
-        
+
         if(!empty($resultCrawl)){
             $this->process();
             $this->CI->db->update('crawlstatus',array('processed_events'=>$this->processed_events),array('id'=>$resultCrawl->id));
@@ -32,46 +32,6 @@ class StubhubDrv extends CrawlerDrv
                 ->update('venues AS v', array('v.cityid' => 'c.id'), array('v.cityId' => 0));
         }
         
-    }
-
-    protected function get_total_event_count_old(){
-        ini_set('max_execution_time', 0);
-        $resultCrawl = $this->CI->db
-            ->select('city')
-            ->where('crawler','stubhub')
-            ->where('DATE(datetime) = DATE((SELECT MAX(datetime) FROM crawlstatus))')
-            ->where('DATEDIFF(DATE(NOW()), DATE(datetime)) <= 7')
-            ->get('crawlstatus');
-
-        $excludeCity = array();
-        foreach ($resultCrawl->result() as $city) {
-            $excludeCity[] = $city->city;
-        }
-
-        $this->CI->db->select('id,city');
-        if(!empty($excludeCity)){
-            $this->CI->db->where_not_in('city', $excludeCity);
-        }
-        $result = $this->CI->db->get('metroareas');
-
-        foreach ($result->result() as $city) {
-            $dom = $this->curl(sprintf($this->formatUrl, $city->city, 0));
-            $html = new simple_html_dom();
-            $html->Load($dom);
-            $resultRed = $html->find('span[@class="resultRed"]', 0);
-            $insert_data = array(
-                'crawler' => 'stubhub',
-                'city' => $city->city,
-                'total_event' => 0,
-                'processed_events' => 0
-            );
-            if ($resultRed) {
-                $totalCount = (int)$resultRed->innertext;
-                $insert_data['total_event'] = $totalCount;
-            }
-            $this->CI->db->insert('crawlstatus', $insert_data);
-            sleep(2);
-        }
     }
 
     protected function get_total_event_count(){
@@ -84,7 +44,7 @@ class StubhubDrv extends CrawlerDrv
             ->where('DATEDIFF(DATE(NOW()), DATE(datetime)) <= 7')
             ->get('crawlstatus')->row();
 
-        if(!empty($resultCrawl)){
+        if(empty($resultCrawl)){
             $dom = $this->curl(sprintf($this->formatUrl, 0));
             $html = new simple_html_dom();
             $html->Load($dom);
@@ -190,12 +150,4 @@ class StubhubDrv extends CrawlerDrv
         unset($html);
         return $ret;
     }
-    
-    public function scrap_test($city) {
-        $dom = $this->curl(sprintf($this->formatUrl, $city, 0));
-        echo 'File saved to: assets/uploads/scraping.html<br>';
-        file_put_contents('assets/uploads/scraping.html', $dom);
-    }
-    
-   
 }
