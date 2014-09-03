@@ -16,4 +16,10 @@ class Crawler extends AdminController {
         $this->event_crawler->start_parse();
         redirect('admin/crawler');
     }
+    
+    public function update_venues_addresses(){
+
+        $this->event_crawler->update_venues_addresses();
+        redirect('admin/crawler');
+    }
 }
