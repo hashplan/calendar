@@ -34,6 +34,50 @@ class StubhubDrv extends CrawlerDrv
         
     }
 
+    public function update_venues_addresses() {
+        $result = 0;
+        $venuesWithEmptyAddress = $this->CI->db
+            ->select()
+            ->from('venues v')
+            ->where('v.url IS NOT NULL')
+            ->where('v.address IS NULL')
+            ->or_where('v.address', '')
+            ->get()
+            ->result();
+    
+        foreach ($venuesWithEmptyAddress as $venue) {
+            
+             if(empty($venue->address)){
+        
+                $dom = $this->curl($venue->url);
+
+                $html = new simple_html_dom();
+                $html->Load($dom);
+                
+                $venueReff = $html->find('span#googleAddress a', 0);
+  
+                $venueAddress = '';
+                if (!empty($venueReff)) {
+                                    
+                
+                    if (!empty($venueReff->innertext)) {
+                        $venueAddress = $venueReff->innertext;
+                    }
+                }
+                if (!empty($venueAddress)) {
+                    $updateData = array(
+                        'address' => $venueAddress,
+                    );
+                    $this->CI->db->where('id', $venue->id);
+                    $res = $this->CI->db->update('venues', $updateData);
+
+                }
+
+             }
+        }
+
+    }
+    
     protected function get_total_event_count(){
         $result = 0;
         ini_set('max_execution_time', 0);
