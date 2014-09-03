@@ -127,7 +127,8 @@ class StubhubDrv extends CrawlerDrv
             if (!$day || !$month || !$year) {
                 continue;
             }
-
+            $eventLocation = $tr->find('td.eventLocation a', 0);
+            $venueLink = $eventLocation->href;
             $venueName = $tr->find('td.eventLocation a', 0)->innertext;
             $pieces = preg_split('/<br[^>]*>/i', $tr->find('td.eventLocation', 0)->innertext);
 
@@ -142,7 +143,7 @@ class StubhubDrv extends CrawlerDrv
 
             $sql = "call " . $this->CI->db->database . ".InsertEvent('" . addslashes($eventName) . "','" . $datetime . "','" .
                 addslashes($venueName) . "','" . $city .
-                "','" . $state . "','" . addslashes($eventLink) . "');";
+                "','" . $state . "','" . addslashes($eventLink) . "','" . addslashes($venueLink) . "');";
             //echo $sql. "<br/>";
             $this->CI->db->query($sql);
         }
