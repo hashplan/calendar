@@ -35,8 +35,8 @@ class Migration_Alter_InsertEvent_procedure  extends CI_Migration {
 
         If exists(select * from venues where name = venueName and city = venueCity) THEN
                 set venueId = (select id from venues where name = venueName and city = venueCity LIMIT 1);
-                set venueUrl = (SELECT IF(url IS NULL or url = '', 'empty', url) as url FROM venues where id = venueId);
-                IF venueUrl = 'empty' THEN 
+                set dbVenueUrl = (SELECT IF(url IS NULL or url = '', 'empty', url) as url FROM venues where id = venueId);
+                IF dbVenueUrl = 'empty' THEN 
                         update venues set url = venueUrl where id = venueId;
                 end if;
 
