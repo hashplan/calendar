@@ -1,9 +1,10 @@
 <?php defined('BASEPATH') OR exit('No direct script access allowed');
 class Migration_Alter_InsertEvent_procedure  extends CI_Migration {
 
-	public function up() {
-
-            $query =  <<<EOD
+    public function up() {
+        $query = 'DROP PROCEDURE IF EXISTS InsertEvent';
+        $this->db->query($query);
+        $query =  <<<EOD
    
         CREATE DEFINER=`root`@`localhost` PROCEDURE `InsertEvent`(IN `eventName` VARCHAR(400), IN `date` VARCHAR(45), IN `venueName` VARCHAR(400), IN `venueCity` VARCHAR(100), IN `venueState` VARCHAR(100), IN `booking_url` VARCHAR(500))
         BEGIN
@@ -75,10 +76,11 @@ EOD;
                     
 
 	public function down() {
-
+$query = 'DROP PROCEDURE IF EXISTS InsertEvent';
+$this->db->query($query);
 		$query = <<<EOD
-DELIMITER $$
-DROP PROCEDURE IF EXISTS InsertEvent $$
+
+
 CREATE DEFINER=`root`@`localhost` PROCEDURE `InsertEvent`(IN `eventName` VARCHAR(400), IN `date` VARCHAR(45), IN `venueName` VARCHAR(400), IN `venueCity` VARCHAR(100), IN `venueState` VARCHAR(100), IN `stubhub_url` VARCHAR(500))
 BEGIN
 
@@ -134,8 +136,8 @@ END IF;
 
 
 
-END$$
-DELIMITER;
+END
+
 EOD;
 
         $this->db->query($query);
