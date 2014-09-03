@@ -42,5 +42,10 @@ class Event_crawler
         $PollstarDrv->start();
     }
 
+    public function update_venues_addresses() {
+        $StubhubDrv = new StubhubDrv();
+        $StubhubDrv->update_venues_addresses();
+    }
+    
 
 }
