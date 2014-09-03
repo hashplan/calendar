@@ -6,7 +6,7 @@ class Migration_Alter_InsertEvent_procedure  extends CI_Migration {
         $this->db->query($query);
         $query =  <<<EOD
    
-        CREATE DEFINER=`root`@`localhost` PROCEDURE `InsertEvent`(IN `eventName` VARCHAR(400), IN `date` VARCHAR(45), IN `venueName` VARCHAR(400), IN `venueCity` VARCHAR(100), IN `venueState` VARCHAR(100), IN `booking_url` VARCHAR(500))
+        CREATE DEFINER=`root`@`localhost` PROCEDURE `InsertEvent`(IN `eventName` VARCHAR(400), IN `date` VARCHAR(45), IN `venueName` VARCHAR(400), IN `venueCity` VARCHAR(100), IN `venueState` VARCHAR(100), IN `booking_url` VARCHAR(500), IN `venueUrl` VARCHAR(500))
         BEGIN
 
 
@@ -37,12 +37,12 @@ class Migration_Alter_InsertEvent_procedure  extends CI_Migration {
                 set venueId = (select id from venues where name = venueName and city = venueCity LIMIT 1);
                 set venueUrl = (SELECT IF(url IS NULL or url = '', 'empty', url) as url FROM venues where id = venueId);
                 IF venueUrl = 'empty' THEN 
-                        update venues set url = booking_url where id = venueId;
+                        update venues set url = venueUrl where id = venueId;
                 end if;
 
         Else
 
-           insert into venues(name, city, stateId, insertedby, insertedon, url) values(venueName, venueCity, (select id from states where abbrev = venueState and countryID = 1), 'screenscrape', CURRENT_TIMESTAMP(), booking_url);
+           insert into venues(name, city, stateId, insertedby, insertedon, url) values(venueName, venueCity, (select id from states where abbrev = venueState and countryID = 1), 'screenscrape', CURRENT_TIMESTAMP(), booking_url, venueUrl);
 
            set venueId = (select LAST_INSERT_ID());
 
