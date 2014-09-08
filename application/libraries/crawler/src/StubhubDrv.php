@@ -160,7 +160,11 @@ class StubhubDrv extends CrawlerDrv
                 continue;
             }
             $eventLocation = $tr->find('td.eventLocation a', 0);
-            $venueLink = 'http://www.stubhub.com/' . $eventLocation->href;
+            $venueLink = $eventLocation->href;
+            if($eventLink[0] == '/')
+            {
+                $venueLink = 'http://www.stubhub.com/' . $venueLink;
+            }
             $venueName = $tr->find('td.eventLocation a', 0)->innertext;
             $pieces = preg_split('/<br[^>]*>/i', $tr->find('td.eventLocation', 0)->innertext);
 
