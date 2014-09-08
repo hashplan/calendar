@@ -36,7 +36,7 @@
                             <h4><?= html_escape($event->venue_name) ?></h4>
                             <h4><?= html_escape(date("l, F jS, Y \n g:ia", strtotime($event->event_datetime))) ?></h4>
                             <? if ($event->event_booking_link): ?>
-                                <?= anchor('http://www.stubhub.com/' . $event->event_booking_link, 'Need tickets?') ?>
+                                <?= anchor($event->event_booking_link, 'Need tickets?') ?>
                             <? endif ?>
                         </div>
                         <div class="col-md-6">
