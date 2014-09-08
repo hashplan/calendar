@@ -16,7 +16,7 @@
 					<iframe \
 						frameborder="0" \
 						style="border:0" \
-						src="https://www.google.com/maps/embed/v1/place?key=' + googleMapsApiKey + '&q=' + venueName + ',' + cityName + '"> \
+						src="https://www.google.com/maps/embed/v1/place?key=' + googleMapsApiKey + '&q=' + venueName + ',' + cityName + ',' + address + '"> \
 					</iframe>\
 				');
                     clearInterval(intervalId);
@@ -34,11 +34,15 @@
             if ($('.yelp-content-holder').hasClass('empty')) {
                 var venueName = $('#event_modal .event-venue-hidden').val();
                 var cityName = $('#event_modal .event-city-hidden').val();
+                var address = $('#event_modal .event-address-hidden').val();
+                if(!address){
+                    address = cityName;
+                }
 
                 $.ajax('/event/yelp', {
                     type: 'POST',
                     dataType: 'html',
-                    data: { venue: venueName, city: cityName },
+                    data: { venue: venueName, city: address },
                     success: function (response) {
                         $('.yelp-content-holder').removeClass('empty').html(response);
                     }
