@@ -35,7 +35,6 @@ class StubhubDrv extends CrawlerDrv
     }
 
     public function update_venues_addresses() {
-        $result = 0;
         $venuesWithEmptyAddress = $this->CI->db
             ->select()
             ->from('venues v')
@@ -48,34 +47,23 @@ class StubhubDrv extends CrawlerDrv
         foreach ($venuesWithEmptyAddress as $venue) {
             
              if(empty($venue->address)){
-        
-                $dom = $this->curl($venue->url);
+                $dom = $this->curl($venue->url.'/');
 
                 $html = new simple_html_dom();
                 $html->Load($dom);
                 
                 $venueReff = $html->find('span#googleAddress a', 0);
-  
-                $venueAddress = '';
-                if (!empty($venueReff)) {
-                                    
-                
-                    if (!empty($venueReff->innertext)) {
-                        $venueAddress = $venueReff->innertext;
-                    }
-                }
-                if (!empty($venueAddress)) {
+
+                if (!empty($venueReff)&&!empty($venueReff->innertext))
+                {
                     $updateData = array(
-                        'address' => $venueAddress,
+                        'address' => $venueReff->innertext,
                     );
                     $this->CI->db->where('id', $venue->id);
-                    $res = $this->CI->db->update('venues', $updateData);
-
+                    $this->CI->db->update('venues', $updateData);
                 }
-
              }
         }
-
     }
     
     protected function get_total_event_count(){
@@ -172,7 +160,7 @@ class StubhubDrv extends CrawlerDrv
                 continue;
             }
             $eventLocation = $tr->find('td.eventLocation a', 0);
-            $venueLink = $eventLocation->href;
+            $venueLink = 'http://www.stubhub.com/' . $eventLocation->href;
             $venueName = $tr->find('td.eventLocation a', 0)->innertext;
             $pieces = preg_split('/<br[^>]*>/i', $tr->find('td.eventLocation', 0)->innertext);
 
