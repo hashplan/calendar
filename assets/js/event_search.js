@@ -101,6 +101,7 @@
             $('#event-date').val('');
             $('#event-categories').val(0);
             $('#event_list').val('');
+            $('.widget-top-venues .venue').removeClass('active');
             fetchEvents();
         });
 
@@ -185,9 +186,6 @@
                 case 'deleted':
                     text = metroName === "Doesn't matter" ? 'All deleted events' : 'Deleted events in ' + metroName;
                     break;
-            }
-            if (window.console) {
-                console.log(metroName, $('.widget-top-venues .venue.active .venue-name').text());
             }
             if($('.widget-top-venues .venue.active .venue-name').text()){
                 text = text + ' - ' + $('.widget-top-venues .venue.active .venue-name').text();

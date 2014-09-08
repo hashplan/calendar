@@ -119,10 +119,10 @@ class Events extends AuthController
         if ($default_location !== NULL) {
             $top_venues_params['metroarea'] = $events_search_params['metro_id'] = $this->data['metro_id'] = isset($default_location->metroId) ? $default_location->metroId : '';
             $this->data['metro_name'] = isset($default_location->city) ? $default_location->city : '';
-            $this->data['picture_path'] = 'assets/img/metroareas/'. (isset($default_location->picture_path) ? $default_location->picture_path : 'Nashville_Skyline_-_Cropped_Format.jpg');
+            $this->data['picture_path'] = 'assets/img/metroareas/'. (isset($default_location->picture_path) ? $default_location->picture_path : 'default.jpg');
         }
         else{
-            $this->data['picture_path'] = 'assets/img/metroareas/Nashville_Skyline_-_Cropped_Format.jpg';
+            $this->data['picture_path'] = 'assets/img/metroareas/default.jpg';
         }
 
         $this->load->model('venues_m');
