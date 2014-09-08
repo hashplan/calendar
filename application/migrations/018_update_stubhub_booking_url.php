@@ -4,22 +4,19 @@ class Migration_update_stubhub_booking_url extends CI_Migration
 {
     public function up()
     {
-        $this->db->trans_start();
         $this->db->query("
-                UPDATE `calendar_ext`.`events`
-                SET `booking_link` = CONCAT('http://www.stubhub.com', `booking_link`)
-                WHERE LOCATE('http://www.stubhub.com', `booking_link`) = '' OR LOCATE('http://www.stubhub.com', `booking_link`) IS NULL;
+                UPDATE `" . $this->db->database . "`.`events`
+                SET booking_link = CONCAT('http://www.stubhub.com', booking_link)
+                WHERE booking_link LIKE '/%';
         ");
-        $this->db->trans_complete();
     }
 
     public function down()
     {
-        $this->db->trans_start();
         $this->db->query("
-                UPDATE `calendar_ext`.`events`
-                SET `booking_link` = REPLACE(`booking_link`, 'http://www.stubhub.com', '')
-                WHERE LOCATE('http://www.stubhub.com', `booking_link`) != '' AND  LOCATE('http://www.stubhub.com', `booking_link`) IS NOT NULL;
+                UPDATE `" . $this->db->database . "`.`events`
+                SET booking_link = REPLACE(booking_link, 'http://www.stubhub.com', '')
+                WHERE LOCATE('http://www.stubhub.com', booking_link) != '' AND  LOCATE('http://www.stubhub.com', booking_link) IS NOT NULL;
         ");
     }
 
