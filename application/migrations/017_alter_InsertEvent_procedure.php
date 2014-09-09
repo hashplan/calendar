@@ -56,7 +56,7 @@ class Migration_Alter_InsertEvent_procedure  extends CI_Migration {
 
         If not exists(select * from events where name = eventNameClean and venueId = venueId and datetime = eventDateTime) THEN
 
-          insert into events (name, venueId, datetime, booking_link,insertedby, insertedon) values(eventNameClean, venueId, eventDateTime, booking_link,'screenscrape', CURRENT_TIMESTAMP());
+          insert into events (name, venueId, datetime, booking_link,insertedby, insertedon) values(eventNameClean, venueId, eventDateTime, booking_url,'screenscrape', CURRENT_TIMESTAMP());
 
         END IF;
 
