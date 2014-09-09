@@ -141,6 +141,10 @@ class StubhubDrv extends CrawlerDrv
                 continue;
             }
             $eventLink = $title->href;
+            if($eventLink[0] == '/')
+            {
+                $eventLink = 'http://www.stubhub.com' . $eventLink;
+            }
 
             $day = $month = null;
             if(!is_null($tr->find('td.eventDate span#ticketEventDate', 0))){
@@ -161,10 +165,7 @@ class StubhubDrv extends CrawlerDrv
             }
             $eventLocation = $tr->find('td.eventLocation a', 0);
             $venueLink = $eventLocation->href;
-            if($eventLink[0] == '/')
-            {
-                $venueLink = 'http://www.stubhub.com/' . $venueLink;
-            }
+
             $venueName = $tr->find('td.eventLocation a', 0)->innertext;
             $pieces = preg_split('/<br[^>]*>/i', $tr->find('td.eventLocation', 0)->innertext);
 
