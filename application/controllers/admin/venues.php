@@ -61,13 +61,8 @@ class Venues extends AdminController {
     
     public function remove($venueId)
     {
-        if (!$venueId)
-        {
-            return false;
-        }
-        $res = $this->venues_m->delete($venueId);
+        $this->venues_m->delete($venueId);
         redirect('admin/venues');
-        
     }
     
     public function add($venueId = false)
@@ -220,5 +215,11 @@ class Venues extends AdminController {
             echo json_encode($result);
             die();
         }
-    }  
+    }
+
+    public function switch_excluded($venueId, $status = 0){
+        $this->venues_m->switch_excluded($venueId, $status);
+        redirect('admin/venues');
+    }
+
 }

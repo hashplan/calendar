@@ -12,7 +12,7 @@ class Venues_m extends MY_Model
     public function get_venues($options = array())
     {
         $this->db
-            ->select('v.id as venue_id, v.id as id, v.name as venue_name, v.address venue_address, v.city venue_city')
+            ->select('v.id as venue_id, v.id as id, v.name as venue_name, v.address venue_address, v.city venue_city, v.is_excluded is_excluded')
             ->from($this->table . ' v');
 
         if (isset($options['metroarea']) && !empty($options['metroarea'])) {
@@ -33,7 +33,7 @@ class Venues_m extends MY_Model
   public function get_venues_list($options = array())
     {
         $this->db
-            ->select('v.id as venue_id, v.id as id, v.name as venue_name, v.address venue_address, v.city venue_city, co.country as venue_country, s.state as venue_state')
+            ->select('v.id as venue_id, v.id as id, v.name as venue_name, v.address venue_address, v.city venue_city, co.country as venue_country, s.state as venue_state, v.is_excluded is_excluded')
             ->from($this->table . ' v');
 
             $this->db
@@ -122,5 +122,10 @@ class Venues_m extends MY_Model
             $res = $this->db->insert('venues', $data);
         }
         return $res;
+    }
+
+    public function switch_excluded($venueId, $status = 0)
+    {
+        return $this->db->update('venues', array('is_excluded' => ($status == 1 ? 1 : 0)), array('id' => $venueId));
     }
 }
