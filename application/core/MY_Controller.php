@@ -450,11 +450,13 @@ class AdminController extends AuthController
 
         if (!$counters_last_update || time() - $counters_cache_expiry_time > $counters_last_update || $isForce) {
             $this->load->model('events_m');
+            $this->load->model('venues_m');
             $this->load->model('location_m');
             $this->counters['users'] = $this->ion_auth->users()->num_rows();
             $this->counters['future_events'] = $this->events_m->get_total_count('future_events');
             $this->counters['custom_future_events'] = $this->events_m->get_total_count('custom_future_events');
             $this->counters['metroareas'] = $this->location_m->get_metroareas_total_count();
+            $this->counters['venues_list'] = $this->venues_m->get_total_count();
 
             $this->session->set_userdata(array('counters' => $this->counters, 'counters_last_update' => time()));
         }

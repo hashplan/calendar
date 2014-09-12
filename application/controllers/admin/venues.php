@@ -46,7 +46,7 @@ class Venues extends AdminController {
         $paged->has_next = $paged->total_pages > $page;
         $paged->next_page = $paged->has_next ? $page + 1 : $page;
 
-        $this->data['pagination'] = $this->get_paging($paged, 'admin/venues/');
+        $this->data['pagination'] = $this->get_paging($paged, 'admin/venues/venues_list/');
 
         $options = array(
             'venues_type' => false,
@@ -221,5 +221,4 @@ class Venues extends AdminController {
         $this->venues_m->switch_excluded($venueId, $status);
         redirect('admin/venues');
     }
-
 }

@@ -44,10 +44,14 @@ class Venues_m extends MY_Model
         if (isset($options['venues_type']) && !empty($options['venues_type'])) {
             $this->db->where('v.typeId', $options['venues_type']);
         }
-
-        if (isset($options['limit']) && !empty($options['limit'])) {
-            $this->db->limit($options['limit']);
+        if (!isset($options['offset']) || empty($options['offset'])) {
+            $options['offset'] = 0;
         }
+        if (isset($options['limit']) || empty($options['limit'])) {
+            $options['limit'] = 50;
+        }
+
+        $this->db->limit($options['limit'], $options['offset']);
 
         return $this->db->get()->result();
     }
@@ -127,5 +131,10 @@ class Venues_m extends MY_Model
     public function switch_excluded($venueId, $status = 0)
     {
         return $this->db->update('venues', array('is_excluded' => ($status == 1 ? 1 : 0)), array('id' => $venueId));
+    }
+
+
+    public function get_total_count(){
+        return $this->db->count_all_results($this->table);
     }
 }
