@@ -29,7 +29,7 @@ class StubhubDrv extends CrawlerDrv
             
             $this->CI->db
                 ->join('cities AS c', 'v.city = c.city AND v.stateId = c.stateId')
-                ->update('venues AS v', array('v.cityid' => 'c.id'), array('v.cityId' => 0));
+                ->update('venues AS v', array('v.cityId' => 'c.id'), array('v.cityId' => 0));
         }
         
     }

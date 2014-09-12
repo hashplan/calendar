@@ -34,6 +34,7 @@ class Events_m extends MY_Model
             ->join('cities AS ci', 'v.cityId = ci.id', 'left')
             ->join('metroareas AS ma', 'ci.metroId = ma.id', 'left')
             ->where('(e.ownerId IS NULL OR e.ownerId = ' . $this->db->escape($user_id) . ' OR (e.ownerId IS NOT NULL AND e.is_public = 1))')
+            ->where('v.is_excluded !=', 1)
             ->order_by('e.datetime')
             ->limit($options['limit'], $options['offset']);
 
@@ -562,7 +563,7 @@ class Events_m extends MY_Model
         }
 
         $this->db
-            ->select('e.id, e.name, v.name as venue_name, e.datetime, DATE(e.datetime) AS date_only, e.ownerId AS event_owner_id, e.status')
+            ->select('e.id, e.name, v.name as venue_name, e.datetime, DATE(e.datetime) AS date_only, e.ownerId AS event_owner_id, e.status, v.is_excluded AS is_excluded')
             ->from('events AS e')
             ->join('venues AS v', 'e.venueId = v.id', 'left')
             ->join('cities AS ci', 'v.cityId = ci.id', 'left')
@@ -593,7 +594,7 @@ class Events_m extends MY_Model
     }
 
     public function delete_event($eventId) {
-
+        $this->changeStatus($eventId, 'cancelled');
     }
 
     public function changeStatus($eventId, $status) {
