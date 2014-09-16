@@ -34,7 +34,7 @@ class Events_m extends MY_Model
             ->join('cities AS ci', 'v.cityId = ci.id', 'left')
             ->join('metroareas AS ma', 'ci.metroId = ma.id', 'left')
             ->where('(e.ownerId IS NULL OR e.ownerId = ' . $this->db->escape($user_id) . ' OR (e.ownerId IS NOT NULL AND e.is_public = 1))')
-            ->where('v.is_excluded !=', 1)
+            ->where(array('v.is_excluded !=' => 1, 'e.status' => 'active'))
             ->order_by('e.datetime')
             ->limit($options['limit'], $options['offset']);
 
