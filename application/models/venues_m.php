@@ -67,8 +67,8 @@ class Venues_m extends MY_Model
         if (!isset($options['next_days']) || empty($options['next_days'])) {
             $options['next_days'] = 30;
         }
-        $this->db
-            ->where('e.datetime between now() and (NOW() + INTERVAL ' . $this->db->escape($options['next_days']) . ' DAY)');
+        $this->db->where('e.datetime between now() and (NOW() + INTERVAL ' . $this->db->escape($options['next_days']) . ' DAY)');
+        $this->db->where('v.is_excluded', 0);
 
         if (isset($options['metroarea']) && !empty($options['metroarea'])) {
             $this->db
