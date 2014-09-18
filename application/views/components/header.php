@@ -20,15 +20,15 @@
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries
     WARNING: Respond.js doesn't work if you view the page via file://
     [if lt IE 9]-->
-    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <script src="<?= site_url('assets/js/html5shiv.js'); ?>"></script>
+    <script src="<?= site_url('assets/js/respond.min.js'); ?>"></script>
 
     <?$this->carabiner->display('header_js', 'js');?>
 
-    <script src="<?php echo site_url('assets/js/account_settings.js'); ?>"></script>
-    <script src="<?php echo site_url('assets/js/tinymce/tinymce.min.js'); ?>"></script>
-    <!--<script src="<?php echo site_url('assets/js/tooltip_for_event_to_plan.js'); ?>"></script>-->
-    <script src="<?php echo site_url('assets/js/invites_left_block.js'); ?>"></script>
+    <script src="<?= site_url('assets/js/account_settings.js'); ?>"></script>
+    <script src="<?= site_url('assets/js/tinymce/tinymce.min.js'); ?>"></script>
+    <!--<script src="<?= site_url('assets/js/tooltip_for_event_to_plan.js'); ?>"></script>-->
+    <script src="<?= site_url('assets/js/invites_left_block.js'); ?>"></script>
     <script type="text/javascript">
         tinymce.init({
             selector: "input_variable_here",

@@ -13,10 +13,24 @@
             fetchEvents();
         });
 
+        function IsOnScreen(s) {
+            if ($(s).length > 0) {
+                var element = $(s).eq(-2);
+                var wst = $(window).scrollTop();
+                var wh = $(window).height();
+                return (wst < element.offset().top && wst + wh > element.offset().top + element.height()) ? true : false;
+            }
+            return false;
+        }
+
+        var scrolling = false;
+
         // scrolldown handler - fetch 5 more events on page bottom
         if ($('.page-user-events').length > 0) {
             $(window).scroll(function () {
-                if ($(window).scrollTop() + $(window).height() > $(document).height() - 1) {
+                if (!scrolling && IsOnScreen('#search_result div.event-row')) {
+                    scrolling = true;
+                    $('#search_result').append('<div class="event-loader"><img src="' + base_url + '/assets/img/icons/ajax-loader.gif"/></div>');
                     var data = {
                         name: $('#event_list').val(),
                         offset: $('#search_result .event-row').length
@@ -33,7 +47,7 @@
                     if ($('#event-categories').val() != 0) {
                         data.category = $('#event-categories').val();
                     }
-                    if($('.widget-top-venues .venue.active')){
+                    if ($('.widget-top-venues .venue.active')) {
                         data.venue_id = $('.widget-top-venues .venue.active').data('venue_id');
                     }
                     var eventsType = 'all';
@@ -50,9 +64,25 @@
                         type: 'POST',
                         data: data,
                         success: function (response) {
-                            $(response).appendTo('#search_result');
+                            $('#search_result .event-loader').remove();
+                            if(response.trim().length > 0){
+                                $(response).appendTo('#search_result');
+                            }
+                            else{
+                                if($('#search_result div.event-row').length == 0) {
+                                    $('#search_result').empty();
+                                    $('.no-events-row').addClass('shown').removeClass('hidden');
+                                }
+                            }
+                            scrolling = false;
                         }
                     });
+                }
+                else{
+                    if($('#search_result div.event-row').length == 0 && scrolling == false) {
+                        $('#search_result').empty();
+                        $('.no-events-row').addClass('shown').removeClass('hidden');
+                    }
                 }
             });
         }
@@ -69,7 +99,7 @@
             updateTopVenues();
             $('.page-title').data('metro_name', metroName);
             $('.metro-image').css('background-image', 'url(' + $(this).data('picture_path') + ')');
-            
+
 
             changePageTitle(metroName);
         });
@@ -119,7 +149,7 @@
             if ($('#event-categories').val() != 0) {
                 data.category = $('#event-categories').val();
             }
-            if($('.widget-top-venues .venue.active')){
+            if ($('.widget-top-venues .venue.active')) {
                 data.venue_id = $('.widget-top-venues .venue.active').data('venue_id');
             }
 
@@ -187,7 +217,7 @@
                     text = metroName === "Doesn't matter" ? 'All deleted events' : 'Deleted events in ' + metroName;
                     break;
             }
-            if($('.widget-top-venues .venue.active .venue-name').text()){
+            if ($('.widget-top-venues .venue.active .venue-name').text()) {
                 text = text + ' - ' + $('.widget-top-venues .venue.active .venue-name').text();
             }
 
@@ -195,12 +225,45 @@
                 $('h2.page-title').text(text);
             }
         }
+
         var picture_path = $('.metro-image').data('user_location_image');
 
-        if (picture_path != '')
-        {
-            $('.metro-image').css('background-image', 'url(' + base_url+picture_path + ')');
+        if (picture_path != '') {
+            $('.metro-image').css('background-image', 'url(' + base_url + picture_path + ')');
         }
+
+        //add to calendar
+        $('#search_result').on('click', '.add_event_to_my_plan_btn', function () {
+            var that = $(this);
+            var event_id = that.parents('.event-row').data('event_id');
+            $.ajax(that.attr('href'), {
+                type: 'POST',
+                success: function (response) {
+                    if (response.data && response.data.event_id) {
+                        $('.event-' + response.data.event_id + ' .event_labels').append('<span class="label label-primary">In calendar</span>');
+                        $(that).remove();
+                        $(document).scroll();
+                    }
+                }
+            });
+            return false;
+        });
+
+        //add/restore to ignore list
+        $('#search_result').on('click', '.add_to_ignore_list_btn, .restore_event_btn, .delete_event_from_plan_btn', function () {
+            var that = $(this);
+            var event_id = that.parents('.event-row').data('event_id');
+            $.ajax(that.attr('href'), {
+                type: 'POST',
+                success: function (response) {
+                    if (response.data && response.data.event_id) {
+                        $('.event-' + response.data.event_id).remove();
+                        $(document).scroll();
+                    }
+                }
+            });
+            return false;
+        });
 
     });
 })(jQuery);

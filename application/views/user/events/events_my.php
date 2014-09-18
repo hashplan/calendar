@@ -14,7 +14,7 @@
         </div>
         <?php $current_date = $event->date_only; ?>
     <? endif ?>
-    <div class="panel panel-default event-row">
+    <div class="panel panel-default event-row event-<?=$event->id?>">
         <div class="panel-body">
             <!-- Button trigger modal -->
             <h4><?= anchor('event/modal_details/' . $event->id, $event->name, 'data-toggle="modal" data-target="#event_modal"'); ?></h4>
@@ -26,7 +26,7 @@
             <!--add to events for user id a specific event id-->
             <div class="btn-group btn-group-xs event-buttons-wrapper">
                 <? if ($event->event_owner_id != $user_id): ?>
-                    <?= anchor('event/delete_from_calendar/' . $event->id, '<i class="glyphicon glyphicon-trash"></i>', array('title' => 'Delete Event From Plan', 'class' => 'btn btn-default')); ?>
+                    <a href="<?=site_url('event/delete_from_calendar/' . $event->id)?>" title="Delete Event From Plan" class="btn btn-default delete_event_from_plan_btn"><i class="glyphicon glyphicon-trash"></i></a>
                 <? endif ?>
             </div>
         </div>

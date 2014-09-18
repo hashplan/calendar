@@ -2,7 +2,10 @@
 
 class Event extends AuthController
 {
-
+    protected $response = array(
+        'errors' => array(),
+        'data' => array()
+    );
     public function __construct()
     {
         parent::__construct();
@@ -10,12 +13,26 @@ class Event extends AuthController
 
     public function add_to_favourites($event_id = NULL)
     {
-        $event_id_is_correct = $event_id !== NULL && is_numeric($event_id) && $event_id;
+        $event_id_is_correct = $event_id !== NULL && is_numeric($event_id);
         if (!$event_id_is_correct) {
-            return;
+            show_404();
         }
         $this->load->model('events_m');
-        $this->events_m->add_to_favourites($event_id);
+        if($this->events_m->add_to_favourites($event_id))
+        {
+            $this->response['data'] = array('event_id' => $event_id);
+        }
+        else
+        {
+            $this->response['errors'][] = 'The event has not been added';
+        }
+
+        if($this->input->is_ajax_request())
+        {
+            header('Content-Type: application/json');
+            echo json_encode($this->response);
+            die();
+        }
         redirect(base_url('user/events/favourite'));
     }
 
@@ -26,7 +43,21 @@ class Event extends AuthController
             return;
         }
         $this->load->model('events_m');
-        $this->events_m->delete_from_favourites($event_id);
+        if($this->events_m->delete_from_favourites($event_id))
+        {
+            $this->response['data'] = array('event_id' => $event_id);
+        }
+        else
+        {
+            $this->response['errors'][] = 'The event has not been added';
+        }
+
+        if($this->input->is_ajax_request())
+        {
+            header('Content-Type: application/json');
+            echo json_encode($this->response);
+            die();
+        }
         redirect(base_url('user/events/favourite'));
     }
 
@@ -37,7 +68,21 @@ class Event extends AuthController
             return;
         }
         $this->load->model('events_m');
-        $this->events_m->delete($event_id);
+        if($this->events_m->delete($event_id))
+        {
+            $this->response['data'] = array('event_id' => $event_id);
+        }
+        else
+        {
+            $this->response['errors'][] = 'The event has not been added';
+        }
+
+        if($this->input->is_ajax_request())
+        {
+            header('Content-Type: application/json');
+            echo json_encode($this->response);
+            die();
+        }
         redirect(base_url('user/events/all'));
     }
 
@@ -48,7 +93,21 @@ class Event extends AuthController
             return;
         }
         $this->load->model('events_m');
-        $this->events_m->restore_from_trash($event_id);
+        if($this->events_m->restore_from_trash($event_id))
+        {
+            $this->response['data'] = array('event_id' => $event_id);
+        }
+        else
+        {
+            $this->response['errors'][] = 'The event has not been added';
+        }
+
+        if($this->input->is_ajax_request())
+        {
+            header('Content-Type: application/json');
+            echo json_encode($this->response);
+            die();
+        }
         redirect(base_url('user/events/trash'));
     }
 
@@ -59,8 +118,21 @@ class Event extends AuthController
             return;
         }
         $this->load->model('events_m');
-        $this->events_m->add_to_calendar($event_id);
-        redirect(base_url('user/events'));
+        if($this->events_m->add_to_calendar($event_id))
+        {
+            $this->response['data'] = array('event_id' => $event_id);
+        }
+        else
+        {
+            $this->response['errors'][] = 'The event has not been added';
+        }
+
+        if($this->input->is_ajax_request())
+        {
+            header('Content-Type: application/json');
+            echo json_encode($this->response);
+            die();
+        }
     }
 
     public function delete_from_calendar($event_id)
@@ -70,7 +142,21 @@ class Event extends AuthController
             return;
         }
         $this->load->model('events_m');
-        $this->events_m->delete_from_calendar($event_id);
+        if($this->events_m->delete_from_calendar($event_id))
+        {
+            $this->response['data'] = array('event_id' => $event_id);
+        }
+        else
+        {
+            $this->response['errors'][] = 'The event has not been added';
+        }
+
+        if($this->input->is_ajax_request())
+        {
+            header('Content-Type: application/json');
+            echo json_encode($this->response);
+            die();
+        }
         redirect(base_url('user/events/my'));
     }
 

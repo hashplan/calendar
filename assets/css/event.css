@@ -49,6 +49,10 @@
     margin-right: 15px;
 }
 
+.event-loader{
+    text-align: center;
+}
+
 /*top venues widget*/
 .widget-top-venues {
     margin-top: 20px;

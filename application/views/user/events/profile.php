@@ -64,8 +64,14 @@
             <div class="row no-events-row <?= ($has_events ? 'hidden' : 'shown') ?>">
                 <div class="col-md-12">
                     <div class="panel panel-warning">
-                        <div class="panel-heading">You don't have any plans. Try to go to the "Events" and add
-                            something fun
+                        <div class="panel-heading">
+                            <?if($events_type == 'deleted'):?>
+                                Your ignore list is empty
+                            <?elseif($events_type == 'favourite'):?>
+                                Your favorite list is empty
+                            <?else:?>
+                                You don't have any plans. Try to go to the "Events" and add something fun
+                            <?endif?>
                         </div>
                     </div>
                 </div>
