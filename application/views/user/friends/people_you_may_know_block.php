@@ -9,11 +9,10 @@
                 <div class="dude-name">
                     <?= html_escape($dude->name) ?>
                     <br>
-                    <?= anchor('user/friends/friend_request/' . $dude->id, '<i class="glyphicon glyphicon-plus-sign"></i>Connect', array('class' => 'connect-link')) ?>
+                    <a href="<?=site_url('user/friends/friend_request/' . $dude->id)?>" class="connect-link"><i class="glyphicon glyphicon-plus-sign"></i> Connect</a>
                 </div>
             </div>
-            <a href="<?= site_url('user/friends/remove_from_lists/' . $dude->id) ?>" class="remove-from-lists-link"><i
-                    class="glyphicon glyphicon-remove"></i></a>
+            <a href="<?= site_url('user/friends/remove_from_lists/' . $dude->id) ?>" class="remove-from-lists-link"><i class="glyphicon glyphicon-remove"></i></a>
         </div>
     </div>
 <? endforeach ?>

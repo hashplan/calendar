@@ -13,6 +13,11 @@ class Friends extends AuthController
         'people_you_may_know' => 'people_you_may_know_list'
     );
 
+    protected $response = array(
+        'errors' => array(),
+        'data' => array()
+    );
+
     public function __construct()
     {
         parent::__construct();
@@ -96,6 +101,10 @@ class Friends extends AuthController
     //ajax
     public function users_list()
     {
+        if(!$this->input->is_ajax_request())
+        {
+            show_404();
+        }
         $post = $this->input->post();
         $options = array();
         if (!empty($post['offset'])) {
@@ -140,7 +149,6 @@ class Friends extends AuthController
         $this->data['data']['page_title'] = sprintf('Common friends with %s', $this->users_m->generate_full_name($friend));
         $this->data['data']['page_type'] = 'mutual_friends';
         $this->load->model('location_m');
-        $user_friends = $this->users_m->get_friends(array('user_id' => $user_id));
         $users = $this->users_m->get_mutual_friends_with(array('user_id' => $user_id));
         $locations = $this->location_m->get_left_block_metro_areas();
         $this->data['data']['left_block'] = $this->load->view('user/friends/locations_left_block', array('locations' => $locations, 'user_id' => $user_id), TRUE);
@@ -194,6 +202,10 @@ class Friends extends AuthController
     //ajax
     public function people_you_may_know_list()
     {
+        if(!$this->input->is_ajax_request())
+        {
+            show_404();
+        }
         $post = $this->input->post();
         $options = array();
         if (!empty($post['offset'])) {
@@ -389,10 +401,20 @@ class Friends extends AuthController
                 $this->update_friend_list(true);
                 $this->update_people_you_may_know_list(true);
             }
-            $this->users_m->set_connection_between_users($user_id, NULL, NULL, 'removed');
-            if (!$this->input->is_ajax_request()) {
-                redirect(base_url() . 'user/friends');
+            if($this->users_m->set_connection_between_users($user_id, NULL, NULL, 'removed'))
+            {
+                $this->response['data'] = array('user_id' => $user_id);
             }
+            else
+            {
+                $this->response['errors'][] = 'The request was not sent';
+            }
+            if ($this->input->is_ajax_request()) {
+                header('Content-Type: application/json');
+                echo json_encode($this->response);
+                die();
+            }
+            redirect(base_url() . 'user/friends');
         }
     }
 
@@ -414,6 +436,18 @@ class Friends extends AuthController
         if ($this->users_m->set_connection_between_users($friend_id, NULL, NULL, 'friend_request')) {
             $this->load->library('hashplans_mailer');
             $this->hashplans_mailer->send_friend_invite_email($this->get_user(), $this->ion_auth->user($friend_id)->row());
+            $this->response['data'] = array('user_id' => $friend_id);
+        }
+        else
+        {
+            $this->response['errors'][] = 'The request was not sent';
+        }
+
+        if($this->input->is_ajax_request())
+        {
+            header('Content-Type: application/json');
+            echo json_encode($this->response);
+            die();
         }
         redirect('user/friends/add');
     }

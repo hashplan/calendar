@@ -23,9 +23,8 @@
                 </div>
                 <div class="button-wrapper">
                     <?php if (isset($current_user_id)): ?>
-                        <?=11111;?>
                         <? if (in_array($friend->id, $my_friends)): ?>
-                            <?= anchor('user/friends/remove_from_contact/' . $friend->id, 'Remove', array('class' => 'btn btn-danger')); ?>
+                            <a href="<?=site_url('user/friends/remove_from_contact/' . $friend->id)?>" class="btn btn-danger remove_from_friendlist_btn">Remove</a>
                             <?= anchor('user/events/' . $friend->id, 'View plans', array('class' => 'btn btn-primary friend-view-plans-button')); ?>
                         <? else: ?>
                             <?= anchor('user/friends/friend_request/' . $friend->id, 'Connect', array('class' => 'btn btn-primary friend-view-plans-button')); ?>

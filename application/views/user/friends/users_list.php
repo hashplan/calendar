@@ -1,5 +1,5 @@
 <?php foreach ($people as $dude): ?>
-    <div class="panel panel-default friend-row">
+    <div class="panel panel-default friend-row user-<?= $dude->id ?>" data-user_id="<?= $dude->id ?>">
         <div class="panel-body">
             <div class="left-section">
                 <div class="friend-pic"><img src="/assets/img/icons/no-image-100.png"/></div>
@@ -22,16 +22,14 @@
                     <?endif ?>
                 </div>
                 <div class="button-wrapper">
-                    <?= anchor('user/friends/remove_from_lists/' . $dude->id, 'Ignore', array('class' => 'btn btn-danger')) ?>
+                    <a href="<?= site_url('user/friends/remove_from_lists/' . $dude->id) ?>" class="btn btn-danger add_to_ignore_list_btn">Ignore</a>
                     <? if ($page_type === 'friends'): ?>
                         <?= anchor('user/events/' . $dude->id, 'View plans', array('class' => 'btn btn-primary friend-view-plans-button')); ?>
                     <? elseif ($page_type === 'add_friends'): ?>
-                        <?= anchor('user/friends/friend_request/' . $dude->id, 'Connect', array('class' => 'btn btn-primary friend-view-plans-button')); ?>
-                    <?
-                    elseif ($page_type === 'friends_invites'): ?>
+                        <a href="<?= site_url('user/friends/friend_request/' . $dude->id) ?>" class="btn btn-primary friend_request_btn">Connect</a>
+                    <?elseif ($page_type === 'friends_invites'): ?>
                         <?= anchor('user/friends/friend_accept/' . $dude->id, 'Connect', array('class' => 'btn btn-primary friend-view-plans-button')); ?>
-                    <?
-                    elseif ($page_type === 'events_invites'): ?>
+                    <?elseif ($page_type === 'events_invites'): ?>
                         <?= anchor('user/friends/event_invite_accept/' . $dude->eventId, 'Connect', array('class' => 'btn btn-primary friend-view-plans-button')); ?>
                     <?endif ?>
                 </div>

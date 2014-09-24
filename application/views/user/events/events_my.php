@@ -14,7 +14,7 @@
         </div>
         <?php $current_date = $event->date_only; ?>
     <? endif ?>
-    <div class="panel panel-default event-row event-<?=$event->id?>">
+    <div class="panel panel-default event-row event-<?=$event->id?>" data-event_id="<?=$event->id?>">
         <div class="panel-body">
             <!-- Button trigger modal -->
             <h4><?= anchor('event/modal_details/' . $event->id, $event->name, 'data-toggle="modal" data-target="#event_modal"'); ?></h4>

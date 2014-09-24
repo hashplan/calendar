@@ -1,5 +1,5 @@
 <?php foreach ($people as $dude): ?>
-    <div class="panel panel-default friend-row">
+    <div class="panel panel-default friend-row user-<?= $dude->id ?>" data-user_id="<?= $dude->id ?>">
         <div class="panel-body">
             <div class="left-section">
                 <div class="friend-pic"><img src="/assets/img/icons/no-image-100.png"/></div>
@@ -22,7 +22,7 @@
                     <?endif ?>
                 </div>
                 <div class="button-wrapper">
-                    <?= anchor('user/friends/remove_from_lists/' . $dude->id, 'Ignore', array('class' => 'btn btn-danger')) ?>
+                    <a href="<?= site_url('user/friends/remove_from_lists/' . $dude->id) ?>" class="btn btn-danger add_to_ignore_list_btn">Ignore</a>
                     <?= anchor('user/friends/friend_request/' . $dude->id, 'Connect', array('class' => 'btn btn-primary friend-view-plans-button')); ?>
                 </div>
             </div>

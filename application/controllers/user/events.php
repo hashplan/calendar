@@ -75,6 +75,10 @@ class Events extends AuthController
 
     public function events_list()
     {
+        if(!$this->input->is_ajax_request())
+        {
+            show_404();
+        }
         $post = $this->input->post();
         $options = array();
         if (!empty($post['category']) && $post['category'] != 0) $options['category'] = $post['category'];
