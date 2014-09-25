@@ -154,8 +154,9 @@ class Events extends AuthController
         $post = $this->input->post();
         $options = array();
         if (!empty($post['metro_id'])) $options['metroarea'] = $post['metro_id'];
+        $sticky_venues = $this->venues_m->get_sticky_venues($options);
         $venues = $this->venues_m->get_top_venues($options);
-        $this->load->view('user/events/top_venues_list', array('top_venues' => $venues));
+        $this->load->view('user/events/top_venues_list', array('sticky_venues' => $sticky_venues, 'top_venues' => $venues));
     }
 
 }

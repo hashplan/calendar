@@ -68,7 +68,7 @@ class Venues_m extends MY_Model
             $options['next_days'] = 30;
         }
         $this->db->where('e.datetime between now() and (NOW() + INTERVAL ' . $this->db->escape($options['next_days']) . ' DAY)');
-        $this->db->where('v.is_excluded', 0);
+        $this->db->where('v.is_excluded !=', 1);
 
         if (isset($options['metroarea']) && !empty($options['metroarea'])) {
             $this->db
@@ -76,6 +76,7 @@ class Venues_m extends MY_Model
                 ->join('metroareas m', 'c.metroId = m.id')
                 ->where('m.id', $options['metroarea']);
 
+            $this->db->where('v.is_sticky !=', 1);
         }
 
         $this->db
@@ -89,6 +90,35 @@ class Venues_m extends MY_Model
             $options['offset'] = 0;
         }
         $this->db->limit($options['limit'], $options['offset']);
+
+        return $this->db->get()->result();
+    }
+
+    public function get_sticky_venues($options = array())
+    {
+        $this->db
+            ->select('v.id as venue_id, v.id as id, v.name as venue_name, v.address venue_address, v.city venue_city, count(e.id) events_count')
+            ->from($this->table . ' v')
+            ->join('events e', 'e.venueId = v.id');
+
+        $this->db->where('v.is_excluded !=', 1);
+        $this->db->where('v.is_sticky', 1);
+
+        if (isset($options['metroarea']) && !empty($options['metroarea']))
+        {
+            $this->db
+                ->join('cities c', 'v.cityId = c.id')
+                ->join('metroareas m', 'c.metroId = m.id')
+                ->where('m.id', $options['metroarea']);
+        }
+        else
+        {
+            return array();
+        }
+
+        $this->db
+            ->group_by('e . venueId')
+            ->order_by('events_count', 'DESC');
 
         return $this->db->get()->result();
     }
