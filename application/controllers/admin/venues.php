@@ -221,4 +221,9 @@ class Venues extends AdminController {
         $this->venues_m->switch_excluded($venueId, $status);
         redirect('admin/venues');
     }
+
+    public function switch_is_sticky($venueId, $status = 0){
+        $this->venues_m->switch_is_sticky($venueId, $status);
+        redirect('admin/venues');
+    }
 }

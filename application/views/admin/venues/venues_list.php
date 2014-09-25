@@ -17,6 +17,7 @@
                     <th>State</th>
                     <th>City</th>
                     <th>Is Excluded</th>
+                    <th>Is Sticky</th>
                     <th>Actions</th>
                 </tr>
                 </thead>
@@ -35,6 +36,13 @@
                                     <a href="<?=site_url('admin/venues/switch_excluded/' . $venue->id.'/0')?>">Yes</a>
                                 <?else:?>
                                     <a href="<?=site_url('admin/venues/switch_excluded/' . $venue->id.'/1')?>">No</a>
+                                <?endif?>
+                            </td>
+                            <td>
+                                <?if($venue->is_sticky == 1):?>
+                                    <a href="<?=site_url('admin/venues/switch_is_sticky/' . $venue->id.'/0')?>">Yes</a>
+                                <?else:?>
+                                    <a href="<?=site_url('admin/venues/switch_is_sticky/' . $venue->id.'/1')?>">No</a>
                                 <?endif?>
                             </td>
                             <td>
