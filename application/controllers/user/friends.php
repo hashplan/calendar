@@ -424,10 +424,19 @@ class Friends extends AuthController
             if ($this->users_m->delete_connection_between_users($user_id, NULL)) {
                 $this->update_friend_list(true);
                 $this->update_people_you_may_know_list(true);
+                $this->response['data'] = array('user_id' => $user_id);
             }
-            if (!$this->input->is_ajax_request()) {
-                redirect(base_url() . 'user/friends');
+            else
+            {
+                $this->response['errors'][] = 'User has not been removed from your friend list';
             }
+            if($this->input->is_ajax_request())
+            {
+                header('Content-Type: application/json');
+                echo json_encode($this->response);
+                die();
+            }
+            redirect(base_url() . 'user/friends');
         }
     }
 
@@ -459,6 +468,17 @@ class Friends extends AuthController
             $this->update_people_you_may_know_list(true);
             $this->load->library('hashplans_mailer');
             $this->hashplans_mailer->send_friend_confirmed_email($this->get_user(), $this->ion_auth->user($friend_id)->row());
+            $this->response['data'] = array('user_id' => $friend_id);
+        }
+        else
+        {
+            $this->response['errors'][] = 'User has not been removed from your friend list';
+        }
+        if($this->input->is_ajax_request())
+        {
+            header('Content-Type: application/json');
+            echo json_encode($this->response);
+            die();
         }
         redirect('user/friends/invites');
     }
@@ -469,13 +489,27 @@ class Friends extends AuthController
         $users = $this->users_m->get_invites_by_event_id($event_id);
         $event = $this->events_m->get_event_by_id($event_id);
         if (!empty($users) && !empty($event)) {
-            $this->load->library('hashplans_mailer');
-            foreach ($users as $user) {
-                $this->hashplans_mailer->send_event_confirmed_email($this->get_user(), $user, $event);
-            }
             if ($this->users_m->accept_event_invite($event_id)) {
                 $this->events_m->add_to_calendar($event_id);
+                $this->load->library('hashplans_mailer');
+                foreach ($users as $user) {
+                    $this->hashplans_mailer->send_event_confirmed_email($this->get_user(), $user, $event);
+                }
+                $this->response['data'] = array('event_id' => $event_id);
             }
+            else{
+                $this->response['errors'][] = 'Invitation has not been accepted';
+            }
+        }
+        else
+        {
+            $this->response['errors'][] = 'Event not found';
+        }
+        if($this->input->is_ajax_request())
+        {
+            header('Content-Type: application/json');
+            echo json_encode($this->response);
+            die();
         }
         redirect('user/friends/invites/events');
     }
@@ -485,14 +519,33 @@ class Friends extends AuthController
         $this->load->model('events_m');
         $users = $this->users_m->get_invites_by_event_id($event_id);
         $event = $this->events_m->get_event_by_id($event_id);
-        if (!empty($users) && !empty($event)) {
-            $this->load->library('hashplans_mailer');
-            foreach ($users as $user) {
-                $this->hashplans_mailer->send_event_refused_email($this->get_user(), $user, $event);
+        if (!empty($users) && !empty($event))
+        {
+            if($this->users_m->refused_event_invite($event_id))
+            {
+                $this->load->library('hashplans_mailer');
+                foreach ($users as $user) {
+                    $this->hashplans_mailer->send_event_refused_email($this->get_user(), $user, $event);
+                }
+                $this->response['data'] = array('event_id' => $event_id);
             }
-            $this->users_m->refused_event_invite($event_id);
-            redirect('user/friends/invites/events');
+            else
+            {
+                $this->response['errors'][] = 'Invitation has not been cancelled';
+            }
         }
+        else
+        {
+            $this->response['errors'][] = 'Event not found';
+        }
+
+        if($this->input->is_ajax_request())
+        {
+            header('Content-Type: application/json');
+            echo json_encode($this->response);
+            die();
+        }
+        redirect('user/friends/invites/events');
     }
 
     public function locations_autocomplete()

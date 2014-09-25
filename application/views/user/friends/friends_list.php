@@ -1,5 +1,5 @@
 <? foreach ($people as $friend): ?>
-    <div class="panel panel-default friend-row">
+    <div class="panel panel-default friend-row user-<?= $friend->id ?>" data-user_id="<?= $friend->id ?>">
         <div class="panel-body">
             <div class="left-section">
                 <div class="friend-pic"><img src="<?= site_url('/assets/img/icons/no-image-100.png') ?>"/></div>
@@ -30,16 +30,14 @@
                             <?= anchor('user/friends/friend_request/' . $friend->id, 'Connect', array('class' => 'btn btn-primary friend-view-plans-button')); ?>
                         <?endif ?>
                     <? else: ?>
-                        <?= anchor('user/friends/remove_from_contact/' . $friend->id, 'Remove', array('class' => 'btn btn-danger')) ?>
+                        <a href="<?=site_url('user/friends/remove_from_contact/' . $friend->id)?>" class="btn btn-danger remove_from_friendlist_btn">Remove</a>
                         <? if ($page_type === 'friends'): ?>
                             <?= anchor('user/events/' . $friend->id, 'View plans', array('class' => 'btn btn-primary friend-view-plans-button')); ?>
                         <? elseif ($page_type === 'add_friends'): ?>
                             <?= anchor('user/friends/friend_request/' . $friend->id, 'Connect', array('class' => 'btn btn-primary friend-view-plans-button')); ?>
-                        <?
-                        elseif ($page_type === 'friends_invites'): ?>
-                            <?= anchor('user/friends/friend_accept/' . $friend->id, 'Connect', array('class' => 'btn btn-primary friend-view-plans-button')); ?>
-                        <?
-                        elseif ($page_type === 'events_invites'): ?>
+                        <?elseif ($page_type === 'friends_invites'): ?>
+                            <a href="<?= site_url('user/friends/friend_accept/' . $friend->id) ?>" class="btn btn-primary friend_accept_connetion_btn">Accept</a>
+                        <?elseif ($page_type === 'events_invites'): ?>
                             <?= anchor('user/friends/event_invite_accept/' . $friend->eventId, 'Connect', array('class' => 'btn btn-primary friend-view-plans-button')); ?>
                         <?endif ?>
                     <?endif ?>

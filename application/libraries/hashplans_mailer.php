@@ -94,8 +94,10 @@ class Hashplans_mailer{
         $this->CI->email->clear();
         $this->_render();
         if(!$this->CI->email->send()){
-            print_r($this->CI->email->print_debugger());
-            error_log('error', $this->CI->email->print_debugger());
+            if(false){
+                print_r($this->CI->email->print_debugger());
+            }
+            error_log($this->CI->email->print_debugger());
         }
     }
 

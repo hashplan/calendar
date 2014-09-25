@@ -299,15 +299,13 @@ class Users_m extends MY_Model
             return;
         }
         $user_id = $this->user_id_is_correct($user_id) ? $user_id : $this->ion_auth->user()->row()->id;
-
-        $this->db
-            ->where('connectionUserId', $connection_user_id)
-            ->where('userId', $user_id)
-            ->delete('user_connections');
-
-        $this->db
-            ->where('userId', $connection_user_id)
-            ->where('connectionUserId', $user_id)
+        if (!empty($options['name'])) {
+            $this->db->where('(connectionUserId = "'.$connection_user_id.'" AND userId = "'.$user_id.'")'.
+                'OR (userId = "'.$connection_user_id.'" AND connectionUserId = "'.$user_id.'")');
+        }
+        return $this->db
+            ->where('(connectionUserId = "'.$connection_user_id.'" AND userId = "'.$user_id.'")')
+            ->or_where('(userId = "'.$connection_user_id.'" AND connectionUserId = "'.$user_id.'")')
             ->delete('user_connections');
     }
 

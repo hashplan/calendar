@@ -193,7 +193,7 @@
             $('.btn', parent).removeAttr('disabled');
         }
 
-        $('#friends-list').on('click', '.friend_request_btn', function () {
+        $('#friends-list').on('click', '.friend_request_btn, .friend_accept_connetion_btn', function () {
             var that = $(this);
             var user_id = that.parents('.friend-row').data('user_id');
             that.html('<span class="event-loader"><img src="' + base_url + '/assets/img/icons/ajax-loader.gif"/></span>  ' + that.html());
@@ -202,13 +202,14 @@
                 type: 'POST',
                 success: function (response) {
                     $('.event-loader', that).remove();
-                    that.removeAttr('disabled');
-                    user_unlock(user_id);
                     if (response.data && response.data.user_id) {
                         $('.user-' + response.data.user_id).slideUp(function(){
                             $(this).remove()
                         });
                         $(document).scroll();
+                    }
+                    else{
+                        user_unlock(user_id);
                     }
                 }
             });
@@ -223,13 +224,72 @@
             $.ajax(that.attr('href'), {
                 type: 'POST',
                 success: function (response) {
-                    that.removeAttr('disabled');
-                    user_unlock(user_id);
+                    $('.event-loader', that).remove();
                     if (response.data && response.data.user_id) {
                         $('.user-' + response.data.user_id).slideUp(function(){
                             $(this).remove()
                         });
                         $(document).scroll();
+                    }
+                    else{
+                        user_unlock(user_id);
+                    }
+                }
+            });
+            return false;
+        });
+
+        $('#friends-list').on('click', '.remove_from_friendlist_btn', function () {
+            var that = $(this);
+            var user_id = that.parents('.friend-row').data('user_id');
+            that.html('<span class="event-loader"><img src="' + base_url + '/assets/img/icons/ajax-loader.gif"/></span>  ' + that.html()).attr('disabled','disabled');
+            user_lock(user_id);
+            $.ajax(that.attr('href'), {
+                type: 'POST',
+                success: function (response) {
+                    $('.event-loader', that).remove();
+                    if (response.data && response.data.user_id) {
+                        $('.user-' + response.data.user_id).slideUp(function(){
+                            $(this).remove()
+                        });
+                        $(document).scroll();
+                    }
+                    else{
+                        user_unlock(user_id);
+                    }
+                }
+            });
+            return false;
+        });
+
+        function event_lock(user_id){
+            var parent = $('.event-' + user_id);
+            $('.btn', parent).attr('disabled','disabled');
+        }
+
+        function event_unlock(user_id){
+            var parent = $('.event-' + user_id);
+            $('.btn', parent).removeAttr('disabled');
+        }
+
+        $('#friends-list').on('click', '.event_accept_invitation_btn, .event_cancel_invitation_btn', function () {
+            var that = $(this);
+            var event_id = that.parents('.friend-row').data('event_id');
+            that.html('<span class="event-loader"><img src="' + base_url + '/assets/img/icons/ajax-loader.gif"/></span>  ' + that.html()).attr('disabled','disabled');
+            event_lock(event_id);
+            $.ajax(that.attr('href'), {
+                type: 'POST',
+                success: function (response) {
+                    $('.event-loader', that).remove();
+
+                    if (response.data && response.data.event_id) {
+                        $('.event-' + response.data.event_id).slideUp(function(){
+                            $(this).remove()
+                        });
+                        $(document).scroll();
+                    }
+                    else{
+                        event_unlock(event_id);
                     }
                 }
             });
