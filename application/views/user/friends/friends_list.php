@@ -2,7 +2,7 @@
     <div class="panel panel-default friend-row user-<?= $friend->id ?>" data-user_id="<?= $friend->id ?>">
         <div class="panel-body">
             <div class="left-section">
-                <div class="friend-pic"><img src="<?= site_url('/assets/img/icons/no-image-100.png') ?>"/></div>
+                <div class="friend-pic"><img src="<?= site_url('/assets/img/' . ($friend->avatar_path ? 'users/' . $friend->avatar_path : 'icons/no-image-100.png')) ?>" class="img-circle"/></div>
             </div>
             <div class="right-section">
                 <div class="friend-name"><?= $friend->name ?></div>

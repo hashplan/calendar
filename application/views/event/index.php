@@ -68,8 +68,7 @@
                                     <div class="col-md-6 friend-related-with-event" data-uid="<?= $friendId ?>">
                                         <i <?= $class ?> title="<?= $tooltip ?>"></i>
                                         <a href="<?= site_url('user/events/' . $friendId) ?>">
-                                            <img
-                                                src="<?= site_url('/assets/img/' . ($friend['avatar_path'] ? 'users/' . $friend['avatar_path'] : 'icons/no-image-100.png')) ?>"/>
+                                            <img src="<?= site_url('/assets/img/' . ($friend['avatar_path'] ? 'users/' . $friend['avatar_path'] : 'icons/no-image-100.png')) ?>"/>
                                         </a>
                                     <span>
                                         <a href="<?= site_url('user/events/' . $friendId) ?>"><?= html_escape($friend['name']) ?></a>
@@ -81,8 +80,7 @@
                         <hr>
                         <div class="row">
                             <div class="col-md-12">
-                                <input type="text" placeholder="Invite more friends" class="form-control"
-                                       id="invite-more-friends-field" autocomplete="off">
+                                <input type="text" placeholder="Invite more friends" class="form-control" id="invite-more-friends-field" autocomplete="off">
                             </div>
                         </div>
                     </div>

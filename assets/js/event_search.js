@@ -67,6 +67,7 @@
                             $('#search_result .event-loader').remove();
                             if(response.trim().length > 0){
                                 $(response).appendTo('#search_result');
+                                scrolling = false;
                             }
                             else{
                                 if($('#search_result div.event-row').length == 0) {
@@ -74,7 +75,6 @@
                                     $('.no-events-row').addClass('shown').removeClass('hidden');
                                 }
                             }
-                            scrolling = false;
                         }
                     });
                 }

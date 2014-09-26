@@ -817,7 +817,7 @@ class Users_m extends MY_Model
 
         if (!isset($options['uids'])||!empty($options['uids'])){
             $this->db
-                ->select('u.id, u.username, u.first_name, u.last_name')
+                ->select('u.id, u.username, u.first_name, u.last_name, u.avatar_path')
                 ->from('users AS u')
                 ->where('NOT EXISTS (SELECT 1 FROM user_connections uc WHERE (u.id = uc.userId AND uc.connectionUserId = ' . $user_id . ') OR (u.id=uc.connectionUserId AND uc.userId = ' . $user_id . '))', '', FALSE)
                 ->where(array('u.id !=' => $user_id, 'u.active' => 1))
