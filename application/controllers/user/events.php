@@ -131,8 +131,9 @@ class Events extends AuthController
         }
 
         $this->load->model('venues_m');
+        $sticky_venues = $this->venues_m->get_sticky_venues($top_venues_params);
         $top_venues = $this->venues_m->get_top_venues($top_venues_params);
-        $this->data['data']['top_venues'] = $this->load->view('user/events/top_venues_list', array('top_venues' => $top_venues), true);
+        $this->data['data']['top_venues'] = $this->load->view('user/events/top_venues_list', array('sticky_venues' => $sticky_venues, 'top_venues' => $top_venues), true);
 
         $events = $this->events_m->get_all($events_search_params);
         $events_data = array(
