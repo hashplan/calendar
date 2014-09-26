@@ -101,7 +101,7 @@ class Events extends AuthController
             'current_date' => $current_date,
             'user_id' => $options['user_id'] ? $options['user_id'] : $this->ion_auth->user()->row()->id
         );
-        $result = $this->load->view('user/events/events_' . $options['events_type'], $events_data, true);
+        $this->load->view('user/events/events_' . $options['events_type'], $events_data);
 
     }
 
