@@ -39,7 +39,7 @@
                     address = cityName;
                 }
 
-                $.ajax('/event/yelp', {
+                $.ajax(base_url + '/event/yelp', {
                     type: 'POST',
                     dataType: 'html',
                     data: { venue: venueName, city: address },

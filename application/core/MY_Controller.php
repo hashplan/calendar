@@ -60,15 +60,6 @@ class MY_Controller extends CI_Controller
             $this->data['data'] = array();
         }
 
-        /*if(ENVIRONMENT == 'development'){
-            if($this->input->is_ajax_request()){
-                $this->output->enable_profiler(FALSE);
-            }
-            else{
-                $this->output->enable_profiler(TRUE);
-            }
-        }*/
-
         $this->load->library('carabiner');
         $this->_load_assets();
     }
@@ -422,14 +413,14 @@ class AdminController extends AuthController
         }
         $this->update_counters();
 
-        /*$js_assets = array(
-
-        );*/
-        $css_assets = array(
-            array('admin/admin.css')
+        $js_assets = array(
+            array('bootstrap-table.js'),
         );
-        $this->carabiner->group('page_assets', array( /*'js' => $js_assets,*/
-            'css' => $css_assets));
+        $css_assets = array(
+            array('admin/admin.css'),
+            array('bootstrap-table.css'),
+        );
+        $this->carabiner->group('page_assets', array( 'js' => $js_assets, 'css' => $css_assets));
 
         $this->data['sub_layout'] = 'layouts/admin_page';
     }

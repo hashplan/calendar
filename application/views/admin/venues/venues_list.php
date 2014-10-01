@@ -1,68 +1,29 @@
 <div class="panel panel-default">
     <div class="panel-heading"><h2 class="sub-header">Venues</h2></div>
     <div class="panel-body">
-        <? if (isset($pagination) && !empty($pagination)): ?>
-            <div>
-                <?= $pagination ?>
-            </div>
-        <? endif ?>
         <div class="table-responsive">
-            <table class="table table-striped">
+            <table class="table table-striped is_sortable_table" data-url="<?= site_url('admin/venues/venues_list') ?>"
+                   data-side-pagination="server" data-pagination="true" data-page-list="[10, 25, 50, 100]"
+                   data-search="true" data-query-params="vanue.queryParams">
                 <thead>
                 <tr>
-                    <th>#</th>
-                    <th>Venue Name</th>
-                    <th>Address</th>
-                    <th>Country</th>
-                    <th>State</th>
-                    <th>City</th>
-                    <th>Is Excluded</th>
-                    <th>Is Sticky</th>
-                    <th>Actions</th>
+                    <th class="col-md-1" data-field="venue_id" data-align="right" data-sortable="true">#</th>
+                    <th class="col-md-2" data-field="venue_name" data-sortable="true">Venue Name</th>
+                    <th class="col-md-2" data-field="venue_address" data-sortable="true">Address</th>
+                    <th class="col-md-1" data-field="country_country" data-sortable="true">Country</th>
+                    <th class="col-md-1" data-field="state_state" data-sortable="true">State</th>
+                    <th class="col-md-1" data-field="venue_city" data-sortable="true">City</th>
+                    <th class="col-md-2" data-field="venue_is_sticky" data-sortable="true">Is Excluded</th>
+                    <th class="col-md-1" data-field="venue_is_excluded" data-sortable="true">Is Sticky</th>
+                    <th class="col-md-1" data-field="actions">Actions</th>
                 </tr>
                 </thead>
                 <tbody>
-                <? if (isset($venues) && !empty($venues)): ?>
-                    <? foreach ($venues as $venue): ?>
-                        <tr <?=$venue->is_excluded == 1?'class="danger"':''?>>
-                            <td><?= $venue->venue_id ?></td>
-                            <td><?= $venue->venue_name ?></td>
-                            <td><?= $venue->venue_address ?></td>
-                            <td><?= $venue->venue_country ?></td>
-                            <td><?= $venue->venue_state ?></td>
-                            <td><?= $venue->venue_city ?></td>
-                            <td>
-                                <?if($venue->is_excluded == 1):?>
-                                    <a href="<?=site_url('admin/venues/switch_excluded/' . $venue->id.'/0')?>">Yes</a>
-                                <?else:?>
-                                    <a href="<?=site_url('admin/venues/switch_excluded/' . $venue->id.'/1')?>">No</a>
-                                <?endif?>
-                            </td>
-                            <td>
-                                <?if($venue->is_sticky == 1):?>
-                                    <a href="<?=site_url('admin/venues/switch_is_sticky/' . $venue->id.'/0')?>">Yes</a>
-                                <?else:?>
-                                    <a href="<?=site_url('admin/venues/switch_is_sticky/' . $venue->id.'/1')?>">No</a>
-                                <?endif?>
-                            </td>
-                            <td>
-                                <a href="<?= site_url('admin/venues/add/' . $venue->id) ?>"><span class="glyphicon glyphicon-edit"></span></a> |
-                                <a href="<?= site_url('admin/venues/remove/' . $venue->id) ?>" onclick="return confirm('Are you sure you want to remove this venue?')"><span class="glyphicon glyphicon-remove"></span></a>
-                            </td>
-                        </tr>
-                    <? endforeach ?>
-                <? else: ?>
-                    <tr class="text-center warning">
-                        <td colspan="7">There is no data to be displayed</td>
-                    </tr>
-                <?endif ?>
+                <tr class="text-center warning">
+                    <td colspan="9">There is no data to be displayed</td>
+                </tr>
                 </tbody>
             </table>
         </div>
-        <? if (isset($pagination) && !empty($pagination)): ?>
-            <div>
-                <?= $pagination ?>
-            </div>
-        <? endif ?>
     </div>
 </div>
