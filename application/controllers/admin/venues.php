@@ -3,6 +3,11 @@
 class Venues extends AdminController
 {
 
+    protected $response = array(
+        'errors' => array(),
+        'data' => array()
+    );
+
     public function __construct()
     {
         parent::__construct();
@@ -57,26 +62,6 @@ class Venues extends AdminController
                 'search' => $search,
             );
             $venues = $this->venues_m->get_venues_list($options);
-            if(!empty($venues))
-            {
-                foreach($venues as $venue)
-                {
-                    $venue->venue_is_excluded = $venue->venue_is_excluded == 1?
-                        '<a href="'.site_url('admin/venues/switch_excluded/' . $venue->venue_id.'/0').'">Yes</a>':
-                        '<a href="'.site_url('admin/venues/switch_excluded/' . $venue->venue_id.'/1').'">No</a>';
-                    $venue->venue_is_sticky = $venue->venue_is_sticky == 1?
-                        '<a href="'.site_url('admin/venues/switch_is_sticky/' . $venue->venue_id.'/0').'">Yes</a>':
-                        '<a href="'.site_url('admin/venues/switch_is_sticky/' . $venue->venue_id.'/1').'">No</a>';
-
-                    $venue->actions = '<a href="'.site_url('admin/venues/add/' . $venue->venue_id).'">'.
-                                        '<span class="glyphicon glyphicon-edit"></span></a> | '.
-                                    '<a href="'.site_url('admin/venues/remove/' . $venue->id) .'" '.
-                                        'onclick="return confirm(\'Are you sure you want to remove this venue?\')">'.
-                                        '<span class="glyphicon glyphicon-remove"></span></a>';
-
-                }
-            }
-
             $total = $this->venues_m->get_venues_list($options + array('total' => true));
 
             header('Content-Type: application/json');
@@ -244,13 +229,35 @@ class Venues extends AdminController
 
     public function switch_excluded($venueId, $status = 0)
     {
-        $this->venues_m->switch_excluded($venueId, $status);
+        if($this->venues_m->switch_excluded($venueId, $status)){
+            $this->response['data'] = array('is_excluded' => $status);
+        }
+        else {
+            $this->response['errors'][] = 'Venue was not marked as excluded';
+        }
+
+        if ($this->input->is_ajax_request()) {
+            header('Content-Type: application/json');
+            echo json_encode($this->response);
+            die();
+        }
         redirect('admin/venues');
     }
 
     public function switch_is_sticky($venueId, $status = 0)
     {
-        $this->venues_m->switch_is_sticky($venueId, $status);
+        if ($this->venues_m->switch_is_sticky($venueId, $status)) {
+            $this->response['data'] = array('is_sticky' => $status);
+        }
+        else {
+            $this->response['errors'][] = 'Venue was not marked as sticky';
+        }
+
+        if ($this->input->is_ajax_request()) {
+            header('Content-Type: application/json');
+            echo json_encode($this->response);
+            die();
+        }
         redirect('admin/venues');
     }
 }
