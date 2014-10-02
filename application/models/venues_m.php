@@ -72,7 +72,6 @@ class Venues_m extends MY_Model
             $this->db->order_by($options['order_by'], $options['order_type']);
             $this->db->limit($options["limit"], $options['offset']);
             $result = $this->db->get()->result();
-            $a = $this->db->last_query();
         }
         else {
             $result = $this->db->count_all_results();
