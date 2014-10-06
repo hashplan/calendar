@@ -54,6 +54,7 @@ $db['default']['port'] = 4040;
 $db['default']['username'] = 'calendar';
 $db['default']['password'] = 'calendar';
 $db['default']['database'] = 'calendar_ext';
+//$db['default']['database'] = 'calendar';
 $db['default']['dbdriver'] = 'mysql';
 $db['default']['dbprefix'] = '';
 $db['default']['pconnect'] = TRUE;

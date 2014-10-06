@@ -138,33 +138,21 @@
     <!--row of columns -->
     <div class="row">
         <div class="col-md-3">
-            <h2>Search</h2>
-
+            <h2>Search and Discover</h2>
             <p>MANY <span class="text-muted">cool events</span></p>
-
-            <p><a class="btn btn-default" href="#" role="button">View details &raquo;</a></p>
         </div>
         <div class="col-md-3">
             <h2>Go Mobile!</h2>
-
             <p>Coming soon! The Hashplan app for Android and iPhone</p>
-
-            <p><a class="btn btn-default" href="#" role="button">View details &raquo;</a></p>
         </div>
         <div class="col-md-3">
             <h2>Share plans with friends!</h2>
-
             <p>Find things to do with your friends and start planning today</p>
-
-            <p><a class="btn btn-default" href="#" role="button">View details &raquo;</a></p>
         </div>
         <div class="col-md-3">
             <h2>Explore!</h2>
-
             <p>Browse our listings of thousands of events to discover new activities, venues, musicians, festivals,
                 local artists, and more</p>
-
-            <p><a class="btn btn-default" href="#" role="button">View details &raquo;</a></p>
         </div>
     </div>
 </div>

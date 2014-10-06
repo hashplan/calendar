@@ -20,7 +20,7 @@
                         <?=html_escape($dude->mutual_friends_count) ." shared connections";?>
                     <?endif?>
                 </div>
-                <div class="button-wrapper">
+                <div class="btn-group btn-group-xs button-wrapper">
                     <?if(in_array($dude->id, $my_friends)):?>
                         <a href="<?=site_url('user/friends/remove_from_contact/' . $dude->id)?>" class="btn btn-danger remove_from_friendlist_btn">Remove</a>
                         <?=anchor('user/events/'. $dude->id, 'View plans', array('class' => 'btn btn-primary friend-view-plans-button'));?>
