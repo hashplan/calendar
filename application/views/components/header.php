@@ -26,29 +26,8 @@
     <?$this->carabiner->display('header_js', 'js');?>
 
     <script src="<?= site_url('assets/js/account_settings.js'); ?>"></script>
-    <script src="<?= site_url('assets/js/tinymce/tinymce.min.js'); ?>"></script>
-    <!--<script src="<?= site_url('assets/js/tooltip_for_event_to_plan.js'); ?>"></script>-->
     <script src="<?= site_url('assets/js/invites_left_block.js'); ?>"></script>
-    <script type="text/javascript">
-        tinymce.init({
-            selector: "input_variable_here",
-            plugins: [
-                "advlist autolink autosave link image lists charmap print preview hr anchor pagebreak spellchecker",
-                "searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking",
-                "table contextmenu directionality emoticons template textcolor paste fullpage textcolor"
-            ],
 
-            toolbar1: "newdocument fullpage | bold italic underline strikethrough | alignleft aligncenter alignright alignjustify | styleselect formatselect fontselect fontsizeselect",
-            toolbar2: "cut copy paste | searchreplace | bullist numlist | outdent indent blockquote | undo redo | link unlink anchor image media code | inserttime preview | forecolor backcolor",
-            toolbar3: "table | hr removeformat | subscript superscript | charmap emoticons | print fullscreen | ltr rtl | spellchecker | visualchars visualblocks nonbreaking template pagebreak restoredraft",
-
-            menubar: true,
-            toolbar_items_size: 'small'
-        });
-    </script>
-    <script>
-
-    </script>
 </head>
 
 <body class="page-<?php echo $page_class ?>">

@@ -21,7 +21,7 @@
                         <?= html_escape($friend->mutual_friends_count) . " shared connections"; ?>
                     <?endif ?>
                 </div>
-                <div class="button-wrapper">
+                <div class="btn-group btn-group-xs button-wrapper">
                     <?php if (isset($current_user_id)): ?>
                         <? if (in_array($friend->id, $my_friends)): ?>
                             <a href="<?=site_url('user/friends/remove_from_contact/' . $friend->id)?>" class="btn btn-danger remove_from_friendlist_btn">Remove</a>

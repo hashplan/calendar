@@ -21,7 +21,7 @@
                         <?= html_escape($dude->mutual_friends_count) . " shared connections"; ?>
                     <?endif ?>
                 </div>
-                <div class="button-wrapper">
+                <div class="btn-group btn-group-xs button-wrapper">
                     <a href="<?= site_url('user/friends/remove_from_lists/' . $dude->id) ?>" class="btn btn-danger add_to_ignore_list_btn">Ignore</a>
                     <? if ($page_type === 'friends'): ?>
                         <?= anchor('user/events/' . $dude->id, 'View plans', array('class' => 'btn btn-primary friend-view-plans-button')); ?>

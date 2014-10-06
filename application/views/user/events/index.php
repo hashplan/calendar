@@ -93,7 +93,7 @@
         <div class="col-md-3 hidden-xs hidden-sm">
             <div class="panel panel-default widget-top-venues">
                 <div class="panel-heading">
-                    <div class="panel-title"><h4><strong>Top Venues</strong></h4></div>
+                    <div class="panel-title"><h4><strong>Trending Venues</strong></h4></div>
                 </div>
                 <div class="list-group">
                     <?= $top_venues; ?>
