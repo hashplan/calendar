@@ -130,7 +130,6 @@ class Events_m extends MY_Model
 				e.id AS event_id,
 				e.name AS event_name,
 				e.description AS event_description,
-				e.typeId AS event_typeId,
 				e.datetime AS event_datetime,
 				e.venueId AS event_venueId,
 				e.booking_link AS event_booking_link,
@@ -177,7 +176,6 @@ class Events_m extends MY_Model
         $user_added_event = new stdClass();
         $user_added_event->name = '';
         $user_added_event->description = '';
-        $user_added_event->typeId = '';
         $user_added_event->datetime = '';
         $user_added_event->venueId = '';
         $user_added_event->booking_link = '';
@@ -499,7 +497,6 @@ class Events_m extends MY_Model
         $storedData = array(
             'name' => $data['name'],
             'description' => $data['description'],
-            'typeId' => NULL,
             'datetime' => $data['date'] . ' ' . $data['time'],
             'venueId' => $venue_id,
             'booking_link' => $booking_link,
