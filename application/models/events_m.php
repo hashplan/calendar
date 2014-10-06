@@ -385,10 +385,7 @@ class Events_m extends MY_Model
                 $result = $this->db->insert('user_events', array(
                     'userId' => $user_id,
                     'eventId' => $event_id,
-                    'insertedon' => NULL,
-                    'insertedby' => NULL,
-                    'updatedon' => NULL,
-                    'updatedby' => NULL,
+                    'insertedon' => date('Y-m-d H:i:s'),
                     'ownerId' => $event->event_owner_id,
                 ));
             }
