@@ -25,7 +25,7 @@ class StubhubDrv extends CrawlerDrv
 
         if(!empty($resultCrawl)){
             $this->process();
-            $this->CI->db->update('crawlstatus',array('processed_events'=>$this->processed_events),array('id'=>$resultCrawl->id));
+            $this->CI->db->update('crawlstatus',array('processed_events'=>$this->processed_events, 'updatedon' => date('Y-m-d H:i:s')),array('id'=>$resultCrawl->id));
             
             $this->CI->db
                 ->join('cities AS c', 'v.city = c.city AND v.stateId = c.stateId')
