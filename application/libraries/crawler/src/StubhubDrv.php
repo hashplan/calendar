@@ -175,12 +175,17 @@ class StubhubDrv extends CrawlerDrv
             $state = trim($citystate[1]);
             $time = trim($pieces[3]);
 
+            $eventStatus = 'active';
+            if(stripos($eventName, 'parking passes') === FALSE){
+                $eventStatus = 'cancelled';
+            }
+
             $date = date_parse($year . "-" . date('m', strtotime($month)) . "-" . $day . " " . $time);
             $datetime = $date["year"] . "-" . sprintf("%02d", $date["month"]) . "-" . sprintf("%02d", $date["day"]) . " " . sprintf("%02d", $date["hour"]) . ":" . sprintf("%02d", $date["minute"]);
 
             $sql = "call " . $this->CI->db->database . ".InsertEvent('" . addslashes($eventName) . "','" . $datetime . "','" .
                 addslashes($venueName) . "','" . $city .
-                "','" . $state . "','" . addslashes($eventLink) . "','" . addslashes($venueLink) . "');";
+                "','" . $state . "','" . addslashes($eventLink) . "','" . addslashes($venueLink) . "', '".$eventStatus."');";
             //echo $sql. "<br/>";
             $this->CI->db->query($sql);
         }
