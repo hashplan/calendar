@@ -175,9 +175,9 @@ class StubhubDrv extends CrawlerDrv
             $state = trim($citystate[1]);
             $time = trim($pieces[3]);
 
-            $eventStatus = 'active';
+            $eventStatus = 'cancelled';
             if(stripos($eventName, 'parking passes') === FALSE){
-                $eventStatus = 'cancelled';
+                $eventStatus = 'active';
             }
 
             $date = date_parse($year . "-" . date('m', strtotime($month)) . "-" . $day . " " . $time);
