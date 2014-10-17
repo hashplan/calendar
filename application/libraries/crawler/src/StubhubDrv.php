@@ -47,7 +47,7 @@ class StubhubDrv extends CrawlerDrv
         foreach ($venuesWithEmptyAddress as $venue) {
             
              if(empty($venue->address)){
-                $dom = $this->curl($venue->url.'/');
+                $dom = $this->curl($venue->url.'/', '', null, true);
 
                 $html = new simple_html_dom();
                 $html->Load($dom);
@@ -77,7 +77,7 @@ class StubhubDrv extends CrawlerDrv
             ->get('crawlstatus')->row();
 
         if(empty($resultCrawl)){
-            $dom = $this->curl(sprintf($this->formatUrl, 0));
+            $dom = $this->curl(sprintf($this->formatUrl, 0), '', null, true);
             $html = new simple_html_dom();
             $html->Load($dom);
             $resultRed = $html->find('span[@class="resultRed"]', 0);
@@ -102,7 +102,7 @@ class StubhubDrv extends CrawlerDrv
     protected function process()
     {
         ini_set('max_execution_time', 0);
-        $dom = $this->curl(sprintf($this->formatUrl, 0));
+        $dom = $this->curl(sprintf($this->formatUrl, 0), '', null, true);
         $html = new simple_html_dom();
         $html->Load($dom);
         $resultRed = $html->find('span[@class="resultRed"]', 0);
@@ -121,7 +121,7 @@ class StubhubDrv extends CrawlerDrv
 
     protected function scraping($url)
     {
-        $dom = $this->curl($url);
+        $dom = $this->curl($url, '', null, true);
         $html = new simple_html_dom();
         $html->load($dom);
         // get count
