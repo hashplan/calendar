@@ -8,7 +8,7 @@
                 <span class="icon-bar"></span>
             </button>
             <a class="navbar-brand" href="<?= site_url(''); ?>"><img
-                    src="<?= site_url('/assets/img/logo/hashplan_150-28.png'); ?>" alt="Hashplan logo"></a>
+                    src="<?= site_url('/assets/img/logo/hashplan_150-28_gif.gif'); ?>" alt="Hashplan logo"></a>
         </div>
         <div class="navbar-collapse collapse">
             <ul class="nav navbar-nav">
